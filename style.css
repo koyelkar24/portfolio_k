@@ -148,6 +148,31 @@ img { max-width: 100%; display: block; }
 .site-footer p, .back-top { color: #858c86; font-size: 10px; }
 .back-top:hover { color: var(--green); }
 
+/* Quiet motion gives the page a little life without competing with its content. */
+.motion-ready .hero-copy > * { animation: rise-in .72s both; }
+.motion-ready .hero-copy > :nth-child(1) { animation-delay: .08s; }
+.motion-ready .hero-copy > :nth-child(2) { animation-delay: .16s; }
+.motion-ready .hero-copy > :nth-child(3) { animation-delay: .24s; }
+.motion-ready .hero-copy > :nth-child(4) { animation-delay: .32s; }
+.motion-ready .hero-copy > :nth-child(5) { animation-delay: .4s; }
+.motion-ready .portrait-wrap { animation: portrait-in .9s .16s both; }
+.motion-ready .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.motion-ready .reveal.is-visible { opacity: 1; transform: translateY(0); }
+.motion-ready .project .strength-track span { transform: scaleX(.2); transform-origin: left; transition: transform .9s .25s cubic-bezier(.2,.7,.2,1); }
+.motion-ready .project.is-visible .strength-track span { transform: scaleX(1); }
+.project-visual > .visual-window, .project-visual > .cipher-card { transition: transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s ease; }
+.project:hover .visual-window { transform: translateY(-5px) rotate(-.5deg); box-shadow: 0 25px 50px rgba(37, 61, 46, .15); }
+.project:hover .cipher-card { transform: translateY(-5px) rotate(.5deg); box-shadow: 0 25px 50px rgba(33, 50, 42, .22); }
+.project-link span, .text-link span, .contact-email span, .social-links span { display: inline-block; transition: transform .2s ease; }
+.project-link:hover span, .text-link:hover span, .contact-email:hover span, .social-links a:hover span { transform: translate(2px, -2px); }
+.scroll-cue span:last-child { animation: cue-bob 1.8s ease-in-out infinite; }
+.caret { animation: caret-blink 1s steps(2, start) infinite; }
+
+@keyframes rise-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes portrait-in { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes cue-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+@keyframes caret-blink { to { visibility: hidden; } }
+
 @media (max-width: 900px) {
   .page-wrap { width: min(var(--content), calc(100% - 52px)); }
   .site-header { width: calc(100% - 52px); }
