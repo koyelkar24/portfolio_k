@@ -61,7 +61,7 @@
           <p class="eyebrow">SELECTED WORK · 2024—2026</p>
           <h2 id="work-title">Projects</h2>
         </div>
-        <p class="section-intro">Small, practical explorations at the intersection of security and software.</p>
+        <p class="section-intro">Career tools, AI-powered video learning, password security, and cryptography—built with Python and practical web technologies.</p>
       </div>
 
       <div class="project-list page-wrap">
@@ -78,14 +78,54 @@
                 <div class="check-row"><span>✓</span> Common pattern detection</div>
               </div>
             </div>
-            <span class="visual-index">01 / SECURITY TOOL</span>
+            <span class="visual-index">01 / CYBERSECURITY</span>
           </div>
           <div class="project-copy">
-            <p class="project-number">01 <span>PERSONAL PROJECT</span></p>
+            <p class="project-number">01 <span>SECURITY APPLICATION</span></p>
             <h3>Password Analyzer</h3>
-            <p>A password-strength tool that explores entropy, common patterns, and breach-checking logic to make security concepts easier to understand and evaluate.</p>
-            <ul class="tag-list" aria-label="Technologies"><li>Python</li><li>HTML</li><li>CSS</li><li>Security analysis</li></ul>
+            <p>Checks password strength with entropy and zxcvbn scoring, flags common patterns, estimates cracking time, and offers suggestions. Breach checks use the Have I Been Pwned range API with a SHA-1 prefix lookup.</p>
+            <ul class="tag-list" aria-label="Technologies and tools used"><li>Python</li><li>Flask</li><li>Flask-CORS</li><li>HTML</li><li>CSS</li><li>JavaScript</li><li>zxcvbn</li><li>Requests</li><li>Have I Been Pwned API</li><li>Vercel</li></ul>
             <a class="project-link" href="https://github.com/koyelkar24/passwordAnalyser" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+
+        <article class="project project-career">
+          <div class="project-visual career-visual" aria-hidden="true">
+            <div class="career-dashboard">
+              <div class="mini-window-bar"><span></span><span></span><span></span><b>CAREER WORKSPACE</b></div>
+              <div class="career-dashboard-body">
+                <span class="mini-kicker">YOUR NEXT STEP</span>
+                <strong>Build your career<br>with a clear plan.</strong>
+                <div class="career-tool-grid"><span>Resume review</span><span>Find roles</span><span>Practice interviews</span><span>Track applications</span></div>
+              </div>
+            </div>
+            <span class="visual-index">02 / CAREER TOOLS</span>
+          </div>
+          <div class="project-copy">
+            <p class="project-number">02 <span>CAREER WORKSPACE</span></p>
+            <h3>Career Assistant</h3>
+            <p>A browser-based workspace for resume parsing and ATS scoring, job search, application tracking, resume tailoring, mock interviews, job scam checks, and career roadmaps. Optional Gemini or OpenAI coaching adds resume-to-role reviews and detailed interview feedback; job search and email integrations can be enabled with API and SMTP settings.</p>
+            <ul class="tag-list" aria-label="Technologies and tools used"><li>Python</li><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Streamlit</li><li>Python HTTP server</li><li>SQLite</li><li>CSV</li><li>Pydantic</li><li>python-dotenv</li><li>Requests</li><li>pdfplumber</li><li>python-docx</li><li>ReportLab</li><li>OpenAI API</li><li>Gemini API</li><li>JSearch / RapidAPI</li><li>SMTP</li></ul>
+            <a class="project-link" href="https://github.com/koyelkar24/Career-Assistant" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">&#8599;</span></a>
+          </div>
+        </article>
+
+        <article class="project project-summarizer">
+          <div class="project-visual summarizer-visual" aria-hidden="true">
+            <div class="summary-panel">
+              <div class="summary-panel-top"><span>VIDEO STUDY BRIEF</span><span class="summary-live">READY</span></div>
+              <div class="summary-progress"><i></i></div>
+              <div class="summary-section"><b>KEY TAKEAWAYS</b><span></span><span></span><span></span></div>
+              <div class="summary-chapters"><b>SMART CHAPTERS</b><div><i>00:00</i><span>Introduction</span></div><div><i>03:42</i><span>Core concepts</span></div></div>
+            </div>
+            <span class="visual-index">03 / AI VIDEO LEARNING</span>
+          </div>
+          <div class="project-copy">
+            <p class="project-number">03 <span>AI VIDEO LEARNING</span></p>
+            <h3>J.A.R.V.I.S. Video Summarizer</h3>
+            <p>Turns YouTube links and uploaded videos into transcripts, concise summaries, key highlights, smart chapters, video Q&amp;A, and study materials such as notes, viva questions, MCQs, and flashcards. Uses available YouTube captions or extracts audio for Faster-Whisper transcription, then runs a local Ollama model or Gemini. Summaries can be downloaded as PDF or TXT.</p>
+            <ul class="tag-list" aria-label="Technologies and tools used"><li>Python</li><li>Streamlit</li><li>yt-dlp</li><li>YouTube Transcript API 1.2.4</li><li>Faster-Whisper (tiny default)</li><li>FFmpeg / ffprobe</li><li>Ollama / llama3.1</li><li>Gemini API</li><li>google-genai</li><li>Requests</li><li>python-dotenv</li><li>ReportLab</li></ul>
+            <a class="project-link" href="https://github.com/koyelkar24/summarization_dashboard" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">&#8599;</span></a>
           </div>
         </article>
 
@@ -100,10 +140,10 @@
               <div class="cipher-line cipher-output">phhw ph diwhu fodvv</div>
               <div class="cipher-footer"><span>ALGORITHM</span><b>CLASSICAL CIPHER</b></div>
             </div>
-            <span class="visual-index">02 / CRYPTOGRAPHY</span>
+            <span class="visual-index">04 / CRYPTOGRAPHY</span>
           </div>
           <div class="project-copy">
-            <p class="project-number">02 <span>PERSONAL PROJECT</span></p>
+            <p class="project-number">04 <span>PERSONAL PROJECT</span></p>
             <h3>Text Encryption Tool</h3>
             <p>A desktop application for encrypting and decrypting text with classical and modern cipher techniques, built to make cryptography interactive.</p>
             <ul class="tag-list" aria-label="Technologies"><li>Python</li><li>Tkinter</li><li>Cryptography</li></ul>
@@ -124,7 +164,7 @@
           <div class="about-narrative">
             <p class="about-lead">I’m Koyel, a B.Sc. Cyber Security student at <strong>Guru Nanak Institute of Technology</strong>, affiliated with MAKAUT.</p>
             <p>I’m interested in the ideas behind secure technology: how information is protected, how passwords can be evaluated, and how encryption keeps messages private. I learn by turning those topics into small projects and exploring how they work in practice.</p>
-            <p>My recent work includes a <strong>Password Analyzer</strong> and a <strong>Text Encryption Tool</strong>. I’m continuing to build my foundations in cybersecurity, programming, and web development through study and hands-on practice.</p>
+            <p>My projects range from a <strong>Password Analyzer</strong> and <strong>Text Encryption Tool</strong> to a career planning workspace and AI-powered video study assistant. I’m continuing to build my foundations in cybersecurity, programming, and web development through study and hands-on practice.</p>
 
             <div class="about-highlights-list">
               <article class="highlight-item">
@@ -138,7 +178,7 @@
             </div>
 
             <div class="about-key-stats" aria-label="A few details">
-              <div class="stat-card"><span class="stat-number">02</span><span class="stat-label">Featured projects</span></div>
+              <div class="stat-card"><span class="stat-number">04</span><span class="stat-label">Featured projects</span></div>
               <div class="stat-card"><span class="stat-number">03</span><span class="stat-label">Areas of focus</span></div>
               <div class="stat-card"><span class="stat-number">2024</span><span class="stat-label">Started my degree</span></div>
             </div>
