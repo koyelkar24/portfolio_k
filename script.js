@@ -12,18 +12,14 @@ if (openingScene) {
     openingScene.remove();
   };
 
-  if (prefersReducedMotion) {
-    removeOpeningScene();
-  } else {
-    skipIntro.addEventListener('click', () => {
-      openingScene.classList.add('is-skipped');
-      introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
-    });
-    openingScene.addEventListener('animationend', (event) => {
-      if (event.target === openingScene && event.animationName === 'opening-scene-close') removeOpeningScene();
-    });
-    introRemovalTimer = window.setTimeout(removeOpeningScene, 3400);
-  }
+  skipIntro.addEventListener('click', () => {
+    openingScene.classList.add('is-skipped');
+    introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
+  });
+  openingScene.addEventListener('animationend', (event) => {
+    if (event.target === openingScene && event.animationName === 'opening-scene-close') removeOpeningScene();
+  });
+  introRemovalTimer = window.setTimeout(removeOpeningScene, prefersReducedMotion ? 3200 : 3800);
 }
 
 if (!prefersReducedMotion && 'IntersectionObserver' in window) {
