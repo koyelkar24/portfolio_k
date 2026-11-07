@@ -492,11 +492,36 @@ html { scroll-padding-top: 96px; }
 
 @media (max-width: 740px) {
   .about-content-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-highlights-list { grid-template-columns: 1fr; }
   .about-key-stats { gap: 5px; }
   .stat-card { padding-inline: 6px; }
   .stat-number { font-size: 20px; }
   .stat-label { font-size: 8px; }
   .about-education { padding: 16px; }
+}
+
+/* Standalone education timeline */
+.about-highlights-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.education-section { background: #fff; }
+.education-section .section-heading { margin-bottom: 38px; }
+.education-timeline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.education-card { min-height: 205px; padding: 22px; border: 1px solid #e2e7e0; border-radius: 6px; background: #fbfcf9; }
+.education-card.current { border-color: #c8d8ca; background: #f6faf5; }
+.edu-card-top { margin-bottom: 22px; }
+.education-card h3 { margin: 0 0 8px; font-size: 17px; font-weight: 600; }
+.education-card .edu-institution { color: #59645d; font-size: 12px; line-height: 1.65; }
+.education-card .edu-desc { margin-top: 12px; font-size: 11px; }
+
+@media (max-width: 900px) {
+  .education-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .education-card.current { grid-column: 1 / -1; }
+}
+
+@media (max-width: 680px) {
+  .about-highlights-list { grid-template-columns: 1fr; }
+  .education-timeline { grid-template-columns: 1fr; gap: 12px; }
+  .education-card.current { grid-column: auto; }
+  .education-card { min-height: auto; padding: 18px; }
 }
 
 /* Landing page details */
