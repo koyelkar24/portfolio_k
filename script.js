@@ -2,6 +2,30 @@ const navToggle = document.getElementById('navToggle');
 const primaryNav = document.getElementById('primaryNav');
 
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const openingScene = document.getElementById('openingScene');
+const skipIntro = document.getElementById('skipIntro');
+
+if (openingScene) {
+  let introRemovalTimer;
+  const removeOpeningScene = () => {
+    if (introRemovalTimer) window.clearTimeout(introRemovalTimer);
+    openingScene.remove();
+  };
+
+  if (prefersReducedMotion) {
+    removeOpeningScene();
+  } else {
+    skipIntro.addEventListener('click', () => {
+      openingScene.classList.add('is-skipped');
+      introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
+    });
+    openingScene.addEventListener('animationend', (event) => {
+      if (event.target === openingScene && event.animationName === 'opening-scene-close') removeOpeningScene();
+    });
+    introRemovalTimer = window.setTimeout(removeOpeningScene, 3400);
+  }
+}
+
 if (!prefersReducedMotion && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('motion-ready');
 
