@@ -612,8 +612,9 @@ html { scroll-padding-top: 96px; }
 .globe-rim { fill: none; stroke: rgb(67 105 76 / 35%); stroke-width: 1; }
 .globe-orbit { fill: none; stroke: rgb(79 119 87 / 34%); stroke-width: .8; transform: rotate(-18deg); transform-origin: 90px 90px; }
 .globe-orbit-back { stroke: rgb(79 119 87 / 19%); stroke-dasharray: 2 3; }
-.globe-map-track { transform-box: view-box; animation: globe-map-roll 28s linear infinite; }
-.globe-orbit-dot { fill: #386b57; stroke: #f7f7ef; stroke-width: 1.5; transform-box: view-box; transform-origin: 90px 90px; animation: globe-orbit-roll 12s linear infinite; }
+.globe-map-track { transform-box: view-box; animation: globe-map-roll 28s linear infinite; animation-play-state: paused; }
+.globe-orbit-dot { fill: #386b57; stroke: #f7f7ef; stroke-width: 1.5; transform-box: view-box; transform-origin: 90px 90px; animation: globe-orbit-roll 12s linear infinite; animation-play-state: paused; }
+.entry-complete .globe-map-track, .entry-complete .globe-orbit-dot { animation-play-state: running; }
 @keyframes globe-map-roll { to { transform: translateX(-180px); } }
 @keyframes globe-orbit-roll { to { transform: rotate(360deg); } }
 
@@ -641,17 +642,17 @@ html { scroll-padding-top: 96px; }
   animation: opening-scene-close .65s 2.8s ease forwards;
 }
 .entry-doorway {
-  position: relative;
-  perspective: 1100px;
+  position: absolute;
+  inset: 0;
+  perspective: 1800px;
   transform-style: preserve-3d;
-  width: min(76vw, 430px);
-  height: min(64vh, 500px);
-  min-height: 350px;
-  border: 9px solid #394d3b;
+  width: 100%;
+  height: 100%;
+  border: 0;
   background: transparent;
-  box-shadow: 0 0 0 2px rgb(218 226 208 / 14%), 0 24px 70px rgb(0 0 0 / 38%);
+  box-shadow: none;
 }
-.entry-door-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 58%, rgb(211 190 132 / 20%), rgb(85 117 82 / 8%) 46%, transparent 76%); filter: blur(9px); }
+.entry-door-glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 55%, rgb(211 190 132 / 13%), transparent 58%); filter: blur(12px); }
 .entry-door-leaf {
   position: absolute;
   z-index: 2;
@@ -690,7 +691,6 @@ html { scroll-padding-top: 96px; }
 @keyframes opening-scene-close { to { opacity: 0; visibility: hidden; } }
 
 @media (max-width: 680px) {
-  .entry-doorway { width: min(78vw, 340px); height: min(58vh, 430px); min-height: 320px; border-width: 7px; }
   .skip-intro { top: 14px; right: 14px; padding: 9px 12px; }
 }
 @media (prefers-reduced-motion: reduce) {

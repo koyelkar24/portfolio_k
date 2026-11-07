@@ -5,24 +5,10 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const openingScene = document.getElementById('openingScene');
 const skipIntro = document.getElementById('skipIntro');
 
-if (openingScene) {
-  let introRemovalTimer;
-  const removeOpeningScene = () => {
-    if (introRemovalTimer) window.clearTimeout(introRemovalTimer);
-    openingScene.remove();
-  };
+function startPortfolioMotion() {
+  document.documentElement.classList.add('entry-complete');
+  if (prefersReducedMotion) return;
 
-  skipIntro.addEventListener('click', () => {
-    openingScene.classList.add('is-skipped');
-    introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
-  });
-  openingScene.addEventListener('animationend', (event) => {
-    if (event.target === openingScene && event.animationName === 'opening-scene-close') removeOpeningScene();
-  });
-  introRemovalTimer = window.setTimeout(removeOpeningScene, prefersReducedMotion ? 3200 : 3800);
-}
-
-if (!prefersReducedMotion && 'IntersectionObserver' in window) {
   document.documentElement.classList.add('motion-ready');
 
   const glyphs = 'abcdefghijklmnopqrstuvwxyz';
@@ -48,6 +34,7 @@ if (!prefersReducedMotion && 'IntersectionObserver' in window) {
     }, lineIndex * 320);
   });
 
+  if (!('IntersectionObserver' in window)) return;
   const revealItems = document.querySelectorAll(
     '.section-heading, .project-visual, .project-number, .project-copy h3, .project-copy > p:not(.project-number), .tag-list, .project-link, .about-heading, .about-content, .education-item, .contact-inner'
   );
@@ -64,6 +51,38 @@ if (!prefersReducedMotion && 'IntersectionObserver' in window) {
     item.classList.add('reveal');
     revealObserver.observe(item);
   });
+}
+
+if (openingScene) {
+  let introRemovalTimer;
+  let doorsOpened = 0;
+  let motionStarted = false;
+  const beginAfterDoorsOpen = () => {
+    if (motionStarted) return;
+    motionStarted = true;
+    startPortfolioMotion();
+  };
+  const removeOpeningScene = () => {
+    if (introRemovalTimer) window.clearTimeout(introRemovalTimer);
+    openingScene.remove();
+  };
+
+  skipIntro.addEventListener('click', () => {
+    beginAfterDoorsOpen();
+    openingScene.classList.add('is-skipped');
+    introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
+  });
+  openingScene.addEventListener('animationend', (event) => {
+    if (event.target.classList.contains('entry-door-leaf') && event.animationName.startsWith('simple-door-')) {
+      doorsOpened += 1;
+      if (doorsOpened === 2) beginAfterDoorsOpen();
+    }
+    if (event.target === openingScene && event.animationName === 'opening-scene-close') removeOpeningScene();
+  });
+  window.setTimeout(beginAfterDoorsOpen, prefersReducedMotion ? 2200 : 2700);
+  introRemovalTimer = window.setTimeout(removeOpeningScene, prefersReducedMotion ? 3200 : 3800);
+} else {
+  startPortfolioMotion();
 }
 
 navToggle.addEventListener('click', () => {
