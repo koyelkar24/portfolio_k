@@ -36,7 +36,7 @@ function startPortfolioMotion() {
 
   if (!('IntersectionObserver' in window)) return;
   const revealItems = document.querySelectorAll(
-    '.section-heading, .project-visual, .project-number, .project-copy h3, .project-copy > p:not(.project-number), .tag-list, .project-link, .about-heading, .about-content, .education-item, .contact-inner'
+    '.section-heading, .project-visual, .project-number, .project-copy h3, .project-copy > p:not(.project-number), .tag-list, .project-link, .skill-card, .about-heading, .about-content, .education-item, .contact-inner'
   );
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {

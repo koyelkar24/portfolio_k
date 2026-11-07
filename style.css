@@ -702,3 +702,35 @@ html { scroll-padding-top: 96px; }
 }
 @keyframes simple-door-left-reduced { 0%, 14% { transform: rotateY(0); } 100% { transform: rotateY(-78deg); } }
 @keyframes simple-door-right-reduced { 0%, 14% { transform: rotateY(0); } 100% { transform: rotateY(78deg); } }
+
+/* Skills section */
+.skills-section { background: linear-gradient(145deg, #eef2ec, #f7f7f2 52%, #edf1eb); }
+.skills-section .section-heading { align-items: end; }
+.skills-intro { max-width: 390px; }
+.skills-intro .section-intro { max-width: 390px; margin-bottom: 14px; }
+.skills-legend { display: flex; flex-wrap: wrap; gap: 9px 18px; color: #66716a; font-size: 10px; }
+.skills-legend > span { display: inline-flex; align-items: center; gap: 7px; }
+.skill-dot { width: 8px; height: 8px; border-radius: 50%; }
+.skill-dot-project { background: #386b57; }
+.skill-dot-foundation { background: #5484a2; }
+.skills-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.skill-card { min-width: 0; padding: 22px; border: 1px solid #e0e6de; border-radius: 6px; background: rgb(255 255 255 / 78%); box-shadow: 0 8px 24px rgb(36 55 42 / 3%); }
+.skill-card:nth-child(3n + 1) { --reveal-delay: 0ms; }
+.skill-card:nth-child(3n + 2) { --reveal-delay: 90ms; }
+.skill-card:nth-child(3n) { --reveal-delay: 180ms; }
+.skill-card h3 { margin: 0 0 16px; font-size: 14px; font-weight: 600; letter-spacing: -.01em; }
+.skill-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.skill-list li { padding: 5px 9px; border: 1px solid; border-radius: 999px; font-size: 10px; line-height: 1.45; }
+.skill-list .skill-project { border-color: #c8dbce; color: #2f6148; background: #edf5ef; }
+.skill-list .skill-foundation { border-color: #cbdce7; color: #416d88; background: #eff5f8; }
+
+@media (max-width: 900px) {
+  .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 680px) {
+  .skills-section .section-heading { align-items: start; }
+  .skills-intro { max-width: 100%; }
+  .skills-grid { grid-template-columns: 1fr; gap: 12px; }
+  .skill-card { padding: 19px; }
+  .skill-card { --reveal-delay: 0ms; }
+}
