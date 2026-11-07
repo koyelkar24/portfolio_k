@@ -426,6 +426,56 @@ html { scroll-padding-top: 96px; }
   .portrait-wrap::after { right: -20px; letter-spacing: .08em; }
 }
 
+/* About section: biography, focus areas, and education timeline */
+.about-grid { grid-template-columns: .68fr 1.32fr; gap: clamp(38px, 6vw, 88px); }
+.about-heading { position: static; }
+.about-heading h2 { font-size: clamp(50px, 5.4vw, 70px); }
+.about-subtitle { max-width: 260px; margin: 20px 0 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+.about-content-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(270px, .95fr); gap: clamp(25px, 3vw, 42px); align-items: start; }
+.about-narrative { min-width: 0; }
+.about-narrative p { margin: 0 0 16px; color: var(--muted); font-size: 13px; line-height: 1.85; }
+.about-narrative .about-lead { color: #303b34; font-size: 16px; line-height: 1.75; }
+.about-narrative strong { color: var(--ink); font-weight: 700; }
+.about-highlights-list { display: grid; gap: 10px; margin-top: 26px; }
+.highlight-item { display: flex; align-items: start; gap: 13px; padding: 14px; border: 1px solid #e1e4db; border-radius: 5px; background: rgb(255 255 255 / 58%); }
+.highlight-index { color: var(--green); font: 16px/1.2 var(--serif); }
+.highlight-item h3 { margin: 0 0 4px; font-size: 12px; font-weight: 700; }
+.highlight-item p { margin: 0; font-size: 11px; line-height: 1.6; }
+.about-key-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-top: 18px; }
+.stat-card { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding: 13px 10px; border-top: 1px solid #cfd8ce; }
+.stat-number { color: var(--green); font: 22px/1.1 var(--serif); }
+.stat-label { color: #707a72; font-size: 9px; line-height: 1.45; }
+.about-education { min-width: 0; padding: 20px; border: 1px solid #e0e4dc; border-radius: 6px; background: rgb(255 255 255 / 62%); scroll-margin-top: 100px; }
+.education-header { display: flex; align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.education-header .eyebrow { margin: 0 0 6px; font-size: 9px; }
+.education-header h3 { margin: 0; font: 400 25px/1.2 var(--serif); }
+.education-badge { flex: 0 0 auto; padding: 5px 8px; border: 1px solid #d9e1d8; border-radius: 999px; color: #647168; font-size: 8px; }
+.education-timeline { display: grid; gap: 10px; }
+.education-card { padding: 14px; border: 1px solid #e6e9e3; border-radius: 4px; background: #fff; }
+.education-card.current { border-color: #c8d8ca; background: #fbfcf9; }
+.edu-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 9px; }
+.edu-year-pill, .edu-status-pill { color: var(--green); font-size: 8px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+.edu-status-pill { padding: 4px 7px; border-radius: 999px; background: #edf3eb; }
+.edu-status-pill.completed { color: #737d75; background: #f1f2ee; }
+.education-card h4 { margin: 0 0 4px; font-size: 12px; font-weight: 700; }
+.education-card .edu-institution { margin: 0; color: #59645d; font-size: 10px; line-height: 1.55; }
+.education-card .edu-desc { margin: 9px 0 0; color: #778078; font-size: 10px; line-height: 1.65; }
+
+@media (max-width: 1000px) {
+  .about-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-content-grid { grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr); }
+  .about-subtitle { max-width: 440px; }
+}
+
+@media (max-width: 740px) {
+  .about-content-grid { grid-template-columns: 1fr; gap: 28px; }
+  .about-key-stats { gap: 5px; }
+  .stat-card { padding-inline: 6px; }
+  .stat-number { font-size: 20px; }
+  .stat-label { font-size: 8px; }
+  .about-education { padding: 16px; }
+}
+
 /* Landing page details */
 .hero {
   min-height: 720px;
