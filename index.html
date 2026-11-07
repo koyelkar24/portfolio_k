@@ -48,6 +48,50 @@
         </div>
       </div>
       <figure class="portrait-wrap">
+        <div class="hero-globe" aria-hidden="true">
+          <svg viewBox="0 0 180 180" role="presentation" focusable="false">
+            <defs>
+              <clipPath id="globeClip"><circle cx="90" cy="90" r="69"></circle></clipPath>
+              <radialGradient id="globeOcean" cx="34%" cy="28%" r="78%">
+                <stop offset="0" stop-color="#edf5ec"></stop>
+                <stop offset=".58" stop-color="#c4d8c7"></stop>
+                <stop offset="1" stop-color="#789b82"></stop>
+              </radialGradient>
+              <radialGradient id="globeShade" cx="34%" cy="26%" r="78%">
+                <stop offset=".48" stop-color="#fff" stop-opacity="0"></stop>
+                <stop offset="1" stop-color="#18382a" stop-opacity=".34"></stop>
+              </radialGradient>
+              <g id="globeLand">
+                <path d="M8 20 15 12 25 9 31 14 39 13 46 20 43 27 36 29 33 37 27 39 24 47 17 44 15 37 9 33 11 27 5 25Z"></path>
+                <path d="m35 39 8 4 5 10-3 10-4 8-3 13-5 11-5-8 1-12-5-8 2-10 4-7Z"></path>
+                <path d="m52 9 8-5 7 3-2 8-7 3-7-3Z"></path>
+                <path d="m78 24 7-7 11-2 6 4 11-2 9 5 15-1 12 7-4 7-11 1-7 6-10-1-6 7-8-3-4-8-8-2-4-8-9 2-7-4Z"></path>
+                <path d="m91 43 12-4 10 5 5 10-4 11-7 9-4 12-7 9-5-7-2-12-7-10 2-11-5-7Z"></path>
+                <path d="m137 68 9-4 9 4 5 8-7 7-11-2-7-6Z"></path>
+                <path d="m167 30 8 2 4 6-7 4-7-5Z"></path>
+              </g>
+            </defs>
+            <ellipse class="globe-orbit" cx="90" cy="90" rx="84" ry="31"></ellipse>
+            <g clip-path="url(#globeClip)">
+              <circle cx="90" cy="90" r="69" fill="url(#globeOcean)"></circle>
+              <g class="globe-map-track">
+                <use href="#globeLand" x="0" y="35" class="globe-land"></use>
+                <use href="#globeLand" x="180" y="35" class="globe-land"></use>
+                <use href="#globeLand" x="-180" y="35" class="globe-land"></use>
+              </g>
+              <g class="globe-grid">
+                <ellipse cx="90" cy="90" rx="24" ry="69"></ellipse>
+                <ellipse cx="90" cy="90" rx="48" ry="69"></ellipse>
+                <ellipse cx="90" cy="90" rx="69" ry="24"></ellipse>
+                <ellipse cx="90" cy="90" rx="69" ry="48"></ellipse>
+              </g>
+              <circle cx="90" cy="90" r="69" fill="url(#globeShade)"></circle>
+            </g>
+            <circle class="globe-rim" cx="90" cy="90" r="69"></circle>
+            <ellipse class="globe-orbit globe-orbit-back" cx="90" cy="90" rx="84" ry="31"></ellipse>
+            <circle class="globe-orbit-dot" cx="171" cy="72" r="3.5"></circle>
+          </svg>
+        </div>
         <img src="kar.jpeg" alt="Portrait of Koyel Kar" class="portrait" fetchpriority="high">
         <figcaption><span>KOYEL KAR</span><span>LEARN · BUILD · SECURE</span></figcaption>
         <div class="portrait-note"><span class="portrait-note-mark" aria-hidden="true">K</span><span><b>B.Sc. Cyber Security</b><small>Guru Nanak Institute of Technology</small></span></div>
