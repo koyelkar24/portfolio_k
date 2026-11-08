@@ -65,7 +65,7 @@
         </div>
       </div>
       <figure class="portrait-wrap">
-        <div class="hero-globe" aria-hidden="true">
+        <div class="hero-globe" role="img" aria-label="Rotating globe marking Kolkata, India">
           <svg viewBox="0 0 180 180" role="presentation" focusable="false">
             <defs>
               <clipPath id="globeClip"><circle cx="90" cy="90" r="69"></circle></clipPath>
@@ -95,6 +95,11 @@
                 <use href="#globeLand" x="0" y="35" class="globe-land"></use>
                 <use href="#globeLand" x="180" y="35" class="globe-land"></use>
                 <use href="#globeLand" x="-180" y="35" class="globe-land"></use>
+                <g class="globe-location-markers">
+                  <g class="globe-location-marker" transform="translate(108 82)"><circle class="globe-location-pulse" r="7"></circle><circle class="globe-location-dot" r="2.8"></circle></g>
+                  <g class="globe-location-marker" transform="translate(288 82)"><circle class="globe-location-pulse" r="7"></circle><circle class="globe-location-dot" r="2.8"></circle></g>
+                  <g class="globe-location-marker" transform="translate(-72 82)"><circle class="globe-location-pulse" r="7"></circle><circle class="globe-location-dot" r="2.8"></circle></g>
+                </g>
               </g>
               <g class="globe-grid">
                 <ellipse cx="90" cy="90" rx="24" ry="69"></ellipse>
@@ -108,6 +113,7 @@
             <ellipse class="globe-orbit globe-orbit-back" cx="90" cy="90" rx="84" ry="31"></ellipse>
             <circle class="globe-orbit-dot" cx="171" cy="72" r="3.5"></circle>
           </svg>
+          <span class="globe-location-label"><i></i>Kolkata, India</span>
         </div>
         <img src="kar-contact-cutout.png" alt="Portrait of Koyel Kar" class="portrait" fetchpriority="high">
         <figcaption><span>KOYEL KAR</span><span>LEARN · BUILD · SECURE</span></figcaption>
