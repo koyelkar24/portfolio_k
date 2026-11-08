@@ -681,6 +681,8 @@ html { scroll-padding-top: 96px; }
 .hero h1 { max-width: 850px; margin-block: 24px 26px; color: var(--hero-ink); font-size: clamp(58px, 7.3vw, 102px); line-height: .98; }
 .hero-line { display: inline; color: inherit; }
 .hero-line-two { color: var(--hero-lime); }
+.motion-ready .hero-line-one { --line-color: var(--hero-ink); }
+.motion-ready .hero-line-two { --line-color: var(--hero-lime); }
 .hero-intro { max-width: 500px; color: #e2e5dd; font-size: clamp(15px, 1.4vw, 18px); line-height: 1.75; }
 .hero-actions { gap: 12px; }
 .hero-actions .button { min-height: 49px; border-radius: 999px; }
@@ -745,7 +747,7 @@ html { scroll-padding-top: 96px; }
   overflow: hidden;
   perspective: 1300px;
   background: radial-gradient(ellipse at 50% 48%, rgb(82 120 84 / 12%), transparent 50%), rgb(7 12 9 / 68%);
-  animation: opening-scene-close .65s 2.8s ease forwards;
+  animation: opening-scene-close .35s 2.35s ease forwards;
 }
 .entry-doorway {
   position: absolute;
@@ -802,7 +804,7 @@ html { scroll-padding-top: 96px; }
 @media (prefers-reduced-motion: reduce) {
   .globe-map-track { animation-duration: 70s; }
   .globe-orbit-dot { animation-duration: 45s; }
-  .opening-scene { animation-duration: .55s; animation-delay: 2.25s; }
+  .opening-scene { animation-duration: .4s; animation-delay: 1.85s; }
   .entry-door-left { animation-name: simple-door-left-reduced; animation-duration: 1.6s; animation-delay: .35s; }
   .entry-door-right { animation-name: simple-door-right-reduced; animation-duration: 1.6s; animation-delay: .35s; }
 }
