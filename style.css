@@ -742,6 +742,75 @@ html { scroll-padding-top: 96px; }
   .scroll-cue { display: none; }
 }
 
+/* High contrast contact panel inspired by the supplied reference */
+.contact-section.section-pad { padding: 0; overflow: hidden; background: #c4c4c4; text-align: left; }
+.contact-ribbons { padding: 12px max(32px, calc((100% - 1240px) / 2)) 0; color: #737373; overflow: hidden; }
+.contact-ribbons p { width: max-content; max-width: none; margin: 0; font-size: clamp(13px, 2vw, 21px); line-height: 1.7; white-space: nowrap; }
+.contact-ribbons p:first-child { margin-left: 4%; }
+.contact-ribbons p:nth-child(2) { margin-left: 10%; }
+.contact-ribbons span { padding-inline: 18px; color: #cf171d; font-size: .9em; }
+.contact-display { position: relative; z-index: 2; width: min(100% - 64px, 1240px); margin: 25px auto -44px; color: #050505; font: 800 clamp(78px, 17vw, 218px)/.78 "DM Sans", sans-serif; letter-spacing: -.085em; white-space: nowrap; }
+.contact-stage { position: relative; min-height: 420px; overflow: hidden; padding: 74px 0 22px; background: #050505; color: #f4f4f1; }
+.contact-watermark { position: absolute; top: 15px; left: 50%; color: #121212; font: 800 clamp(150px, 27vw, 360px)/.9 "DM Sans", sans-serif; letter-spacing: -.09em; transform: translateX(-50%); pointer-events: none; }
+.contact-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(200px, .8fr) minmax(0, 1fr); align-items: end; gap: clamp(22px, 4vw, 60px); min-height: 315px; }
+.contact-social-column, .contact-message-column { display: flex; min-width: 0; flex-direction: column; justify-content: space-between; align-self: stretch; }
+.contact-signature { margin: 0; color: #f5f5f2; font-size: 11px; font-weight: 700; letter-spacing: .08em; }
+.contact-signature sup { font-size: 7px; }
+.contact-social-block { max-width: 280px; }
+.contact-social-block > p:first-child { margin: 0 0 12px; color: #f2f2ef; font-size: 13px; }
+.contact-social-icons { display: flex; align-items: center; gap: 10px; }
+.contact-social-icons a { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid #777; border-radius: 50%; color: #f7f7f4; font-size: 12px; font-weight: 600; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+.contact-social-icons a:hover { border-color: #f4f4f1; background: #f4f4f1; color: #050505; }
+.contact-note { max-width: 250px; margin: 17px 0 0; color: #a6a6a3; font-size: 10px; line-height: 1.6; }
+.contact-portrait { position: relative; align-self: end; width: 100%; height: 315px; margin: 0; overflow: hidden; }
+.contact-portrait::after { position: absolute; inset: 35% 0 0; background: linear-gradient(transparent, #050505); content: ""; }
+.contact-portrait img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 16%; filter: grayscale(1) contrast(1.1) brightness(.78); }
+.contact-message-column { justify-content: center; align-items: flex-start; gap: 12px; padding-bottom: 16px; }
+.contact-panel-label { margin: 0; color: #c8c8c4; font-size: 9px; font-weight: 700; letter-spacing: .12em; }
+.contact-message-title { margin: 0; color: #f6f6f3; font: 500 clamp(22px, 2.5vw, 31px)/1.15 "DM Sans", sans-serif; }
+.contact-section .contact-email { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; margin-top: 4px; padding: 10px 12px; border: 1px solid #777; border-radius: 3px; color: #111; background: #e9e9e7; font: 11px "DM Sans", sans-serif; }
+.contact-section .contact-email span { color: #050505; font-size: 16px; }
+.contact-section .contact-email:hover { border-color: white; background: white; }
+.contact-location { margin: 8px 0 0; color: #92928f; font-size: 8px; letter-spacing: .07em; }
+.contact-copyright { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 20px; padding-top: 16px; border-top: 1px solid #242424; color: #a6a6a3; font-size: 9px; }
+.contact-copyright span { letter-spacing: .14em; }
+.site-footer { width: 100%; max-width: none; padding: 18px max(32px, calc((100% - 1240px) / 2)); background: #050505; }
+.site-footer .brand, .site-footer .brand:hover { color: #f4f4f1; }
+.site-footer .brand-mark { background: #f4f4f1; color: #111; }
+.site-footer .brand-mark span { color: #638050; }
+.site-footer p, .site-footer .back-top { color: #999; }
+.site-footer .back-top:hover { color: #f4f4f1; }
+@media (max-width: 760px) {
+  .contact-display { width: calc(100% - 36px); margin: 22px auto -26px; font-size: clamp(70px, 16vw, 124px); }
+  .contact-stage { min-height: 470px; padding-top: 56px; }
+  .contact-layout { grid-template-columns: 1fr 1fr; gap: 20px; min-height: 355px; }
+  .contact-portrait { position: absolute; z-index: 0; top: 42px; left: 50%; width: min(48%, 210px); height: 280px; transform: translateX(-50%); opacity: .38; }
+  .contact-social-column, .contact-message-column { position: relative; z-index: 1; padding-top: 0; }
+  .contact-social-column { grid-column: 1; }
+  .contact-message-column { grid-column: 2; align-self: end; padding-bottom: 0; }
+  .contact-section .contact-email { font-size: 9px; }
+  .contact-location { font-size: 7px; line-height: 1.6; }
+  .contact-note { font-size: 9px; }
+  .site-footer { padding-inline: 20px; }
+}
+@media (max-width: 480px) {
+  .contact-ribbons { padding-inline: 18px; }
+  .contact-ribbons p { font-size: 12px; }
+  .contact-ribbons p:nth-child(2) { margin-left: 4%; }
+  .contact-display { font-size: clamp(58px, 15vw, 76px); }
+  .contact-stage { padding-top: 42px; }
+  .contact-layout { width: calc(100% - 36px); gap: 12px; min-height: 370px; }
+  .contact-portrait { top: 60px; width: 54%; height: 250px; }
+  .contact-social-block > p:first-child { font-size: 11px; }
+  .contact-social-icons { gap: 6px; }
+  .contact-social-icons a { width: 27px; height: 27px; font-size: 10px; }
+  .contact-message-title { font-size: 21px; }
+  .contact-section .contact-email { padding: 9px 8px; font-size: 8px; }
+  .contact-copyright { width: calc(100% - 36px); font-size: 8px; }
+  .site-footer { gap: 10px; padding-inline: 18px; }
+  .site-footer p { display: none; }
+}
+
 /* Minimal double-door entrance */
 .opening-scene {
   position: fixed;
