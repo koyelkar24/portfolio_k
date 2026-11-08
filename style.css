@@ -701,14 +701,14 @@ html { scroll-padding-top: 96px; }
   bottom: 8%;
   width: min(43%, 560px);
   margin: 0;
-  border: 1px solid rgb(255 255 255 / 18%);
-  border-radius: 22px;
-  background: #263128;
-  overflow: hidden;
-  box-shadow: 0 28px 70px rgb(0 0 0 / 24%);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+  box-shadow: none;
 }
 .portrait-wrap::before, .portrait-wrap::after { display: none; }
-.portrait { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0; object-position: center 18%; filter: grayscale(1) contrast(1.06) brightness(.83); opacity: .88; mix-blend-mode: luminosity; }
+.portrait { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0; background: transparent; object-position: center 18%; filter: grayscale(1) contrast(1.06) brightness(.83); opacity: .88; mix-blend-mode: luminosity; }
 .portrait-wrap figcaption { position: absolute; z-index: 2; right: 16px; bottom: 13px; left: auto; color: #f5f7ed; font-size: 8px; letter-spacing: .13em; }
 .portrait-wrap figcaption span:last-child { color: #d2f278; }
 .portrait-note { z-index: 3; right: 16px; bottom: 50px; left: auto; min-width: 225px; border-color: rgb(255 255 255 / 18%); background: rgb(24 32 25 / 82%); box-shadow: 0 14px 40px rgb(0 0 0 / 20%); backdrop-filter: blur(12px); }
