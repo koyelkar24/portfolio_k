@@ -750,8 +750,8 @@ html { scroll-padding-top: 96px; }
 .contact-ribbons p:nth-child(2) { margin-left: 10%; }
 .contact-ribbons span { padding-inline: 18px; color: #cf171d; font-size: .9em; }
 .contact-display { position: relative; z-index: 2; width: min(100% - 64px, 1240px); margin: 25px auto -44px; color: #171a17; font: 800 clamp(78px, 17vw, 218px)/.78 "DM Sans", sans-serif; letter-spacing: -.085em; white-space: nowrap; }
-.contact-stage { position: relative; min-height: 420px; overflow: hidden; padding: 74px 0 22px; background: #171a17; color: #f4f4f1; }
-.contact-watermark { position: absolute; top: 15px; left: 50%; color: #252925; font: 800 clamp(150px, 27vw, 360px)/.9 "DM Sans", sans-serif; letter-spacing: -.09em; transform: translateX(-50%); pointer-events: none; }
+.contact-stage { position: relative; min-height: 420px; overflow: hidden; padding: 74px 0 22px; background: #242824; color: #f4f4f1; }
+.contact-watermark { position: absolute; top: 15px; left: 50%; color: #333833; font: 800 clamp(150px, 27vw, 360px)/.9 "DM Sans", sans-serif; letter-spacing: -.09em; transform: translateX(-50%); pointer-events: none; }
 .contact-layout { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(200px, .8fr) minmax(0, 1fr); align-items: end; gap: clamp(22px, 4vw, 60px); min-height: 315px; }
 .contact-social-column, .contact-message-column { display: flex; min-width: 0; flex-direction: column; justify-content: space-between; align-self: stretch; }
 .contact-signature { margin: 0; color: #f5f5f2; font-size: 11px; font-weight: 700; letter-spacing: .08em; }
@@ -774,9 +774,9 @@ html { scroll-padding-top: 96px; }
 .contact-section .contact-email span { color: #050505; font-size: 16px; }
 .contact-section .contact-email:hover { border-color: white; background: white; }
 .contact-location { margin: 8px 0 0; color: #92928f; font-size: 8px; letter-spacing: .07em; }
-.contact-copyright { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 20px; padding-top: 16px; border-top: 1px solid #343834; color: #b5b8b3; font-size: 9px; }
+.contact-copyright { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 20px; padding-top: 16px; border-top: 1px solid #414641; color: #c4c7c2; font-size: 9px; }
 .contact-copyright span { letter-spacing: .14em; }
-.site-footer { width: 100%; max-width: none; padding: 18px max(32px, calc((100% - 1240px) / 2)); background: #171a17; }
+.site-footer { width: 100%; max-width: none; padding: 18px max(32px, calc((100% - 1240px) / 2)); background: #242824; }
 .site-footer .brand, .site-footer .brand:hover { color: #f4f4f1; }
 .site-footer .brand-mark { background: #f4f4f1; color: #111; }
 .site-footer .brand-mark span { color: #638050; }
