@@ -55,7 +55,6 @@ function startPortfolioMotion() {
 
 if (openingScene) {
   let introRemovalTimer;
-  let doorsOpened = 0;
   let motionStarted = false;
   const beginAfterDoorsOpen = () => {
     if (motionStarted) return;
@@ -73,13 +72,12 @@ if (openingScene) {
     introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
   });
   openingScene.addEventListener('animationend', (event) => {
-    if (event.target.classList.contains('entry-door-leaf') && event.animationName.startsWith('simple-door-')) {
-      doorsOpened += 1;
-      if (doorsOpened === 2) beginAfterDoorsOpen();
+    if (event.target === openingScene && event.animationName === 'opening-scene-close') {
+      beginAfterDoorsOpen();
+      removeOpeningScene();
     }
-    if (event.target === openingScene && event.animationName === 'opening-scene-close') removeOpeningScene();
   });
-  window.setTimeout(beginAfterDoorsOpen, prefersReducedMotion ? 2200 : 2700);
+  window.setTimeout(beginAfterDoorsOpen, prefersReducedMotion ? 2450 : 2850);
   introRemovalTimer = window.setTimeout(removeOpeningScene, prefersReducedMotion ? 3200 : 3800);
 } else {
   startPortfolioMotion();
