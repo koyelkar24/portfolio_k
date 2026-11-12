@@ -65,55 +65,43 @@
         </div>
       </div>
       <figure class="portrait-wrap">
-        <div class="hero-globe" role="img" aria-label="Rotating globe marking Kolkata, India">
-          <svg viewBox="0 0 180 180" role="presentation" focusable="false">
+        <div class="hero-flower" role="img" aria-label="A softly rotating, luminous flower">
+          <svg viewBox="0 0 320 320" aria-hidden="true" focusable="false">
             <defs>
-              <clipPath id="globeClip"><circle cx="90" cy="90" r="69"></circle></clipPath>
-              <radialGradient id="globeOcean" cx="34%" cy="28%" r="78%">
-                <stop offset="0" stop-color="#edf5ec"></stop>
-                <stop offset=".58" stop-color="#c4d8c7"></stop>
-                <stop offset="1" stop-color="#789b82"></stop>
+              <radialGradient id="petalFill" cx="35%" cy="24%" r="78%">
+                <stop offset="0" stop-color="#fff5c9"></stop>
+                <stop offset=".34" stop-color="#e4f18e"></stop>
+                <stop offset=".72" stop-color="#9dbd65"></stop>
+                <stop offset="1" stop-color="#52794f"></stop>
               </radialGradient>
-              <radialGradient id="globeShade" cx="34%" cy="26%" r="78%">
-                <stop offset=".48" stop-color="#fff" stop-opacity="0"></stop>
-                <stop offset="1" stop-color="#18382a" stop-opacity=".34"></stop>
+              <radialGradient id="flowerHeart" cx="35%" cy="30%" r="80%">
+                <stop offset="0" stop-color="#fff3ce"></stop>
+                <stop offset=".48" stop-color="#e4b56c"></stop>
+                <stop offset="1" stop-color="#9c6043"></stop>
               </radialGradient>
-              <g id="globeLand">
-                <path d="M8 20 15 12 25 9 31 14 39 13 46 20 43 27 36 29 33 37 27 39 24 47 17 44 15 37 9 33 11 27 5 25Z"></path>
-                <path d="m35 39 8 4 5 10-3 10-4 8-3 13-5 11-5-8 1-12-5-8 2-10 4-7Z"></path>
-                <path d="m52 9 8-5 7 3-2 8-7 3-7-3Z"></path>
-                <path d="m78 24 7-7 11-2 6 4 11-2 9 5 15-1 12 7-4 7-11 1-7 6-10-1-6 7-8-3-4-8-8-2-4-8-9 2-7-4Z"></path>
-                <path d="m91 43 12-4 10 5 5 10-4 11-7 9-4 12-7 9-5-7-2-12-7-10 2-11-5-7Z"></path>
-                <path d="m137 68 9-4 9 4 5 8-7 7-11-2-7-6Z"></path>
-                <path d="m167 30 8 2 4 6-7 4-7-5Z"></path>
-              </g>
+              <filter id="flowerGlow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="13"></feGaussianBlur>
+              </filter>
+              <path id="flowerPetal" d="M160 164 C139 143 103 116 111 75 C116 48 140 29 160 12 C180 29 204 48 209 75 C217 116 181 143 160 164Z"></path>
             </defs>
-            <ellipse class="globe-orbit" cx="90" cy="90" rx="84" ry="31"></ellipse>
-            <g clip-path="url(#globeClip)">
-              <circle cx="90" cy="90" r="69" fill="url(#globeOcean)"></circle>
-              <g class="globe-map-track">
-                <use href="#globeLand" x="0" y="35" class="globe-land"></use>
-                <use href="#globeLand" x="180" y="35" class="globe-land"></use>
-                <use href="#globeLand" x="-180" y="35" class="globe-land"></use>
-                <g class="globe-location-markers">
-                  <g class="globe-location-marker" transform="translate(108 82)"><circle class="globe-location-pulse" r="7"></circle><circle class="globe-location-dot" r="2.8"></circle></g>
-                  <g class="globe-location-marker" transform="translate(288 82)"><circle class="globe-location-pulse" r="7"></circle><circle class="globe-location-dot" r="2.8"></circle></g>
-                  <g class="globe-location-marker" transform="translate(-72 82)"><circle class="globe-location-pulse" r="7"></circle><circle class="globe-location-dot" r="2.8"></circle></g>
-                </g>
-              </g>
-              <g class="globe-grid">
-                <ellipse cx="90" cy="90" rx="24" ry="69"></ellipse>
-                <ellipse cx="90" cy="90" rx="48" ry="69"></ellipse>
-                <ellipse cx="90" cy="90" rx="69" ry="24"></ellipse>
-                <ellipse cx="90" cy="90" rx="69" ry="48"></ellipse>
-              </g>
-              <circle cx="90" cy="90" r="69" fill="url(#globeShade)"></circle>
+            <circle cx="160" cy="160" r="111" fill="#c1e777" opacity=".16" filter="url(#flowerGlow)"></circle>
+            <g class="flower-bloom">
+              <use class="flower-petal petal-1" href="#flowerPetal" transform="rotate(0 160 160)"></use>
+              <use class="flower-petal petal-2" href="#flowerPetal" transform="rotate(45 160 160)"></use>
+              <use class="flower-petal petal-3" href="#flowerPetal" transform="rotate(90 160 160)"></use>
+              <use class="flower-petal petal-4" href="#flowerPetal" transform="rotate(135 160 160)"></use>
+              <use class="flower-petal petal-5" href="#flowerPetal" transform="rotate(180 160 160)"></use>
+              <use class="flower-petal petal-6" href="#flowerPetal" transform="rotate(225 160 160)"></use>
+              <use class="flower-petal petal-7" href="#flowerPetal" transform="rotate(270 160 160)"></use>
+              <use class="flower-petal petal-8" href="#flowerPetal" transform="rotate(315 160 160)"></use>
+              <circle cx="160" cy="160" r="29" fill="url(#flowerHeart)"></circle>
+              <circle cx="150" cy="150" r="4" fill="#fff6d9" opacity=".86"></circle>
+              <circle cx="168" cy="148" r="3" fill="#fff1d3" opacity=".78"></circle>
+              <circle cx="173" cy="165" r="4" fill="#fff1d3" opacity=".78"></circle>
+              <circle cx="153" cy="173" r="3" fill="#fff1d3" opacity=".8"></circle>
             </g>
-            <circle class="globe-rim" cx="90" cy="90" r="69"></circle>
-            <ellipse class="globe-orbit globe-orbit-back" cx="90" cy="90" rx="84" ry="31"></ellipse>
-            <circle class="globe-orbit-dot" cx="171" cy="72" r="3.5"></circle>
           </svg>
-          <span class="globe-location-label"><i></i>Kolkata, India</span>
+          <span class="flower-caption">GROW WITH CURIOSITY</span>
         </div>
         <img src="kar-contact-cutout.png" alt="Portrait of Koyel Kar" class="portrait" fetchpriority="high">
         <figcaption><span>KOYEL KAR</span><span>LEARN · BUILD · SECURE</span></figcaption>

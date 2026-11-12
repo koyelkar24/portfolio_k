@@ -822,6 +822,79 @@ html { scroll-padding-top: 96px; }
   .contact-portrait img { animation: none; }
 }
 
+/* A slow, sculptural flower gives the introduction a little movement. */
+.hero-flower {
+  position: absolute;
+  z-index: 2;
+  top: 2%;
+  right: max(32px, calc((100% - 1120px) / 2));
+  width: clamp(190px, 24vw, 300px);
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 20px 34px rgb(0 0 0 / 25%));
+  animation: flower-float 7s ease-in-out infinite;
+}
+.hero-flower svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.flower-bloom { transform-box: fill-box; transform-origin: center; animation: flower-turn 54s linear infinite; }
+.flower-petal { fill: url(#petalFill); stroke: rgb(242 249 206 / 50%); stroke-width: 1.1; }
+.petal-2, .petal-6 { opacity: .82; }
+.petal-3, .petal-7 { opacity: .9; }
+.flower-caption { position: absolute; right: 50%; bottom: -1px; padding: 7px 11px; border: 1px solid rgb(210 242 120 / 36%); border-radius: 999px; color: #f5f7ed; background: rgb(19 28 21 / 78%); font-size: 8px; font-weight: 600; letter-spacing: .13em; white-space: nowrap; transform: translateX(50%); backdrop-filter: blur(8px); }
+@keyframes flower-turn { to { transform: rotate(360deg); } }
+@keyframes flower-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+
+/* Large, image-led project panels with an alternating editorial rhythm. */
+.work-section { background: #f1f0eb; }
+.work-section .section-heading { width: min(1240px, calc(100% - 80px)); margin-bottom: 72px; }
+.project-list { width: min(1240px, calc(100% - 80px)); gap: clamp(82px, 11vw, 150px); }
+.project { grid-template-columns: minmax(0, 1.2fr) minmax(290px, .8fr); gap: clamp(40px, 7vw, 94px); }
+.project:nth-child(even) { grid-template-columns: minmax(290px, .8fr) minmax(0, 1.2fr); }
+.project-visual { min-height: 0; aspect-ratio: 1.18; border-radius: 2px; }
+.password-visual {
+  background: radial-gradient(ellipse at 50% 44%, rgb(199 229 155 / 34%), transparent 43%), linear-gradient(140deg, #26382d, #18231d 68%, #111a15);
+}
+.password-visual::before, .password-visual::after { border-color: rgb(218 239 190 / 13%); }
+.password-visual::after { width: 390px; height: 390px; }
+.visual-window { width: min(72%, 420px); box-shadow: 0 30px 90px rgb(0 0 0 / 28%); }
+.career-visual { background: radial-gradient(ellipse at 48% 39%, #f1d3a4 0 2%, transparent 38%), linear-gradient(135deg, #d0dacb, #a6b7a3 54%, #687e70); }
+.career-dashboard { width: min(76%, 450px); border-radius: 2px; box-shadow: 0 32px 90px rgb(24 32 26 / 28%); }
+.career-dashboard-body { padding: 26px 28px 28px; }
+.career-dashboard-body > strong { font-size: clamp(24px, 3vw, 34px); }
+.career-tool-grid span { padding: 10px 11px; font-size: 9px; }
+.summarizer-visual { background: radial-gradient(ellipse at 50% 46%, rgb(227 207 242 / 65%), transparent 48%), linear-gradient(140deg, #e2e0d9, #b9c5c0); }
+.summary-panel { width: min(74%, 420px); border-radius: 2px; box-shadow: 0 30px 80px rgb(34 40 37 / 21%); }
+.encryption-visual { background: radial-gradient(ellipse at 52% 45%, rgb(151 191 145 / 22%), transparent 50%), linear-gradient(145deg, #3e5346, #17231d); }
+.cipher-card { width: min(72%, 420px); padding: 30px 32px 24px; box-shadow: 0 30px 80px rgb(0 0 0 / 28%); }
+.project-copy { max-width: 450px; }
+.project-number { margin-bottom: 17px; }
+.project-copy h3 { font-size: clamp(32px, 3.7vw, 46px); }
+.project-copy > p:not(.project-number) { font-size: 13px; line-height: 1.85; }
+.tag-list { gap: 6px; margin: 20px 0 22px; }
+.tag-list li { padding: 4px 8px; background: rgb(255 255 255 / 45%); font-size: 9px; }
+.visual-index { color: rgb(246 247 237 / 72%); }
+.project:hover .visual-window, .project:hover .career-dashboard, .project:hover .summary-panel, .project:hover .cipher-card { transform: translateY(-7px) scale(1.015); }
+
+@media (max-width: 900px) {
+  .work-section .section-heading, .project-list { width: calc(100% - 52px); }
+  .project, .project:nth-child(even) { grid-template-columns: minmax(0, 1.08fr) minmax(240px, .92fr); gap: 34px; }
+  .project-visual { aspect-ratio: 1.05; }
+  .hero-flower { right: 7%; width: clamp(180px, 25vw, 230px); }
+}
+@media (max-width: 680px) {
+  .work-section .section-heading, .project-list { width: calc(100% - 40px); }
+  .work-section .section-heading { margin-bottom: 42px; }
+  .project-list { gap: 64px; }
+  .project, .project:nth-child(even) { grid-template-columns: 1fr; gap: 24px; }
+  .project:nth-child(even) .project-visual, .project:nth-child(even) .project-copy { order: initial; }
+  .project-visual { aspect-ratio: 1.13; }
+  .project-copy { max-width: none; }
+  .hero-flower { top: 20px; right: 15px; width: clamp(138px, 39vw, 184px); opacity: .88; }
+  .flower-caption { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-flower, .flower-bloom { animation: none; }
+}
+
 /* Minimal double-door entrance */
 .opening-scene {
   position: fixed;
