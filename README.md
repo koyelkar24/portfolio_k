@@ -10,6 +10,8 @@ From this folder, start a local web server:
 py -m http.server 8000
 ```
 
+
+
 Open [http://localhost:8000](http://localhost:8000) in your browser. Press `Ctrl+C` in the terminal to stop the server.
 
 ## Files
