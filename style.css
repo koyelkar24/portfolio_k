@@ -831,17 +831,20 @@ html { scroll-padding-top: 96px; }
   width: clamp(190px, 24vw, 300px);
   aspect-ratio: 1;
   pointer-events: none;
-  filter: drop-shadow(0 20px 34px rgb(0 0 0 / 25%));
-  animation: flower-float 7s ease-in-out infinite;
+  filter: drop-shadow(0 20px 34px rgb(0 0 0 / 25%)) drop-shadow(0 0 44px rgb(0 184 175 / 13%));
+  animation: flower-drift 7.5s ease-in-out infinite alternate;
+  will-change: transform;
 }
 .hero-flower svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.flower-bloom { transform-box: fill-box; transform-origin: center; animation: flower-turn 54s linear infinite; }
+.flower-bloom { transform-box: fill-box; transform-origin: center; animation: flower-turn 38s linear infinite; }
+.hero-flower svg > circle { transform-box: fill-box; transform-origin: center; animation: flower-aura 5s ease-in-out infinite alternate; }
 .flower-petal { fill: url(#petalFill); stroke: rgb(242 249 206 / 50%); stroke-width: 1.1; }
 .petal-2, .petal-6 { opacity: .82; }
 .petal-3, .petal-7 { opacity: .9; }
 .flower-caption { position: absolute; right: 50%; bottom: -1px; padding: 7px 11px; border: 1px solid rgb(210 242 120 / 36%); border-radius: 999px; color: #f5f7ed; background: rgb(19 28 21 / 78%); font-size: 8px; font-weight: 600; letter-spacing: .13em; white-space: nowrap; transform: translateX(50%); backdrop-filter: blur(8px); }
 @keyframes flower-turn { to { transform: rotate(360deg); } }
-@keyframes flower-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+@keyframes flower-drift { from { transform: translate3d(0, 0, 0) scale(.99); } to { transform: translate3d(0, -11px, 0) scale(1.025); } }
+@keyframes flower-aura { from { opacity: .18; scale: .94; } to { opacity: .34; scale: 1.06; } }
 
 /* Large, image-led project panels with an alternating editorial rhythm. */
 .work-section { background: #f1f0eb; }
@@ -984,10 +987,11 @@ main { margin-left: 108px; background: #f1f0eb; }
   right: -18%;
   width: min(88vw, 1220px);
   opacity: .86;
-  filter: drop-shadow(0 0 62px rgb(0 199 189 / 12%));
-  animation: flower-float 9s ease-in-out infinite;
+  filter: drop-shadow(0 0 62px rgb(0 199 189 / 12%)) drop-shadow(0 0 110px rgb(0 169 163 / 9%));
+  animation: flower-drift 7.5s ease-in-out infinite alternate;
+  will-change: transform;
 }
-.flower-bloom { animation-duration: 72s; }
+.flower-bloom { animation-duration: 38s; }
 .flower-petal { stroke: rgb(187 231 225 / 27%); stroke-width: .8; }
 .flower-petal-back { opacity: .56; }
 .flower-caption { display: none; }
@@ -1063,7 +1067,7 @@ main { margin-left: 108px; background: #f1f0eb; }
   .contact-message-column { align-self: stretch; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-flower, .flower-bloom { animation: none; }
+  .hero-flower, .flower-bloom, .hero-flower svg > circle { animation: none !important; will-change: auto; }
 }
 
 /* A short, CSS-only laptop intro in the portfolio's charcoal and teal palette. */
