@@ -1385,3 +1385,49 @@ main { margin:0; background:transparent; }
   .project-grid { grid-template-columns: 1fr; }
   .project-card { min-height: 230px; }
 }
+
+/* Staggered headline reveal for the landing page. */
+.hero h1 .hero-title-line {
+  display: block;
+  width: fit-content;
+  opacity: 0;
+  text-decoration: none;
+  animation: hero-line-enter .85s cubic-bezier(.2,.75,.25,1) both;
+}
+.hero h1 .hero-title-line:nth-child(1) { animation-delay: .12s; }
+.hero h1 .hero-title-line:nth-child(2) { animation-delay: .3s; }
+.hero h1 .hero-title-line:nth-child(3) {
+  animation-delay: .48s;
+  text-decoration: underline;
+  text-decoration-color: #68777a;
+  text-decoration-thickness: 3px;
+  text-underline-offset: .1em;
+}
+.hero-copy .hero-intro,
+.hero-copy .hero-actions,
+.hero-copy .hero-focus {
+  opacity: 0;
+  animation: hero-copy-enter .75s cubic-bezier(.2,.75,.25,1) both;
+}
+.hero-copy .hero-intro { animation-delay: .72s; }
+.hero-copy .hero-actions { animation-delay: .88s; }
+.hero-copy .hero-focus { animation-delay: 1.02s; }
+@keyframes hero-line-enter {
+  from { opacity: 0; transform: translateY(.38em); filter: blur(6px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes hero-copy-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero h1 .hero-title-line,
+  .hero-copy .hero-intro,
+  .hero-copy .hero-actions,
+  .hero-copy .hero-focus {
+    opacity: 1;
+    animation: none;
+    filter: none;
+    transform: none;
+  }
+}
