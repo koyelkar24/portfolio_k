@@ -4,6 +4,16 @@ const primaryNav = document.getElementById('primaryNav');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const openingScene = document.getElementById('openingScene');
 const skipIntro = document.getElementById('skipIntro');
+const portfolioViewport = document.getElementById('portfolioViewport');
+
+if (portfolioViewport) {
+  const portfolioContent = [
+    document.querySelector('.site-header'),
+    document.querySelector('main'),
+    document.querySelector('.site-footer')
+  ];
+  portfolioViewport.append(...portfolioContent.filter(Boolean));
+}
 
 function startPortfolioMotion() {
   document.documentElement.classList.add('entry-complete');
@@ -53,18 +63,24 @@ function startPortfolioMotion() {
   });
 }
 
-if (openingScene && !prefersReducedMotion) {
-  let introRemovalTimer;
+if (openingScene) {
   let motionStarted = false;
-  const finishIntro = () => {
+  const revealPortfolio = () => {
     if (motionStarted) return;
     motionStarted = true;
     startPortfolioMotion();
-    openingScene.classList.add('is-closing');
-    introRemovalTimer = window.setTimeout(() => openingScene.remove(), 450);
+    openingScene.classList.add('is-complete');
   };
-  skipIntro.addEventListener('click', finishIntro);
-  introRemovalTimer = window.setTimeout(finishIntro, 2550);
+  if (prefersReducedMotion) {
+    openingScene.classList.add('is-skipped');
+    revealPortfolio();
+  } else {
+    skipIntro.addEventListener('click', () => {
+      openingScene.classList.add('is-skipped');
+      revealPortfolio();
+    });
+    window.setTimeout(revealPortfolio, 2550);
+  }
 
   const laptop = openingScene.querySelector('.intro-laptop');
   if (laptop && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
@@ -76,7 +92,6 @@ if (openingScene && !prefersReducedMotion) {
     }, { passive: true });
   }
 } else {
-  openingScene?.remove();
   startPortfolioMotion();
 }
 
