@@ -4,6 +4,7 @@ const primaryNav = document.getElementById('primaryNav');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const openingScene = document.getElementById('openingScene');
 const skipIntro = document.getElementById('skipIntro');
+const roleText = document.getElementById('roleText');
 
 function startPortfolioMotion() {
   document.documentElement.classList.add('entry-complete');
@@ -53,34 +54,41 @@ function startPortfolioMotion() {
   });
 }
 
-if (openingScene) {
+if (openingScene && !prefersReducedMotion) {
   let introRemovalTimer;
   let motionStarted = false;
-  const beginAfterDoorsOpen = () => {
+  const finishIntro = () => {
     if (motionStarted) return;
     motionStarted = true;
     startPortfolioMotion();
+    openingScene.classList.add('is-closing');
+    introRemovalTimer = window.setTimeout(() => openingScene.remove(), 450);
   };
-  const removeOpeningScene = () => {
-    if (introRemovalTimer) window.clearTimeout(introRemovalTimer);
-    openingScene.remove();
-  };
+  skipIntro.addEventListener('click', finishIntro);
+  introRemovalTimer = window.setTimeout(finishIntro, 2550);
 
-  skipIntro.addEventListener('click', () => {
-    beginAfterDoorsOpen();
-    openingScene.classList.add('is-skipped');
-    introRemovalTimer = window.setTimeout(removeOpeningScene, 450);
-  });
-  openingScene.addEventListener('animationend', (event) => {
-    if (event.target === openingScene && event.animationName === 'opening-scene-close') {
-      beginAfterDoorsOpen();
-      removeOpeningScene();
-    }
-  });
-  window.setTimeout(beginAfterDoorsOpen, prefersReducedMotion ? 2450 : 2850);
-  introRemovalTimer = window.setTimeout(removeOpeningScene, prefersReducedMotion ? 3200 : 3800);
+  const laptop = openingScene.querySelector('.intro-laptop');
+  if (laptop && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    openingScene.addEventListener('pointermove', (event) => {
+      const x = (event.clientX / window.innerWidth - .5) * 3;
+      const y = (event.clientY / window.innerHeight - .5) * -3;
+      laptop.style.setProperty('--tilt-x', `${x}deg`);
+      laptop.style.setProperty('--tilt-y', `${y}deg`);
+    }, { passive: true });
+  }
 } else {
+  openingScene?.remove();
   startPortfolioMotion();
+}
+
+if (roleText && !prefersReducedMotion) {
+  const roles = ['Frontend Developer', 'Cybersecurity Enthusiast', 'Programmer'];
+  let roleIndex = 0;
+  window.setInterval(() => {
+    roleIndex = (roleIndex + 1) % roles.length;
+    roleText.animate([{ opacity: 0, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }], { duration: 360, easing: 'ease-out' });
+    roleText.textContent = roles[roleIndex];
+  }, 2600);
 }
 
 navToggle.addEventListener('click', () => {
