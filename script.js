@@ -20,6 +20,39 @@ if (navToggle && primaryNav) {
   });
 }
 
+const projectGrid = document.getElementById('projectGrid');
+const visibleCount = document.getElementById('visible-count');
+const projectDialog = document.querySelector('.project-dialog');
+if (projectGrid) {
+  const cards = [...projectGrid.querySelectorAll('.project-card')];
+  document.querySelectorAll('.project-filter').forEach((filter) => {
+    filter.addEventListener('click', () => {
+      const selected = filter.dataset.filter;
+      document.querySelectorAll('.project-filter').forEach((button) => {
+        const active = button === filter;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      let count = 0;
+      cards.forEach((card) => {
+        const visible = selected === 'all' || card.dataset.categories.split(' ').includes(selected);
+        card.hidden = !visible;
+        if (visible) count += 1;
+      });
+      if (visibleCount) visibleCount.textContent = String(count).padStart(2, '0');
+    });
+  });
+  if (projectDialog) {
+    projectGrid.querySelectorAll('.report-link').forEach((button) => {
+      button.addEventListener('click', () => {
+        projectDialog.querySelector('#dialog-title').textContent = button.dataset.title;
+        projectDialog.querySelector('#dialog-copy').textContent = button.dataset.report;
+        projectDialog.showModal();
+      });
+    });
+  }
+}
+
 const updateHeader = () => header?.classList.toggle('scrolled', window.scrollY > 12);
 updateHeader();
 window.addEventListener('scroll', updateHeader, { passive: true });

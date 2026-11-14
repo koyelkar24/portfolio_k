@@ -65,100 +65,60 @@
     </section>
 
     <section class="work-section section-pad" id="work" aria-labelledby="work-title">
-      <div class="section-heading page-wrap">
-        <div>
-          <p class="eyebrow">SELECTED WORK · 2024—2026</p>
+      <div class="work-inner">
+        <header class="work-heading">
+          <p class="work-kicker">SELECTED WORK <span>/</span> 2024?2026</p>
           <h2 id="work-title">Projects</h2>
+          <p>Filter by type, then open a report for details.</p>
+        </header>
+        <div class="work-controls" role="group" aria-label="Filter projects by type">
+          <div class="filter-list">
+            <button class="project-filter is-active" type="button" data-filter="all" aria-pressed="true">All <span>06</span></button>
+            <button class="project-filter" type="button" data-filter="security" aria-pressed="false">Security <span>04</span></button>
+            <button class="project-filter" type="button" data-filter="ai" aria-pressed="false">AI <span>02</span></button>
+            <button class="project-filter" type="button" data-filter="web" aria-pressed="false">Web <span>02</span></button>
+          </div>
+          <span class="build-count"><b id="visible-count">06</b> BUILDS</span>
         </div>
-        <p class="section-intro">Career tools, AI-powered video learning, password security, and cryptography—built with Python and practical web technologies.</p>
-      </div>
-
-      <div class="project-list page-wrap">
-        <article class="project project-password">
-          <div class="project-visual password-visual" aria-hidden="true">
-            <div class="visual-window">
-              <div class="window-bar"><span></span><span></span><span></span><i>password check</i></div>
-              <div class="password-ui">
-                <span class="ui-label">PASSWORD STRENGTH</span>
-                <div class="masked-password">••••••••••••</div>
-                <div class="strength-track"><span></span></div>
-                <div class="strength-caption"><b>STRONG</b><span>Entropy analysis complete</span></div>
-                <div class="check-row"><span>✓</span> Length &amp; character variety</div>
-                <div class="check-row"><span>✓</span> Common pattern detection</div>
-              </div>
-            </div>
-            <span class="visual-index">01 / CYBERSECURITY</span>
-          </div>
-          <div class="project-copy">
-            <p class="project-number">01 <span>SECURITY APPLICATION</span></p>
+        <div class="project-grid" id="projectGrid">
+          <article class="project-card" data-categories="security">
+            <div class="card-top"><span>Security</span><span class="card-index">01</span></div>
             <h3>Password Analyzer</h3>
-            <p>Checks password strength with entropy and zxcvbn scoring, flags common patterns, estimates cracking time, and offers suggestions. Breach checks use the Have I Been Pwned range API with a SHA-1 prefix lookup.</p>
-            <ul class="tag-list" aria-label="Technologies and tools used"><li>Python</li><li>Flask</li><li>Flask-CORS</li><li>HTML</li><li>CSS</li><li>JavaScript</li><li>zxcvbn</li><li>Requests</li><li>Have I Been Pwned API</li><li>Vercel</li></ul>
-            <a class="project-link" href="https://github.com/koyelkar24/passwordAnalyser" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
-          </div>
-        </article>
-
-        <article class="project project-career">
-          <div class="project-visual career-visual" aria-hidden="true">
-            <div class="career-dashboard">
-              <div class="mini-window-bar"><span></span><span></span><span></span><b>CAREER WORKSPACE</b></div>
-              <div class="career-dashboard-body">
-                <span class="mini-kicker">YOUR NEXT STEP</span>
-                <strong>Build your career<br>with a clear plan.</strong>
-                <div class="career-tool-grid"><span>Resume review</span><span>Find roles</span><span>Practice interviews</span><span>Track applications</span></div>
-              </div>
-            </div>
-            <span class="visual-index">02 / CAREER TOOLS</span>
-          </div>
-          <div class="project-copy">
-            <p class="project-number">02 <span>CAREER WORKSPACE</span></p>
+            <p>Evaluates password strength, explains weak patterns, estimates cracking time, and checks breach exposure.</p>
+            <div class="card-actions"><button class="report-link" type="button" data-title="Password Analyzer" data-report="A password security tool that combines entropy and zxcvbn scoring, common-pattern checks, cracking-time estimates, and actionable suggestions. Breach lookups use the Have I Been Pwned range API with a SHA-1 prefix.">REPORT</button><a href="https://github.com/koyelkar24/passwordAnalyser" target="_blank" rel="noopener noreferrer">CODE</a></div>
+          </article>
+          <article class="project-card" data-categories="ai web">
+            <div class="card-top"><span>AI ? Web</span><span class="card-index">02</span></div>
             <h3>Career Assistant</h3>
-            <p>A browser-based workspace for resume parsing and ATS scoring, job search, application tracking, resume tailoring, mock interviews, job scam checks, and career roadmaps. Optional Gemini or OpenAI coaching adds resume-to-role reviews and detailed interview feedback; job search and email integrations can be enabled with API and SMTP settings.</p>
-            <ul class="tag-list" aria-label="Technologies and tools used"><li>Python</li><li>HTML</li><li>CSS</li><li>JavaScript</li><li>Streamlit</li><li>Python HTTP server</li><li>SQLite</li><li>CSV</li><li>Pydantic</li><li>python-dotenv</li><li>Requests</li><li>pdfplumber</li><li>python-docx</li><li>ReportLab</li><li>OpenAI API</li><li>Gemini API</li><li>JSearch / RapidAPI</li><li>SMTP</li></ul>
-            <a class="project-link" href="https://github.com/koyelkar24/Career-Assistant" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">&#8599;</span></a>
-          </div>
-        </article>
-
-        <article class="project project-summarizer">
-          <div class="project-visual summarizer-visual" aria-hidden="true">
-            <div class="summary-panel">
-              <div class="summary-panel-top"><span>VIDEO STUDY BRIEF</span><span class="summary-live">READY</span></div>
-              <div class="summary-progress"><i></i></div>
-              <div class="summary-section"><b>KEY TAKEAWAYS</b><span></span><span></span><span></span></div>
-              <div class="summary-chapters"><b>SMART CHAPTERS</b><div><i>00:00</i><span>Introduction</span></div><div><i>03:42</i><span>Core concepts</span></div></div>
-            </div>
-            <span class="visual-index">03 / AI VIDEO LEARNING</span>
-          </div>
-          <div class="project-copy">
-            <p class="project-number">03 <span>AI VIDEO LEARNING</span></p>
+            <p>A career workspace for resume reviews, job search, interview practice, and application tracking.</p>
+            <div class="card-actions"><button class="report-link" type="button" data-title="Career Assistant" data-report="A browser-based career workspace with resume parsing and ATS scoring, job search, application tracking, resume tailoring, mock interviews, scam checks, and career roadmaps. Optional AI coaching and external integrations can be configured.">REPORT</button><a href="https://github.com/koyelkar24/Career-Assistant" target="_blank" rel="noopener noreferrer">CODE</a></div>
+          </article>
+          <article class="project-card" data-categories="ai">
+            <div class="card-top"><span>AI</span><span class="card-index">03</span></div>
             <h3>J.A.R.V.I.S. Video Summarizer</h3>
-            <p>Turns YouTube links and uploaded videos into transcripts, concise summaries, key highlights, smart chapters, video Q&amp;A, and study materials such as notes, viva questions, MCQs, and flashcards. Uses available YouTube captions or extracts audio for Faster-Whisper transcription, then runs a local Ollama model or Gemini. Summaries can be downloaded as PDF or TXT.</p>
-            <ul class="tag-list" aria-label="Technologies and tools used"><li>Python</li><li>Streamlit</li><li>yt-dlp</li><li>YouTube Transcript API 1.2.4</li><li>Faster-Whisper (tiny default)</li><li>FFmpeg / ffprobe</li><li>Ollama / llama3.1</li><li>Gemini API</li><li>google-genai</li><li>Requests</li><li>python-dotenv</li><li>ReportLab</li></ul>
-            <a class="project-link" href="https://github.com/koyelkar24/summarization_dashboard" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">&#8599;</span></a>
-          </div>
-        </article>
-
-        <article class="project project-encryption">
-          <div class="project-visual encryption-visual" aria-hidden="true">
-            <div class="cipher-card">
-              <div class="cipher-top"><span>TEXT ENCRYPTION TOOL</span><span class="cipher-lock">⌑</span></div>
-              <div class="cipher-label">PLAINTEXT</div>
-              <div class="cipher-line">meet me after class<span class="caret"></span></div>
-              <div class="cipher-arrow">↓ <span>ENCRYPT</span></div>
-              <div class="cipher-label">CIPHERTEXT</div>
-              <div class="cipher-line cipher-output">phhw ph diwhu fodvv</div>
-              <div class="cipher-footer"><span>ALGORITHM</span><b>CLASSICAL CIPHER</b></div>
-            </div>
-            <span class="visual-index">04 / CRYPTOGRAPHY</span>
-          </div>
-          <div class="project-copy">
-            <p class="project-number">04 <span>PERSONAL PROJECT</span></p>
+            <p>Turns videos into transcripts, concise summaries, smart chapters, Q&amp;A, and study materials.</p>
+            <div class="card-actions"><button class="report-link" type="button" data-title="J.A.R.V.I.S. Video Summarizer" data-report="A video learning assistant that transcribes YouTube links and uploaded videos, then creates summaries, highlights, chapters, Q&amp;A, notes, quizzes, and flashcards. It can use captions or Faster-Whisper, with local Ollama or Gemini models.">REPORT</button><a href="https://github.com/koyelkar24/summarization_dashboard" target="_blank" rel="noopener noreferrer">CODE</a></div>
+          </article>
+          <article class="project-card" data-categories="security">
+            <div class="card-top"><span>Security</span><span class="card-index">04</span></div>
+            <h3>Deepfake Image Tampering Detector</h3>
+            <p>Explores image authenticity and tampering detection through a focused forensic workflow.</p>
+            <div class="card-actions"><button class="report-link" type="button" data-title="Deepfake Image Tampering Detector" data-report="An image forensics project focused on identifying deepfake imagery and signs of image tampering. Repository details were unavailable when this portfolio entry was added.">REPORT</button><a href="https://github.com/arkap1502/Deepfake-Image-Tampering-Detector" target="_blank" rel="noopener noreferrer">CODE</a></div>
+          </article>
+          <article class="project-card" data-categories="security web">
+            <div class="card-top"><span>Security ? Web</span><span class="card-index">05</span></div>
+            <h3>Secure Vault System</h3>
+            <p>A secure vault project centered on protecting and organizing sensitive information.</p>
+            <div class="card-actions"><button class="report-link" type="button" data-title="Secure Vault System" data-report="A secure vault project for managing sensitive information. Repository details were unavailable when this portfolio entry was added.">REPORT</button><a href="https://github.com/dipanjann804-svg/Secure-Vault-System" target="_blank" rel="noopener noreferrer">CODE</a></div>
+          </article>
+          <article class="project-card" data-categories="security">
+            <div class="card-top"><span>Security</span><span class="card-index">06</span></div>
             <h3>Text Encryption Tool</h3>
-            <p>A desktop application for encrypting and decrypting text with classical and modern cipher techniques, built to make cryptography interactive.</p>
-            <ul class="tag-list" aria-label="Technologies"><li>Python</li><li>Tkinter</li><li>Cryptography</li></ul>
-            <a class="project-link" href="https://github.com/koyelkar24/text_encryption" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
-          </div>
-        </article>
+            <p>A desktop app for experimenting with classical and modern approaches to text encryption.</p>
+            <div class="card-actions"><button class="report-link" type="button" data-title="Text Encryption Tool" data-report="A desktop application built with Python and Tkinter to explore encrypting and decrypting text with classical and modern cipher techniques.">REPORT</button><a href="https://github.com/koyelkar24/text_encryption" target="_blank" rel="noopener noreferrer">CODE</a></div>
+          </article>
+        </div>
+        <dialog class="project-dialog" aria-labelledby="dialog-title"><form method="dialog"><button class="dialog-close" aria-label="Close report">&times;</button></form><p class="work-kicker">PROJECT REPORT</p><h3 id="dialog-title"></h3><p id="dialog-copy"></p></dialog>
       </div>
     </section>
 
