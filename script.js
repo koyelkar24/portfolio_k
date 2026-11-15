@@ -83,3 +83,86 @@ window.addEventListener('resize', () => {
     primaryNav.classList.remove('open');
   }
 });
+
+/* Builds the wireframe globe in the landing hero. The rings and
+   surface nodes are sized in pixels so the 3D transforms stay true
+   at any viewport width; they are rebuilt whenever the globe resizes. */
+const globeSphere = document.querySelector('.globe-sphere');
+
+if (globeSphere) {
+  let builtSize = 0;
+
+  const buildGlobe = () => {
+    const size = Math.round(globeSphere.clientWidth);
+    if (!size || size === builtSize) return;
+    builtSize = size;
+
+    const radius = size / 2;
+    const fragment = document.createDocumentFragment();
+    const random = (() => {
+      let seed = 2026188;
+      return () => {
+        seed = (seed * 16807) % 2147483647;
+        return (seed - 1) / 2147483646;
+      };
+    })();
+
+    for (let deg = 0; deg < 180; deg += 15) {
+      const meridian = document.createElement('span');
+      meridian.className = 'globe-ring globe-meridian';
+      if (deg === 0) meridian.classList.add('globe-meridian--prime');
+      if (deg === 90) meridian.classList.add('globe-meridian--major');
+      meridian.style.setProperty('--rot', `${deg}deg`);
+      fragment.append(meridian);
+    }
+
+    for (let lat = -75; lat <= 75; lat += 15) {
+      const rad = (lat * Math.PI) / 180;
+      const ringRadius = Math.cos(rad) * radius;
+      const latitude = document.createElement('span');
+      latitude.className = 'globe-ring globe-latitude';
+      if (lat === 0) latitude.classList.add('globe-latitude--equator');
+      latitude.style.width = `${ringRadius * 2}px`;
+      latitude.style.height = `${ringRadius * 2}px`;
+      latitude.style.left = `${radius - ringRadius}px`;
+      latitude.style.top = `${radius - ringRadius}px`;
+      latitude.style.transform = `translateY(${-Math.sin(rad) * radius}px) rotateX(90deg)`;
+      fragment.append(latitude);
+    }
+
+    const baseDot = size > 560 ? 3 : 2.4;
+    const signalDot = size > 560 ? 5 : 4;
+    const nodeCount = size > 600 ? 96 : size > 460 ? 72 : 52;
+
+    for (let index = 0; index < nodeCount; index += 1) {
+      const lat = (Math.asin(2 * random() - 1) * 180) / Math.PI;
+      const lon = random() * 360;
+      const signal = index % 11 === 0;
+      const dotSize = signal ? signalDot : baseDot;
+      const node = document.createElement('span');
+      node.className = signal ? 'globe-node globe-node--signal' : 'globe-node';
+      node.style.width = `${dotSize}px`;
+      node.style.height = `${dotSize}px`;
+      node.style.left = `${radius - dotSize / 2}px`;
+      node.style.top = `${radius - dotSize / 2}px`;
+      node.style.transform = `rotateY(${lon.toFixed(2)}deg) rotateX(${lat.toFixed(2)}deg) translateZ(${radius}px)`;
+      fragment.append(node);
+    }
+
+    globeSphere.querySelectorAll('.globe-ring, .globe-node').forEach((element) => element.remove());
+    globeSphere.append(fragment);
+  };
+
+  buildGlobe();
+
+  let globeFrame = 0;
+  const queueGlobeBuild = () => {
+    cancelAnimationFrame(globeFrame);
+    globeFrame = requestAnimationFrame(buildGlobe);
+  };
+
+  window.addEventListener('resize', queueGlobeBuild);
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(queueGlobeBuild).observe(globeSphere);
+  }
+}

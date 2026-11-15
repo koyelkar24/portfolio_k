@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+<head><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="margin:0;background:#fff;color:#000;font:32px monospace">
+<div id="out"></div>
+<script>
+  document.getElementById('out').textContent =
+    'innerWidth=' + window.innerWidth +
+    ' | dpr=' + window.devicePixelRatio +
+    ' | mobileMQ=' + window.matchMedia('(max-width: 680px)').matches +
+    ' | docW=' + document.documentElement.clientWidth;
+</script>
+</body>
+</html>
