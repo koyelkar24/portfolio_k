@@ -166,3 +166,58 @@ if (globeSphere) {
     new ResizeObserver(queueGlobeBuild).observe(globeSphere);
   }
 }
+
+/* Brief title-card intro. It is skippable by click, key, or scroll,
+   reveals the hero after the curtain lifts, and never runs when the
+   visitor prefers reduced motion or JavaScript is unavailable. */
+const intro = document.getElementById('intro');
+const introRoot = document.documentElement;
+
+if (intro && introRoot.classList.contains('intro-on')) {
+  const introTimers = [];
+  const introEvents = new AbortController();
+  let introClosed = false;
+
+  const hideIntro = () => {
+    intro.hidden = true;
+    intro.inert = true;
+    introRoot.classList.remove('intro-exit', 'is-fast');
+    introRoot.classList.add('intro-done');
+  };
+
+  const finishIntro = (fast) => {
+    if (introClosed) return;
+    introClosed = true;
+    introTimers.forEach((timer) => window.clearTimeout(timer));
+    introEvents.abort();
+
+    introRoot.classList.remove('intro-on');
+    introRoot.classList.add('intro-exit', 'intro-done');
+    if (fast) introRoot.classList.add('is-fast');
+    intro.inert = true;
+
+    introTimers.push(window.setTimeout(hideIntro, fast ? 620 : 1080));
+  };
+
+  const listenIntro = (target, type, handler, options = {}) => {
+    target.addEventListener(type, handler, { ...options, signal: introEvents.signal });
+  };
+
+  introTimers.push(window.setTimeout(() => finishIntro(false), 2100));
+
+  listenIntro(intro, 'click', (event) => {
+    event.preventDefault();
+    finishIntro(true);
+  });
+
+  listenIntro(document, 'keydown', (event) => {
+    if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      finishIntro(true);
+    }
+  });
+
+  listenIntro(window, 'wheel', () => finishIntro(true), { passive: true });
+  listenIntro(window, 'touchmove', () => finishIntro(true), { passive: true });
+  listenIntro(window, 'scroll', () => finishIntro(true), { passive: true });
+}

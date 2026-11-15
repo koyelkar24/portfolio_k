@@ -10,8 +10,48 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('intro-on');
+      window.setTimeout(function () {
+        if (document.documentElement.classList.contains('intro-on')) {
+          document.documentElement.classList.remove('intro-on');
+          var intro = document.getElementById('intro');
+          if (intro) intro.hidden = true;
+        }
+      }, 6000);
+    }
+  </script>
 </head>
 <body>
+  <div class="intro" id="intro">
+    <div class="intro-orbit" aria-hidden="true">
+      <span class="intro-orbit-glow"></span>
+      <span class="intro-orbit-ring intro-orbit-ring--a"></span>
+      <span class="intro-orbit-ring intro-orbit-ring--b"></span>
+      <span class="intro-orbit-ring intro-orbit-ring--c"></span>
+      <span class="intro-orbit-node"></span>
+    </div>
+    <div class="intro-shell">
+      <div class="intro-top" aria-hidden="true">
+        <span class="intro-mark">K<span>.</span></span>
+        <span class="intro-edition">PORTFOLIO <i>/</i> 2026</span>
+      </div>
+      <div class="intro-core" aria-hidden="true">
+        <p class="intro-kicker"><span class="intro-kicker-dot"></span> CYBERSECURITY <i>&times;</i> SOFTWARE</p>
+        <div class="intro-name">
+          <span class="intro-name-row"><span class="intro-name-word">Koyel</span></span>
+          <span class="intro-name-row"><span class="intro-name-word">Kar<em>.</em></span></span>
+        </div>
+      </div>
+      <div class="intro-bottom">
+        <span class="intro-place" aria-hidden="true">KOLKATA, INDIA <i>22.57&deg; N &middot; 88.36&deg; E</i></span>
+        <div class="intro-meter" aria-hidden="true"><span class="intro-meter-fill"><i></i></span></div>
+        <button class="intro-skip" id="introSkip" type="button">Skip intro <span aria-hidden="true">&#8599;</span></button>
+      </div>
+    </div>
+  </div>
+
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
@@ -92,7 +132,7 @@
       <div class="hero-bottomline" aria-label="Portfolio values">
         <span>BUILD WITH INTENT</span><span>SECURE BY DESIGN</span><span>SHIP WITH CARE</span>
       </div>
-      <a class="scroll-cue" href="#work"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">?</span></a>
+      <a class="scroll-cue" href="#work"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">&#8595;</span></a>
     </section>
 
     <section class="work-section section-pad" id="work" aria-labelledby="work-title">
