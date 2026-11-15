@@ -1743,7 +1743,7 @@ main { margin:0; background:transparent; }
 
 @media (max-width: 380px) {
   .hero-globe { opacity: .72; }
-  .hero h1 { font-size: 42px; }
+  .hero h1 { font-size: min(42px, 12.2vw); }
   .hero-pin {
     right: 20px;
     bottom: 104px;
