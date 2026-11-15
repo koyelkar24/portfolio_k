@@ -286,3 +286,29 @@ if (aboutPortrait) {
     driftPortrait();
   }
 }
+
+/* About copy: reveal the heading and biography in sequence as the
+   section arrives. Reduced-motion visitors see the finished layout. */
+const aboutHeading = document.querySelector('.about-heading');
+const aboutNarrative = document.querySelector('.about-narrative');
+
+if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+  const stageAboutElement = (element, className, threshold) => {
+    if (!element) return;
+
+    element.classList.add(className);
+
+    const aboutObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-inview');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold, rootMargin: '0px 0px -36px 0px' });
+
+    aboutObserver.observe(element);
+  };
+
+  stageAboutElement(aboutHeading, 'heading-reveal', 0.2);
+  stageAboutElement(aboutNarrative, 'text-reveal', 0.08);
+}
