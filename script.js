@@ -221,3 +221,68 @@ if (intro && introRoot.classList.contains('intro-on')) {
   listenIntro(window, 'touchmove', () => finishIntro(true), { passive: true });
   listenIntro(window, 'scroll', () => finishIntro(true), { passive: true });
 }
+
+/* About portrait: unveil it on first view, then let it drift
+   against the page scroll. Both effects are skipped entirely
+   when the visitor prefers reduced motion. */
+const aboutPortrait = document.querySelector('.about-portrait');
+
+if (aboutPortrait) {
+  const portraitImage = aboutPortrait.querySelector('img');
+  let portraitSeen = false;
+  let portraitReady = !portraitImage || (portraitImage.complete && portraitImage.naturalWidth > 0);
+
+  const revealPortrait = () => {
+    if (portraitSeen && portraitReady) aboutPortrait.classList.add('is-inview');
+  };
+
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    aboutPortrait.classList.add('will-reveal');
+
+    const portraitObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        portraitSeen = true;
+        observer.unobserve(entry.target);
+        revealPortrait();
+      });
+    }, { threshold: 0.28, rootMargin: '0px 0px -36px 0px' });
+
+    portraitObserver.observe(aboutPortrait);
+
+    if (portraitImage) {
+      if (!portraitReady) {
+        portraitImage.addEventListener('load', () => {
+          portraitReady = true;
+          revealPortrait();
+        }, { once: true });
+      }
+      portraitImage.addEventListener('error', () => {
+        aboutPortrait.classList.remove('will-reveal');
+      }, { once: true });
+    }
+  }
+
+  if (!prefersReducedMotion) {
+    let portraitFrame = 0;
+
+    const driftPortrait = () => {
+      portraitFrame = 0;
+      const rect = aboutPortrait.getBoundingClientRect();
+      const viewport = window.innerHeight;
+      if (rect.bottom < -80 || rect.top > viewport + 80) return;
+
+      const progress = (rect.top + rect.height / 2 - viewport / 2) / viewport;
+      const shift = Math.max(-13, Math.min(13, progress * -30));
+      aboutPortrait.style.setProperty('--portrait-shift', `${shift.toFixed(1)}px`);
+    };
+
+    const queuePortraitDrift = () => {
+      if (!portraitFrame) portraitFrame = window.requestAnimationFrame(driftPortrait);
+    };
+
+    window.addEventListener('scroll', queuePortraitDrift, { passive: true });
+    window.addEventListener('resize', queuePortraitDrift);
+    driftPortrait();
+  }
+}
