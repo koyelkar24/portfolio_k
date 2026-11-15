@@ -2033,8 +2033,6 @@ html.intro-exit .intro-orbit { opacity: 0; transition: opacity .3s ease; }
   letter-spacing: .14em;
   text-transform: uppercase;
   cursor: pointer;
-  opacity: 0;
-  animation: intro-fade-in .9s ease .8s forwards;
   transition: color .2s;
 }
 
@@ -2091,7 +2089,7 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
   .intro-core { padding: 26px 0 24px; }
   .intro-kicker { gap: 8px; margin-bottom: 18px; font-size: 8px; letter-spacing: .18em; }
   .intro-name { font-size: clamp(64px, 19vw, 112px); line-height: .84; }
-  .intro-orbit { top: 46%; right: -34%; width: min(132vw, 560px); opacity: .6; }
+  .intro-orbit { top: 46%; right: -18%; width: min(132vw, 560px); opacity: .6; }
   .intro-bottom {
     grid-template-columns: 1fr auto;
     gap: 14px 18px;
@@ -2099,7 +2097,7 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
   .intro-place { grid-column: 1; grid-row: 1; font-size: 7px; letter-spacing: .08em; }
   .intro-place i { margin-left: 8px; }
   .intro-meter { grid-column: 1 / -1; grid-row: 2; }
-  .intro-skip { grid-column: 2; grid-row: 1; padding: 6px 0; font-size: 8px; }
+  .intro-skip { grid-column: 2; grid-row: 1; padding: 10px 0; font-size: 8px; }
 }
 
 @media (max-width: 380px) {

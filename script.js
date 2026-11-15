@@ -203,7 +203,7 @@ if (intro && introRoot.classList.contains('intro-on')) {
     target.addEventListener(type, handler, { ...options, signal: introEvents.signal });
   };
 
-  introTimers.push(window.setTimeout(() => finishIntro(false), 2100));
+  introTimers.push(window.setTimeout(() => finishIntro(false), 2000));
 
   listenIntro(intro, 'click', (event) => {
     event.preventDefault();
