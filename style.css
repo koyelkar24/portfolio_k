@@ -2688,7 +2688,7 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
 }
 
 .work-doors.is-entering .doors-veil {
-  opacity: 1;
+  opacity: 0;
 }
 
 .work-doors.is-returning .doors-stage {
@@ -2712,7 +2712,8 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
 
 .js .work-doors.is-showcase .showcase {
   display: block;
-  animation: showcase-in .7s cubic-bezier(.16, 1, .3, 1) both;
+  opacity: 1;
+  animation: none;
 }
 
 .js .work-doors.is-showcase .doors-stage {
@@ -3749,8 +3750,6 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
 }
 
 /* ---------- Motion ---------- */
-.js .showcase-head .back-doors,
-.js .showcase-title-block,
 .js .showcase-intro,
 .js .showcase-meta,
 .js .showcase-foot,
@@ -3758,16 +3757,8 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
   opacity: 0;
 }
 
-.js .work-doors.is-showcase .showcase-head .back-doors {
-  animation: showcase-rise .7s cubic-bezier(.16, 1, .3, 1) .05s both;
-}
-
-.js .work-doors.is-showcase .showcase-title-block {
-  animation: showcase-rise .8s cubic-bezier(.16, 1, .3, 1) .12s both;
-}
-
 .js .work-doors.is-showcase .showcase-intro {
-  animation: showcase-rise .8s cubic-bezier(.16, 1, .3, 1) .22s both;
+  animation: showcase-rise .8s cubic-bezier(.16, 1, .3, 1) .12s both;
 }
 
 .js .work-doors.is-showcase .showcase-meta {
