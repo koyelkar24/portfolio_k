@@ -366,12 +366,28 @@ const doorCategoryData = {
 };
 
 let activeWorkDoor = null;
+let activeWorkFocus = null;
 let doorAnimationToken = 0;
+let autoReturnTimer = 0;
 
-const scrollToWorkTop = () => {
+const clearAutoReturn = () => {
+  if (!autoReturnTimer) return;
+  window.clearTimeout(autoReturnTimer);
+  autoReturnTimer = 0;
+};
+
+const scrollToWorkTop = (instant = false) => {
   if (!workDoors) return;
-  const top = workDoors.getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+  const top = Math.max(0, workDoors.getBoundingClientRect().top + window.scrollY);
+  if (!instant) {
+    window.scrollTo({ top, behavior: 'auto' });
+    return;
+  }
+  const root = document.documentElement;
+  const previous = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  window.scrollTo(0, top);
+  root.style.scrollBehavior = previous;
 };
 
 const setShowcaseCategory = (category) => {
@@ -403,15 +419,24 @@ const enterWorkDoor = (door) => {
   const category = door.dataset.door;
   if (!category || !doorCategoryData[category]) return;
 
+  clearAutoReturn();
   const token = ++doorAnimationToken;
   activeWorkDoor = door;
   setShowcaseCategory(category);
 
   const cameraRect = doorsCamera.getBoundingClientRect();
   const doorRect = door.getBoundingClientRect();
-  const originX = ((doorRect.left + doorRect.width / 2 - cameraRect.left) / cameraRect.width) * 100;
-  const originY = ((doorRect.top + doorRect.height / 2 - cameraRect.top) / cameraRect.height) * 100;
-  doorsCamera.style.transformOrigin = `${originX}% ${originY}%`;
+  // The open panel swings left, so its handle ends up near the left edge.
+  const focusX = doorRect.left + doorRect.width * 0.17;
+  const focusY = doorRect.top + doorRect.height * 0.7;
+  const originX = focusX - cameraRect.left;
+  const originY = focusY - cameraRect.top;
+  const panX = window.innerWidth / 2 - focusX;
+  const panY = window.innerHeight / 2 - focusY;
+  activeWorkFocus = { originX, originY };
+  doorsCamera.style.transformOrigin = `${originX}px ${originY}px`;
+  doorsCamera.style.setProperty('--camera-pan-x', `${panX}px`);
+  doorsCamera.style.setProperty('--camera-pan-y', `${panY}px`);
 
   workDoorsList.forEach((item) => item.classList.remove('is-open'));
   door.classList.add('is-open');
@@ -423,7 +448,8 @@ const enterWorkDoor = (door) => {
   } else {
     const doorOpenTime = 560;
     const cameraTime = 950;
-    swapDelay = doorOpenTime + cameraTime;
+    const cameraHoldTime = 260;
+    swapDelay = doorOpenTime + cameraTime + cameraHoldTime;
     window.setTimeout(() => {
       if (token !== doorAnimationToken) return;
       workDoors.classList.add('is-entering');
@@ -449,29 +475,47 @@ const closeWorkDoors = () => {
   if (!workDoors || !workDoors.classList.contains('is-showcase') || workDoors.classList.contains('is-closing')) return;
   if (projectDialog && projectDialog.open) projectDialog.close();
 
+  clearAutoReturn();
   workDoors.classList.add('is-closing');
   const token = ++doorAnimationToken;
   const delay = prefersReducedMotion ? 0 : 220;
+  const returnHold = prefersReducedMotion ? 0 : 260;
 
   window.setTimeout(() => {
     if (token !== doorAnimationToken) return;
+
+    // Re-enter the stage at the same 3D camera position used for the door,
+    // hold the handle close-up, then pull back while the door swings shut.
+    if (activeWorkFocus) {
+      doorsCamera.style.transformOrigin = `${activeWorkFocus.originX}px ${activeWorkFocus.originY}px`;
+    }
+    doorsCamera.style.transition = 'none';
+    workDoors.classList.add('is-returning-zoom');
     workDoors.classList.remove('is-showcase', 'is-closing');
     workDoors.classList.add('is-returning');
     workDoors.setAttribute('aria-labelledby', 'work-title');
-    doorsCamera.style.transformOrigin = '50% 50%';
-    scrollToWorkTop();
+    scrollToWorkTop(true);
+    void doorsCamera.offsetWidth;
+
+    window.setTimeout(() => {
+      if (token !== doorAnimationToken) return;
+      doorsCamera.style.transition = '';
+      workDoors.classList.remove('is-returning-zoom');
+    }, returnHold);
 
     if (activeWorkDoor) {
       const door = activeWorkDoor;
       window.setTimeout(() => {
         if (token === doorAnimationToken) door.classList.remove('is-open');
-      }, 260);
+      }, returnHold + 700);
       door.focus({ preventScroll: true });
     }
 
     window.setTimeout(() => {
-      if (token === doorAnimationToken) workDoors.classList.remove('is-returning');
-    }, 700);
+      if (token !== doorAnimationToken) return;
+      workDoors.classList.remove('is-returning');
+      doorsCamera.style.transformOrigin = '50% 50%';
+    }, returnHold + 1100);
   }, delay);
 };
 
@@ -498,4 +542,35 @@ if (workDoors && doorsCamera) {
       closeWorkDoors();
     }
   });
+
+  const showcaseEnd = document.querySelector('.showcase-foot');
+  if (showcaseEnd && 'IntersectionObserver' in window) {
+    let endVisible = false;
+
+    const armAutoReturn = () => {
+      if (autoReturnTimer || !endVisible) return;
+      if (!workDoors.classList.contains('is-showcase') || workDoors.classList.contains('is-closing')) return;
+
+      autoReturnTimer = window.setTimeout(() => {
+        autoReturnTimer = 0;
+        if (!endVisible || !workDoors.classList.contains('is-showcase') || workDoors.classList.contains('is-closing')) return;
+        if (projectDialog && projectDialog.open) {
+          armAutoReturn();
+          return;
+        }
+        closeWorkDoors();
+      }, 1400);
+    };
+
+    const showcaseObserver = new IntersectionObserver((entries) => {
+      endVisible = entries.some((entry) => entry.isIntersecting);
+      if (!endVisible) {
+        clearAutoReturn();
+        return;
+      }
+      armAutoReturn();
+    }, { threshold: 0.55, rootMargin: '0px 0px -8% 0px' });
+
+    showcaseObserver.observe(showcaseEnd);
+  }
 }

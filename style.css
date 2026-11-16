@@ -2296,6 +2296,8 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
   justify-content: center;
   min-height: 100svh;
   padding: 104px 0 48px;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
 }
 
 .doors-head {
@@ -2327,19 +2329,28 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
 }
 
 .doors-camera {
+  --camera-pan-x: 0px;
+  --camera-pan-y: 0px;
+  --camera-zoom: translate3d(var(--camera-pan-x), var(--camera-pan-y), 0) rotateY(-6deg) rotateX(2deg) scale(4.2);
   position: relative;
   z-index: 2;
   width: 100%;
   margin-top: clamp(36px, 5.2vh, 62px);
   perspective: 1600px;
   transform-origin: 50% 50%;
-  transition: transform 1.15s cubic-bezier(.7, 0, .2, 1), opacity .65s ease .3s;
-  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  transition: transform .95s cubic-bezier(.7, 0, .2, 1);
+  will-change: transform;
 }
 
-.work-doors.is-entering .doors-camera {
+.work-doors.is-entering .doors-camera,
+.work-doors.is-returning-zoom .doors-camera {
+  transform: var(--camera-zoom);
+}
+
+.work-doors.is-returning-zoom .doors-head,
+.work-doors.is-returning-zoom .doors-hint {
   opacity: 0;
-  transform: scale(3.2);
 }
 
 .work-doors.is-entering .doors-head {
@@ -2363,6 +2374,7 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
   width: min(1320px, calc(100% - 80px));
   margin-inline: auto;
   padding-top: 16px;
+  transform-style: preserve-3d;
 }
 
 /* ---------- Door ---------- */
