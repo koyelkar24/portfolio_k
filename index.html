@@ -10,7 +10,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <noscript><style>.doors-stage{display:none!important}.showcase{display:block!important}.back-doors,.door-report,.doors-hint{display:none!important}</style></noscript>
   <script>
+    document.documentElement.classList.add('js');
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.documentElement.classList.add('intro-on');
       window.setTimeout(function () {
@@ -133,60 +135,263 @@
       <a class="scroll-cue" href="#work"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">&#8595;</span></a>
     </section>
 
-    <section class="work-section section-pad" id="work" aria-labelledby="work-title">
-      <div class="work-inner">
-        <header class="work-heading">
-          <p class="work-kicker">SELECTED WORK <span>/</span> 2024&ndash;2026</p>
-          <h2 id="work-title">Projects</h2>
-          <p>Filter by type, then open a report for details.</p>
-        </header>
-        <div class="work-controls" role="group" aria-label="Filter projects by type">
-          <div class="filter-list">
-            <button class="project-filter is-active" type="button" data-filter="all" aria-pressed="true">All <span>06</span></button>
-            <button class="project-filter" type="button" data-filter="security" aria-pressed="false">Security <span>04</span></button>
-            <button class="project-filter" type="button" data-filter="ai" aria-pressed="false">AI <span>02</span></button>
-            <button class="project-filter" type="button" data-filter="web" aria-pressed="false">Web <span>02</span></button>
+    <section class="work-doors" id="work" aria-labelledby="work-title">
+      <div class="doors-stage" id="doorsStage">
+        <div class="doors-head">
+          <p class="work-kicker">SELECTED WORK <span>/</span> 06 BUILDS</p>
+          <h2 id="work-title">Magic happens behind the <em>doors.</em></h2>
+          <p class="doors-sub">Four doors. Four disciplines. Choose one and step inside.</p>
+        </div>
+        <div class="doors-camera" id="doorsCamera">
+          <div class="doors-row" role="group" aria-label="Project categories">
+            <button class="door" type="button" data-door="security" data-door-index="01" aria-label="Open the Security door">
+              <span class="door-frame">
+                <span class="doorway" aria-hidden="true"><span class="doorway-glow"></span></span>
+                <span class="door-panel" aria-hidden="true">
+                  <span class="door-ribs"></span>
+                  <span class="door-plaque"><span>01</span><strong>Security</strong></span>
+                  <span class="door-handle"><i></i></span>
+                </span>
+              </span>
+              <span class="door-meta"><span>01 / SECURITY</span><span>04 builds</span></span>
+            </button>
+            <button class="door" type="button" data-door="ai" data-door-index="02" aria-label="Open the AI door">
+              <span class="door-frame">
+                <span class="doorway" aria-hidden="true"><span class="doorway-glow"></span></span>
+                <span class="door-panel" aria-hidden="true">
+                  <span class="door-ribs"></span>
+                  <span class="door-plaque"><span>02</span><strong>AI</strong></span>
+                  <span class="door-handle"><i></i></span>
+                </span>
+              </span>
+              <span class="door-meta"><span>02 / AI</span><span>02 builds</span></span>
+            </button>
+            <button class="door" type="button" data-door="web" data-door-index="03" aria-label="Open the Web door">
+              <span class="door-frame">
+                <span class="doorway" aria-hidden="true"><span class="doorway-glow"></span></span>
+                <span class="door-panel" aria-hidden="true">
+                  <span class="door-ribs"></span>
+                  <span class="door-plaque"><span>03</span><strong>Web</strong></span>
+                  <span class="door-handle"><i></i></span>
+                </span>
+              </span>
+              <span class="door-meta"><span>03 / WEB</span><span>03 builds</span></span>
+            </button>
+            <button class="door" type="button" data-door="crypto" data-door-index="04" aria-label="Open the Cryptography door">
+              <span class="door-frame">
+                <span class="doorway" aria-hidden="true"><span class="doorway-glow"></span></span>
+                <span class="door-panel" aria-hidden="true">
+                  <span class="door-ribs"></span>
+                  <span class="door-plaque"><span>04</span><strong>Cryptography</strong></span>
+                  <span class="door-handle"><i></i></span>
+                </span>
+              </span>
+              <span class="door-meta"><span>04 / CRYPTOGRAPHY</span><span>02 builds</span></span>
+            </button>
           </div>
-          <span class="build-count"><b id="visible-count">06</b> BUILDS</span>
         </div>
-        <div class="project-grid" id="projectGrid">
-          <article class="project-card" data-categories="security">
-            <div class="card-top"><span>Security</span><span class="card-index">01</span></div>
-            <h3>Password Analyzer</h3>
-            <p>Evaluates password strength, explains weak patterns, estimates cracking time, and checks breach exposure.</p>
-            <div class="card-actions"><button class="report-link" type="button" data-title="Password Analyzer" data-report="A password security tool that combines entropy and zxcvbn scoring, common-pattern checks, cracking-time estimates, and actionable suggestions. Breach lookups use the Have I Been Pwned range API with a SHA-1 prefix.">REPORT</button><a href="https://github.com/koyelkar24/passwordAnalyser" target="_blank" rel="noopener noreferrer">CODE</a></div>
+        <p class="doors-hint"><span class="doors-hint-dot" aria-hidden="true"></span> Choose a door to step inside</p>
+        <span class="doors-floor" aria-hidden="true"></span>
+        <span class="doors-veil" aria-hidden="true"></span>
+      </div>
+
+      <div class="showcase" id="projectShowcase">
+        <div class="showcase-head">
+          <button class="back-doors" type="button" data-close-doors><span aria-hidden="true">&#8592;</span> Back to the doors</button>
+          <div class="showcase-heading">
+            <div class="showcase-title-block">
+              <p class="work-kicker" id="showcaseKicker">PROJECT ARCHIVE <span>/</span> 2024&ndash;2026</p>
+              <h2 id="showcaseTitle">Selected work</h2>
+            </div>
+            <p class="showcase-intro" id="showcaseIntro">Six builds across security, AI, web, and cryptography. Open a door above, or browse the full archive below.</p>
+          </div>
+          <div class="showcase-meta"><span id="showcaseCount">06 builds</span><span id="showcaseDoor">ALL DISCIPLINES</span></div>
+        </div>
+
+        <div class="showcase-list" id="projectGrid">
+          <article class="door-card" data-categories="security crypto web" style="--card-accent: #79c8c0">
+            <div class="door-card-copy">
+              <p class="door-card-index"><span>01</span> Security / Web tool</p>
+              <h3>Password Analyzer</h3>
+              <p>Evaluates password strength, explains weak patterns, estimates cracking time, and checks breach exposure.</p>
+              <ul class="door-tags"><li>Entropy</li><li>Breach checks</li><li>Crack-time</li></ul>
+              <div class="door-card-actions">
+                <button class="report-link door-report" type="button" data-title="Password Analyzer" data-report="A password security tool that combines entropy and zxcvbn scoring, common-pattern checks, cracking-time estimates, and actionable suggestions. Breach lookups use the Have I Been Pwned range API with a SHA-1 prefix.">Project report <span aria-hidden="true">&#8599;</span></button>
+                <a class="door-code" href="https://github.com/koyelkar24/passwordAnalyser" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">&#8599;</span></a>
+              </div>
+            </div>
+            <div class="door-card-visual" aria-hidden="true">
+              <div class="mock-browser">
+                <div class="mock-bar"><span></span><span></span><span></span><em>password-analyzer.app</em></div>
+                <div class="mock-body">
+                  <div class="mock-row"><span class="mock-eyebrow">Password health</span><span class="mock-pill">Live</span></div>
+                  <p class="mock-title">Check a password</p>
+                  <div class="mock-input"><span>&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span><i>show</i></div>
+                  <div class="mock-strength"><span></span></div>
+                  <div class="mock-row mock-caption"><span>STRONG</span><span>82 / 100</span></div>
+                  <div class="mock-stats">
+                    <span class="mock-stat"><small>ENTROPY</small><strong>74.2</strong></span>
+                    <span class="mock-stat"><small>CRACK TIME</small><strong>3.4 yr</strong></span>
+                    <span class="mock-stat"><small>BREACHES</small><strong>0</strong></span>
+                  </div>
+                  <div class="mock-checks"><span>&#10003; length</span><span>&#10003; symbol mix</span><span>&#10003; no reuse</span></div>
+                </div>
+              </div>
+            </div>
           </article>
-          <article class="project-card" data-categories="ai web">
-            <div class="card-top"><span>AI ? Web</span><span class="card-index">02</span></div>
-            <h3>Career Assistant</h3>
-            <p>A career workspace for resume reviews, job search, interview practice, and application tracking.</p>
-            <div class="card-actions"><button class="report-link" type="button" data-title="Career Assistant" data-report="A browser-based career workspace with resume parsing and ATS scoring, job search, application tracking, resume tailoring, mock interviews, scam checks, and career roadmaps. Optional AI coaching and external integrations can be configured.">REPORT</button><a href="https://github.com/koyelkar24/Career-Assistant" target="_blank" rel="noopener noreferrer">CODE</a></div>
+
+          <article class="door-card" data-categories="ai web" style="--card-accent: #a9b6c4">
+            <div class="door-card-copy">
+              <p class="door-card-index"><span>02</span> AI / Web app</p>
+              <h3>Career Assistant</h3>
+              <p>A career workspace for resume reviews, job search, interview practice, and application tracking.</p>
+              <ul class="door-tags"><li>Resume review</li><li>ATS scoring</li><li>Interview prep</li></ul>
+              <div class="door-card-actions">
+                <button class="report-link door-report" type="button" data-title="Career Assistant" data-report="A browser-based career workspace with resume parsing and ATS scoring, job search, application tracking, resume tailoring, mock interviews, scam checks, and career roadmaps. Optional AI coaching and external integrations can be configured.">Project report <span aria-hidden="true">&#8599;</span></button>
+                <a class="door-code" href="https://github.com/koyelkar24/Career-Assistant" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">&#8599;</span></a>
+              </div>
+            </div>
+            <div class="door-card-visual" aria-hidden="true">
+              <div class="mock-browser">
+                <div class="mock-bar"><span></span><span></span><span></span><em>career-assistant.app</em></div>
+                <div class="mock-body">
+                  <div class="mock-row"><span class="mock-eyebrow">Career workspace</span><span class="mock-pill">AI coach</span></div>
+                  <p class="mock-title">Your next move, mapped.</p>
+                  <div class="mock-career-grid">
+                    <div class="mock-career-side">
+                      <span class="mock-avatar">KK</span>
+                      <span class="mock-side-line"></span>
+                      <span class="mock-side-line mock-side-line--short"></span>
+                      <span class="mock-side-line"></span>
+                    </div>
+                    <div class="mock-career-main">
+                      <div class="mock-ring" style="--ring: 82"><span>82</span></div>
+                      <div class="mock-career-score"><small>RESUME SCORE</small><strong>Ready to apply</strong></div>
+                    </div>
+                  </div>
+                  <div class="mock-career-tools"><span>Resume review</span><span>Interview prep</span><span>Track applications</span></div>
+                </div>
+              </div>
+            </div>
           </article>
-          <article class="project-card" data-categories="ai">
-            <div class="card-top"><span>AI</span><span class="card-index">03</span></div>
-            <h3>J.A.R.V.I.S. Video Summarizer</h3>
-            <p>Turns videos into transcripts, concise summaries, smart chapters, Q&amp;A, and study materials.</p>
-            <div class="card-actions"><button class="report-link" type="button" data-title="J.A.R.V.I.S. Video Summarizer" data-report="A video learning assistant that transcribes YouTube links and uploaded videos, then creates summaries, highlights, chapters, Q&amp;A, notes, quizzes, and flashcards. It can use captions or Faster-Whisper, with local Ollama or Gemini models.">REPORT</button><a href="https://github.com/koyelkar24/summarization_dashboard" target="_blank" rel="noopener noreferrer">CODE</a></div>
+
+          <article class="door-card" data-categories="ai" style="--card-accent: #9fb8d0">
+            <div class="door-card-copy">
+              <p class="door-card-index"><span>03</span> AI / Learning tool</p>
+              <h3>J.A.R.V.I.S. Video Summarizer</h3>
+              <p>Turns videos into transcripts, concise summaries, smart chapters, Q&amp;A, and study materials.</p>
+              <ul class="door-tags"><li>Transcription</li><li>Summaries</li><li>Smart chapters</li></ul>
+              <div class="door-card-actions">
+                <button class="report-link door-report" type="button" data-title="J.A.R.V.I.S. Video Summarizer" data-report="A video learning assistant that transcribes YouTube links and uploaded videos, then creates summaries, highlights, chapters, Q&amp;A, notes, quizzes, and flashcards. It can use captions or Faster-Whisper, with local Ollama or Gemini models.">Project report <span aria-hidden="true">&#8599;</span></button>
+                <a class="door-code" href="https://github.com/koyelkar24/summarization_dashboard" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">&#8599;</span></a>
+              </div>
+            </div>
+            <div class="door-card-visual" aria-hidden="true">
+              <div class="mock-browser">
+                <div class="mock-bar"><span></span><span></span><span></span><em>jarvis.study</em></div>
+                <div class="mock-body">
+                  <div class="mock-row"><span class="mock-eyebrow">Video learning</span><span class="mock-pill">Transcribed</span></div>
+                  <p class="mock-title">From 42 minutes to 4.</p>
+                  <div class="mock-video"><span class="mock-play"></span><span class="mock-video-time">12:04 / 42:18</span><span class="mock-wave"></span></div>
+                  <div class="mock-transcript"><span></span><span></span><span></span></div>
+                  <div class="mock-chips"><span>Summary</span><span>Chapters</span><span>Q&amp;A</span><span>Flashcards</span></div>
+                </div>
+              </div>
+            </div>
           </article>
-          <article class="project-card" data-categories="security">
-            <div class="card-top"><span>Security</span><span class="card-index">04</span></div>
-            <h3>Deepfake Image Tampering Detector</h3>
-            <p>Explores image authenticity and tampering detection through a focused forensic workflow.</p>
-            <div class="card-actions"><button class="report-link" type="button" data-title="Deepfake Image Tampering Detector" data-report="An image forensics project focused on identifying deepfake imagery and signs of image tampering. Repository details were unavailable when this portfolio entry was added.">REPORT</button><a href="https://github.com/arkap1502/Deepfake-Image-Tampering-Detector" target="_blank" rel="noopener noreferrer">CODE</a></div>
+
+          <article class="door-card" data-categories="security" style="--card-accent: #d3a06d">
+            <div class="door-card-copy">
+              <p class="door-card-index"><span>04</span> Security / Forensics</p>
+              <h3>Deepfake Image Tampering Detector</h3>
+              <p>Explores image authenticity and tampering detection through a focused forensic workflow.</p>
+              <ul class="door-tags"><li>Image forensics</li><li>Tamper analysis</li><li>Deepfake detection</li></ul>
+              <div class="door-card-actions">
+                <button class="report-link door-report" type="button" data-title="Deepfake Image Tampering Detector" data-report="An image forensics project focused on identifying deepfake imagery and signs of image tampering. Repository details were unavailable when this portfolio entry was added.">Project report <span aria-hidden="true">&#8599;</span></button>
+                <a class="door-code" href="https://github.com/arkap1502/Deepfake-Image-Tampering-Detector" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">&#8599;</span></a>
+              </div>
+            </div>
+            <div class="door-card-visual" aria-hidden="true">
+              <div class="mock-browser">
+                <div class="mock-bar"><span></span><span></span><span></span><em>forensics.lab / scan</em></div>
+                <div class="mock-body">
+                  <div class="mock-row"><span class="mock-eyebrow">Image forensics</span><span class="mock-pill">Scan complete</span></div>
+                  <p class="mock-title">Authenticity, examined.</p>
+                  <div class="mock-photo">
+                    <span class="mock-photo-face"><span class="mock-photo-hair"></span><span class="mock-photo-features"></span></span>
+                    <span class="mock-photo-neck"></span>
+                    <span class="mock-scanline"></span>
+                    <span class="mock-photo-badge">98.2% authentic</span>
+                  </div>
+                  <div class="mock-stats mock-stats--two">
+                    <span class="mock-stat"><small>ARTIFACTS</small><strong>02</strong></span>
+                    <span class="mock-stat"><small>CONFIDENCE</small><strong>98.2%</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </article>
-          <article class="project-card" data-categories="security web">
-            <div class="card-top"><span>Security ? Web</span><span class="card-index">05</span></div>
-            <h3>Secure Vault System</h3>
-            <p>A secure vault project centered on protecting and organizing sensitive information.</p>
-            <div class="card-actions"><button class="report-link" type="button" data-title="Secure Vault System" data-report="A secure vault project for managing sensitive information. Repository details were unavailable when this portfolio entry was added.">REPORT</button><a href="https://github.com/dipanjann804-svg/Secure-Vault-System" target="_blank" rel="noopener noreferrer">CODE</a></div>
+
+          <article class="door-card" data-categories="security web" style="--card-accent: #b7c7a8">
+            <div class="door-card-copy">
+              <p class="door-card-index"><span>05</span> Security / Web app</p>
+              <h3>Secure Vault System</h3>
+              <p>A secure vault project centered on protecting and organizing sensitive information.</p>
+              <ul class="door-tags"><li>Encryption</li><li>Access control</li><li>Storage</li></ul>
+              <div class="door-card-actions">
+                <button class="report-link door-report" type="button" data-title="Secure Vault System" data-report="A secure vault project for managing sensitive information. Repository details were unavailable when this portfolio entry was added.">Project report <span aria-hidden="true">&#8599;</span></button>
+                <a class="door-code" href="https://github.com/dipanjann804-svg/Secure-Vault-System" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">&#8599;</span></a>
+              </div>
+            </div>
+            <div class="door-card-visual" aria-hidden="true">
+              <div class="mock-phone">
+                <div class="mock-phone-screen">
+                  <span class="mock-phone-notch"></span>
+                  <div class="mock-vault-top"><span>SECURE VAULT</span><span>&bull;&bull;&bull;</span></div>
+                  <div class="mock-lock"><span></span></div>
+                  <p class="mock-vault-title">Welcome back</p>
+                  <p class="mock-vault-sub">Enter your vault code</p>
+                  <div class="mock-keypad"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  <span class="mock-vault-status">AES-256 / LOCKED</span>
+                </div>
+              </div>
+            </div>
           </article>
-          <article class="project-card" data-categories="security">
-            <div class="card-top"><span>Security</span><span class="card-index">06</span></div>
-            <h3>Text Encryption Tool</h3>
-            <p>A desktop app for experimenting with classical and modern approaches to text encryption.</p>
-            <div class="card-actions"><button class="report-link" type="button" data-title="Text Encryption Tool" data-report="A desktop application built with Python and Tkinter to explore encrypting and decrypting text with classical and modern cipher techniques.">REPORT</button><a href="https://github.com/koyelkar24/text_encryption" target="_blank" rel="noopener noreferrer">CODE</a></div>
+
+          <article class="door-card" data-categories="security crypto" style="--card-accent: #e0b089">
+            <div class="door-card-copy">
+              <p class="door-card-index"><span>06</span> Cryptography / Desktop</p>
+              <h3>Text Encryption Tool</h3>
+              <p>A desktop app for experimenting with classical and modern approaches to text encryption.</p>
+              <ul class="door-tags"><li>Classical ciphers</li><li>Python</li><li>Tkinter</li></ul>
+              <div class="door-card-actions">
+                <button class="report-link door-report" type="button" data-title="Text Encryption Tool" data-report="A desktop application built with Python and Tkinter to explore encrypting and decrypting text with classical and modern cipher techniques.">Project report <span aria-hidden="true">&#8599;</span></button>
+                <a class="door-code" href="https://github.com/koyelkar24/text_encryption" target="_blank" rel="noopener noreferrer">View code <span aria-hidden="true">&#8599;</span></a>
+              </div>
+            </div>
+            <div class="door-card-visual" aria-hidden="true">
+              <div class="mock-browser">
+                <div class="mock-bar"><span></span><span></span><span></span><em>cipher.local / des</em></div>
+                <div class="mock-body">
+                  <div class="mock-row"><span class="mock-eyebrow">Text encryption</span><span class="mock-pill">Local only</span></div>
+                  <p class="mock-title">Make a message unreadable.</p>
+                  <div class="mock-cipher-panels">
+                    <div class="mock-cipher-panel"><small>PLAINTEXT</small><p>meet me at dawn</p></div>
+                    <span class="mock-cipher-arrow">&#8594;</span>
+                    <div class="mock-cipher-panel mock-cipher-panel--out"><small>CIPHERTEXT</small><p>phhw ph dw gdzq</p></div>
+                  </div>
+                  <div class="mock-key-row"><span>CAESAR +3</span><span>KEY 03</span><span>COPY</span></div>
+                </div>
+              </div>
+            </div>
           </article>
         </div>
+
+        <div class="showcase-foot">
+          <button class="back-doors" type="button" data-close-doors><span aria-hidden="true">&#8592;</span> Back to the doors</button>
+          <p>SELECTED WORK <span>/</span> 06 BUILDS</p>
+        </div>
+
         <dialog class="project-dialog" aria-labelledby="dialog-title"><form method="dialog"><button class="dialog-close" aria-label="Close report">&times;</button></form><p class="work-kicker">PROJECT REPORT</p><h3 id="dialog-title"></h3><p id="dialog-copy"></p></dialog>
       </div>
     </section>

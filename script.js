@@ -312,3 +312,190 @@ if (!prefersReducedMotion && 'IntersectionObserver' in window) {
   stageAboutElement(aboutHeading, 'heading-reveal', 0.2);
   stageAboutElement(aboutNarrative, 'text-reveal', 0.08);
 }
+
+
+/* Selected work — door entry sequence.
+   Clicking a door swings it open, pushes the camera through the
+   doorway, then reveals the matching project showcase. The same
+   interaction reverses on the way back. */
+const workDoors = document.querySelector('.work-doors');
+const doorsCamera = document.getElementById('doorsCamera');
+const workDoorsList = [...document.querySelectorAll('.work-doors .door')];
+const doorShowcase = document.getElementById('projectShowcase');
+const doorShowcaseKicker = document.getElementById('showcaseKicker');
+const doorShowcaseTitle = document.getElementById('showcaseTitle');
+const doorShowcaseIntro = document.getElementById('showcaseIntro');
+const doorShowcaseCount = document.getElementById('showcaseCount');
+const doorShowcaseDoor = document.getElementById('showcaseDoor');
+const doorCards = [...document.querySelectorAll('.work-doors .door-card')];
+const closeDoorButtons = [...document.querySelectorAll('[data-close-doors]')];
+
+const doorCategoryData = {
+  security: {
+    index: '01',
+    label: 'SECURITY',
+    title: 'Security',
+    count: '04 projects',
+    accent: '#79c8c0',
+    intro: 'Defensive thinking, careful implementation, and a habit of asking what could go wrong. These builds make security tangible.'
+  },
+  ai: {
+    index: '02',
+    label: 'AI',
+    title: 'AI & Automation',
+    count: '02 projects',
+    accent: '#a9b6c4',
+    intro: 'Tools that turn raw input into something useful — a clearer career path, a shorter video, a better next step.'
+  },
+  web: {
+    index: '03',
+    label: 'WEB',
+    title: 'Web',
+    count: '03 projects',
+    accent: '#c2d8b8',
+    intro: 'Browser-based work built around real workflows: clean structure, useful interfaces, and details that hold up.'
+  },
+  crypto: {
+    index: '04',
+    label: 'CRYPTOGRAPHY',
+    title: 'Cryptography',
+    count: '02 projects',
+    accent: '#e0b089',
+    intro: 'Cipher experiments and encryption tools, built to make the invisible mechanics of secrecy easier to see.'
+  }
+};
+
+let activeWorkDoor = null;
+let doorAnimationToken = 0;
+
+const scrollToWorkTop = () => {
+  if (!workDoors) return;
+  const top = workDoors.getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+};
+
+const setShowcaseCategory = (category) => {
+  const data = doorCategoryData[category];
+  if (!data || !doorShowcase) return;
+
+  doorShowcase.style.setProperty('--showcase-accent', data.accent);
+  if (doorShowcaseKicker) doorShowcaseKicker.textContent = `BEHIND DOOR ${data.index} / ${data.label}`;
+  if (doorShowcaseTitle) doorShowcaseTitle.textContent = data.title;
+  if (doorShowcaseIntro) doorShowcaseIntro.textContent = data.intro;
+  if (doorShowcaseCount) doorShowcaseCount.textContent = data.count;
+  if (doorShowcaseDoor) doorShowcaseDoor.textContent = `DOOR ${data.index}`;
+
+  let visibleIndex = 0;
+  doorCards.forEach((card) => {
+    const visible = (card.dataset.categories || '').split(/\s+/).includes(category);
+    card.hidden = !visible;
+    if (visible) {
+      card.style.setProperty('--card-delay', `${140 + visibleIndex * 70}ms`);
+      visibleIndex += 1;
+    }
+  });
+};
+
+const enterWorkDoor = (door) => {
+  if (!workDoors || !door || !doorsCamera) return;
+  if (workDoors.classList.contains('is-showcase') || workDoors.classList.contains('is-entering') || workDoors.classList.contains('is-closing')) return;
+
+  const category = door.dataset.door;
+  if (!category || !doorCategoryData[category]) return;
+
+  const token = ++doorAnimationToken;
+  activeWorkDoor = door;
+  setShowcaseCategory(category);
+
+  const cameraRect = doorsCamera.getBoundingClientRect();
+  const doorRect = door.getBoundingClientRect();
+  const originX = ((doorRect.left + doorRect.width / 2 - cameraRect.left) / cameraRect.width) * 100;
+  const originY = ((doorRect.top + doorRect.height / 2 - cameraRect.top) / cameraRect.height) * 100;
+  doorsCamera.style.transformOrigin = `${originX}% ${originY}%`;
+
+  workDoorsList.forEach((item) => item.classList.remove('is-open'));
+  door.classList.add('is-open');
+  workDoors.classList.remove('is-returning');
+
+  let swapDelay = 30;
+  if (prefersReducedMotion) {
+    workDoors.classList.add('is-entering');
+  } else {
+    const doorOpenTime = 560;
+    const cameraTime = 950;
+    swapDelay = doorOpenTime + cameraTime;
+    window.setTimeout(() => {
+      if (token !== doorAnimationToken) return;
+      workDoors.classList.add('is-entering');
+    }, doorOpenTime);
+  }
+
+  window.setTimeout(() => {
+    if (token !== doorAnimationToken) return;
+    workDoors.classList.add('is-showcase');
+    workDoors.classList.remove('is-entering');
+    workDoors.setAttribute('aria-labelledby', 'showcaseTitle');
+    doorsCamera.style.transformOrigin = '50% 50%';
+    scrollToWorkTop();
+
+    if (doorShowcaseTitle) {
+      doorShowcaseTitle.setAttribute('tabindex', '-1');
+      doorShowcaseTitle.focus({ preventScroll: true });
+    }
+  }, swapDelay);
+};
+
+const closeWorkDoors = () => {
+  if (!workDoors || !workDoors.classList.contains('is-showcase') || workDoors.classList.contains('is-closing')) return;
+  if (projectDialog && projectDialog.open) projectDialog.close();
+
+  workDoors.classList.add('is-closing');
+  const token = ++doorAnimationToken;
+  const delay = prefersReducedMotion ? 0 : 220;
+
+  window.setTimeout(() => {
+    if (token !== doorAnimationToken) return;
+    workDoors.classList.remove('is-showcase', 'is-closing');
+    workDoors.classList.add('is-returning');
+    workDoors.setAttribute('aria-labelledby', 'work-title');
+    doorsCamera.style.transformOrigin = '50% 50%';
+    scrollToWorkTop();
+
+    if (activeWorkDoor) {
+      const door = activeWorkDoor;
+      window.setTimeout(() => {
+        if (token === doorAnimationToken) door.classList.remove('is-open');
+      }, 260);
+      door.focus({ preventScroll: true });
+    }
+
+    window.setTimeout(() => {
+      if (token === doorAnimationToken) workDoors.classList.remove('is-returning');
+    }, 700);
+  }, delay);
+};
+
+if (workDoors && doorsCamera) {
+  workDoorsList.forEach((door) => {
+    door.addEventListener('click', () => enterWorkDoor(door));
+  });
+
+  closeDoorButtons.forEach((button) => {
+    button.addEventListener('click', closeWorkDoors);
+  });
+
+  document.querySelectorAll('a[href="#work"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      if (workDoors.classList.contains('is-showcase')) {
+        event.preventDefault();
+        closeWorkDoors();
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && workDoors.classList.contains('is-showcase') && !(projectDialog && projectDialog.open)) {
+      closeWorkDoors();
+    }
+  });
+}
