@@ -3998,3 +3998,34 @@ html.intro-exit.is-fast .intro-shell { transition-duration: .22s; }
   .doors-camera { transition-duration: .01ms !important; }
   .door-panel { transition-duration: .01ms !important; }
 }
+
+/* =========================================================================
+   Smooth-scroll motion layer
+   Requires the page's main content to live inside <main id="main">.
+   ========================================================================= */
+
+/* Lenis: let it drive scrolling instead of the CSS smooth behaviour. */
+html.lenis,
+html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
+
+/* The filter / skew is written inline by script.js while scrolling only. */
+html.motion-ready main#main {
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+html.motion-ready main#main.is-motion {
+  will-change: filter, transform;
+}
+
+/* Reduced motion: no blur/skew. Native scrolling stays intact. */
+@media (prefers-reduced-motion: reduce) {
+  html.motion-ready main#main {
+    filter: none !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+}

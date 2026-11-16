@@ -379,6 +379,12 @@ const clearAutoReturn = () => {
 const scrollToWorkTop = (instant = false) => {
   if (!workDoors) return;
   const top = Math.max(0, workDoors.getBoundingClientRect().top + window.scrollY);
+  // When Lenis is running, hand the jump to it so its internal target stays
+  // in sync instead of fighting a native window.scrollTo.
+  if (window.__lenis) {
+    window.__lenis.scrollTo(top, { immediate: true, force: true });
+    return;
+  }
   if (!instant) {
     window.scrollTo({ top, behavior: 'auto' });
     return;
@@ -573,4 +579,133 @@ if (workDoors && doorsCamera) {
 
     showcaseObserver.observe(showcaseEnd);
   }
+}
+
+/* =========================================================================
+   Smooth scroll + velocity motion blur.
+
+   Everything below is skipped for prefers-reduced-motion visitors, who keep
+   plain native scrolling with no blur.
+   ========================================================================= */
+
+/* ---- Tunable constants -------------------------------------------------
+   lerp          Lenis smoothing (lower = smoother / heavier)
+   blurMax       strongest blur while sliding, desktop (px)
+   skewMax       strongest vertical shear while sliding, desktop (deg)
+   stretchMax    extra vertical scale at full speed (1 + this)
+   velocityNorm  scroll velocity that maps to "full speed"
+   damping       how fast blur/skew ease back to sharp (0-1 per frame)
+   ----------------------------------------------------------------------- */
+const SCROLL_MOTION = {
+  lerp: 0.08,
+  blurMax: 8,
+  blurMaxMobile: 4,
+  skewMax: 2.2,
+  skewMaxMobile: 1.2,
+  stretchMax: 0.0015,
+  velocityNorm: 55,
+  damping: 0.14
+};
+
+if (
+  !prefersReducedMotion &&
+  window.Lenis &&
+  window.gsap &&
+  window.ScrollTrigger &&
+  document.getElementById('main')
+) {
+  const mainEl = document.getElementById('main');
+  const htmlEl = document.documentElement;
+  const mobileQuery = window.matchMedia('(max-width: 740px)');
+
+  htmlEl.classList.add('motion-ready');
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---- 1. Lenis smooth scroll, synced with GSAP + ScrollTrigger -------- */
+  const lenis = new Lenis({
+    lerp: SCROLL_MOTION.lerp,
+    smoothWheel: true,
+    autoRaf: false
+  });
+  window.__lenis = lenis;
+
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+
+  /* ---- 2. Velocity-driven blur + vertical shear ----------------------- */
+  let scrollVelocity = 0;
+  let blur = 0;
+  let skew = 0;
+  let scale = 1;
+
+  lenis.on('scroll', (event) => {
+    scrollVelocity = event.velocity || 0;
+  });
+
+  const applyMotion = () => {
+    const mobile = mobileQuery.matches;
+    const maxBlur = mobile ? SCROLL_MOTION.blurMaxMobile : SCROLL_MOTION.blurMax;
+    const maxSkew = mobile ? SCROLL_MOTION.skewMaxMobile : SCROLL_MOTION.skewMax;
+
+    // Normalise velocity to 0-1, then ease the applied values toward it.
+    const speed = Math.min(Math.abs(scrollVelocity) / SCROLL_MOTION.velocityNorm, 1);
+    const targetBlur = speed * maxBlur;
+    const targetSkew = Math.sign(scrollVelocity) * speed * maxSkew;
+    const targetScale = 1 + speed * SCROLL_MOTION.stretchMax;
+
+    blur += (targetBlur - blur) * SCROLL_MOTION.damping;
+    skew += (targetSkew - skew) * SCROLL_MOTION.damping;
+    scale += (targetScale - scale) * SCROLL_MOTION.damping;
+
+    if (blur < 0.01) blur = 0;
+    if (Math.abs(skew) < 0.005) skew = 0;
+    if (Math.abs(scale - 1) < 0.00001) scale = 1;
+
+    const moving = blur > 0 || skew !== 0 || scale !== 1;
+    mainEl.classList.toggle('is-motion', moving);
+
+    if (moving) {
+      mainEl.style.filter = `blur(${blur.toFixed(2)}px)`;
+      mainEl.style.transform = `skewY(${skew.toFixed(2)}deg) scaleY(${scale.toFixed(4)})`;
+    } else if (mainEl.style.filter) {
+      // Drop the layer entirely once we are at rest.
+      mainEl.style.filter = '';
+      mainEl.style.transform = '';
+    }
+  };
+
+  gsap.ticker.add(applyMotion);
+
+  /* ---- 3. Navbar / in-page anchors glide with Lenis ------------------- */
+  document.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const hash = link.getAttribute('href');
+    if (!hash || hash === '#') return;
+
+    const target = document.querySelector(hash);
+    if (!target) return;
+
+    event.preventDefault();
+    // Lenis already respects the page's `scroll-padding-top`, so the navbar
+    // clearance is handled by CSS; no manual offset is needed here.
+    lenis.scrollTo(target, { duration: 1.1 });
+    if (history.pushState) history.pushState(null, '', hash);
+  });
+
+  // Land on the right spot if the page opens with a hash.
+  if (window.location.hash) {
+    const initialTarget = document.querySelector(window.location.hash);
+    if (initialTarget) lenis.scrollTo(initialTarget, { immediate: true });
+  }
+
+  // Re-measure once fonts/images have settled the layout.
+  window.addEventListener('load', () => ScrollTrigger.refresh());
 }
