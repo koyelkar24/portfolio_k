@@ -233,7 +233,10 @@ if (aboutPortrait) {
   let portraitReady = !portraitImage || (portraitImage.complete && portraitImage.naturalWidth > 0);
 
   const revealPortrait = () => {
-    if (portraitSeen && portraitReady) aboutPortrait.classList.add('is-inview');
+    if (!portraitSeen || !portraitReady) return;
+    aboutPortrait.classList.add('is-inview');
+    // The hanging-photo animation at the bottom of this file listens for this.
+    aboutPortrait.dispatchEvent(new CustomEvent('portfolio:portrait-reveal'));
   };
 
   if (!prefersReducedMotion && 'IntersectionObserver' in window) {
@@ -700,12 +703,86 @@ if (
     if (history.pushState) history.pushState(null, '', hash);
   });
 
-  // Land on the right spot if the page opens with a hash.
-  if (window.location.hash) {
+  // Land on the right spot if the page opens with a hash. Wait for the load
+  // event so fonts and images have settled before measuring the target.
+  const scrollToInitialHash = () => {
+    if (!window.location.hash) return;
     const initialTarget = document.querySelector(window.location.hash);
-    if (initialTarget) lenis.scrollTo(initialTarget, { immediate: true });
+    if (initialTarget) lenis.scrollTo(initialTarget, { immediate: true, force: true });
+  };
+
+  if (window.location.hash) {
+    if (document.readyState === 'complete') {
+      scrollToInitialHash();
+    } else {
+      window.addEventListener('load', () => window.setTimeout(scrollToInitialHash, 80), { once: true });
+    }
   }
 
   // Re-measure once fonts/images have settled the layout.
   window.addEventListener('load', () => ScrollTrigger.refresh());
+}
+
+/* =========================================================================
+   About: suspended portrait reveal.
+
+   The portrait drops in on a string, swings past its resting angle, then
+   keeps a slow pendulum sway. The heading and info rows use the CSS masks
+   and cascade above. Skipped entirely for reduced-motion visitors.
+   ========================================================================= */
+if (!prefersReducedMotion && window.gsap) {
+  const aboutPortrait = document.querySelector('.about-portrait');
+  const aboutStage = document.querySelector('.about-portrait-stage');
+
+  if (aboutPortrait && aboutStage) {
+    document.documentElement.classList.add('about-motion-ready');
+
+    const aboutString = aboutStage.querySelector('.about-portrait-string');
+    const aboutPin = aboutStage.querySelector('.about-portrait-pin');
+    let hangStarted = false;
+
+    const startHang = () => {
+      if (hangStarted) return;
+      hangStarted = true;
+
+      // Draw the string and pop the pin before the card settles.
+      if (aboutString) {
+        gsap.fromTo(aboutString, { scaleY: 0 }, { scaleY: 1, duration: .85, ease: 'power2.out' });
+      }
+      if (aboutPin) {
+        gsap.fromTo(aboutPin, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: .55, ease: 'back.out(2)' });
+      }
+
+      // Drop, overshoot, and settle around the pin above the photo.
+      const intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      intro
+        .fromTo(aboutStage,
+          { opacity: 0, y: -46, rotation: -11, rotationY: -10 },
+          { opacity: 1, y: 0, rotation: -2.2, rotationY: 0, duration: 1.45 }
+        )
+        .to(aboutStage, { rotation: 2, rotationY: 2.6, duration: .95, ease: 'sine.inOut' }, '>-0.05')
+        .to(aboutStage, { rotation: -1.8, rotationY: 0, duration: 1.05, ease: 'sine.inOut' });
+
+      // A slow, endless pendulum once the entrance has finished.
+      intro.eventCallback('onComplete', () => {
+        gsap.to(aboutStage, {
+          rotation: 1.4,
+          rotationY: 2.2,
+          duration: 4.2,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1
+        });
+      });
+    };
+
+    // The About observer may have fired before this block was reached. If the
+    // browser has no IntersectionObserver, the observer is never set up, so
+    // start the swing immediately instead of leaving the portrait hidden.
+    if (!('IntersectionObserver' in window) || aboutPortrait.classList.contains('is-inview')) {
+      startHang();
+    } else {
+      aboutPortrait.addEventListener('portfolio:portrait-reveal', startHang, { once: true });
+    }
+  }
 }
