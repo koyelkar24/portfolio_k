@@ -59,7 +59,7 @@ window.addEventListener('scroll', updateHeader, { passive: true });
 
 if (!prefersReducedMotion && 'IntersectionObserver' in window) {
   const revealItems = document.querySelectorAll(
-    '.section-heading, .project-visual, .project-number, .project-copy h3, .project-copy > p:not(.project-number), .tag-list, .project-link, .skill-card, .about-heading, .about-content, .education-item, .contact-inner'
+    '.section-heading, .project-visual, .project-number, .project-copy h3, .project-copy > p:not(.project-number), .tag-list, .project-link, .skill-card, .about-heading, .about-content, .education-item'
   );
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
@@ -783,6 +783,103 @@ if (!prefersReducedMotion && window.gsap) {
       startHang();
     } else {
       aboutPortrait.addEventListener('portfolio:portrait-reveal', startHang, { once: true });
+    }
+  }
+}
+
+/* =========================================================================
+   Contact: scroll-triggered reveal.
+
+   The header line draws in, the headline uncovers, then the lead, email CTA,
+   card details, socials, and footer rise as they enter the viewport. Initial
+   states are applied only when GSAP + ScrollTrigger are available, so
+   reduced-motion and no-JS visitors always see the finished section. Triggers
+   are created after load so they measure the final layout.
+   ========================================================================= */
+if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
+  const contact = document.getElementById('contact');
+
+  if (contact) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const head = contact.querySelector('.contact-head');
+    const kicker = contact.querySelector('.contact-kicker');
+    const note = contact.querySelector('.contact-head-note');
+    const headLine = contact.querySelector('.contact-head-line');
+    const title = contact.querySelector('.contact-intro h2');
+    const copy = contact.querySelector('.contact-copy');
+    const lead = contact.querySelector('.contact-lead');
+    const mailWrap = contact.querySelector('.contact-mail-wrap');
+    const card = contact.querySelector('.contact-card');
+    const cardTop = contact.querySelector('.contact-card-top');
+    const metaRows = contact.querySelectorAll('.contact-meta-row');
+    const socials = contact.querySelector('.contact-socials');
+    const footer = document.querySelector('.site-footer');
+
+    gsap.set([kicker, note], { y: 14, opacity: 0 });
+    gsap.set(headLine, { scaleX: 0, transformOrigin: 'left center' });
+    gsap.set(title, { y: 40, opacity: 0, clipPath: 'inset(0 0 100% 0)' });
+    gsap.set([lead, mailWrap], { y: 24, opacity: 0 });
+    gsap.set(mailWrap, { scale: .985 });
+
+    const cardStart = window.matchMedia('(max-width: 900px)').matches
+      ? { y: 32, x: 0, rotationY: 0 }
+      : { y: 0, x: 56, rotationY: -5 };
+    gsap.set(card, { ...cardStart, opacity: 0, transformPerspective: 1100 });
+    gsap.set(cardTop, { y: 12, opacity: 0 });
+    gsap.set(metaRows, { y: 12, opacity: 0 });
+    gsap.set(socials, { y: 10, opacity: 0 });
+    if (footer) gsap.set(footer, { y: 16, opacity: 0 });
+
+    const startReveal = () => {
+      // 1. The contact header and headline uncover as the section enters.
+      gsap.timeline({
+        scrollTrigger: { trigger: head, start: 'top 82%', once: true },
+        defaults: { ease: 'power3.out' }
+      })
+        .to(headLine, { scaleX: 1, duration: 1.1, ease: 'power3.inOut' })
+        .to([kicker, note], { y: 0, opacity: 1, duration: .65, stagger: .08 }, .12)
+        .to(title, { y: 0, opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 1.05 }, .22);
+
+      // 2. The lead and email CTA rise together.
+      gsap.timeline({
+        scrollTrigger: { trigger: copy, start: 'top 85%', once: true },
+        defaults: { ease: 'power3.out' }
+      })
+        .to(lead, { y: 0, opacity: 1, duration: .75 })
+        .to(mailWrap, { y: 0, opacity: 1, scale: 1, duration: .85 }, .1);
+
+      // 3. The card settles in 3D, then its details cascade.
+      gsap.timeline({
+        scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+        defaults: { ease: 'power3.out' }
+      })
+        .to(card, { x: 0, y: 0, rotationY: 0, opacity: 1, duration: 1.05 })
+        .to(cardTop, { y: 0, opacity: 1, duration: .55 }, .55)
+        .to(metaRows, { y: 0, opacity: 1, duration: .5, stagger: .07 }, .65)
+        .to(socials, { y: 0, opacity: 1, duration: .5 }, .92);
+
+      // 4. The footer closes the page with the same quiet rise.
+      if (footer) {
+        gsap.to(footer, {
+          y: 0,
+          opacity: 1,
+          duration: .7,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: footer, start: 'top 95%', once: true }
+        });
+      }
+
+      ScrollTrigger.refresh();
+    };
+
+    // Trigger positions are measured after images have loaded. Creating them
+    // during the initial parse can make the first trigger fire against a
+    // shorter page and remove itself before the reveal has a chance to run.
+    if (document.readyState === 'complete') {
+      startReveal();
+    } else {
+      window.addEventListener('load', startReveal, { once: true });
     }
   }
 }
