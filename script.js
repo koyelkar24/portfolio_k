@@ -883,3 +883,175 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
     }
   }
 }
+
+/* =========================================================================
+   Skills: interactive working-matrix.
+
+   Selecting a badge opens the builds that use it; foundational skills show
+   a compact note instead. The section reveals in with GSAP + ScrollTrigger,
+   and interactions animate the related bar.
+   ========================================================================= */
+if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
+  const skillsSection = document.getElementById('skills');
+  const skillsHeading = skillsSection.querySelector('.skills-heading');
+  const skillsColumns = skillsSection.querySelectorAll('.skills-column');
+  const skillBadges = skillsSection.querySelectorAll('.skill-badge');
+  const skillsUsed = skillsSection.querySelectorAll('.skills-used');
+  const skillsToolkit = skillsSection.querySelector('.skills-toolkit');
+  const related = skillsSection.querySelector('.skills-related');
+  const relatedSkill = skillsSection.querySelector('.skills-related-skill');
+  const relatedSub = skillsSection.querySelector('.skills-related-sub');
+  const relatedBuilds = skillsSection.querySelector('.skills-related-builds');
+  const relatedHint = skillsSection.querySelector('.skills-related-hint');
+
+  const projectRegistry = {
+    passwordAnalyzer: { name: 'Password Analyzer', href: 'https://github.com/koyelkar24/passwordAnalyser' },
+    careerAssistant: { name: 'Career Assistant', href: 'https://github.com/koyelkar24/Career-Assistant' },
+    jArcVideo: { name: 'J.A.R.V.I.S. Video Summarizer', href: 'https://github.com/koyelkar24/summarization_dashboard' },
+    deepfake: { name: 'Deepfake Image Tampering Detector', href: 'https://github.com/arkap1502/Deepfake-Image-Tampering-Detector' },
+    secureVault: { name: 'Secure Vault System', href: 'https://github.com/dipanjann804-svg/Secure-Vault-System' },
+    textEncryption: { name: 'Text Encryption Tool', href: 'https://github.com/koyelkar24/text_encryption' }
+  };
+
+  const skillsDirectory = {
+    'Password audit': { type: 'project', builds: ['passwordAnalyzer', 'secureVault'] },
+    'Breach checks': { type: 'project', builds: ['passwordAnalyzer'] },
+    'Web app security': { type: 'project', builds: ['passwordAnalyzer', 'secureVault', 'careerAssistant'] },
+    'Encryption': { type: 'project', builds: ['secureVault', 'textEncryption'] },
+    'Access control': { type: 'project', builds: ['secureVault'] },
+    'Digital forensics': { type: 'project', builds: ['deepfake'] },
+    'Threat modeling': { type: 'foundation', builds: [] },
+    'Network recon': { type: 'foundation', builds: [] },
+    'HTML5': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault'] },
+    'CSS3': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault'] },
+    'JavaScript': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault'] },
+    'React.js': { type: 'foundation', builds: [] },
+    'Responsive UI': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault'] },
+    'Flask': { type: 'project', builds: ['passwordAnalyzer', 'secureVault', 'careerAssistant'] },
+    'REST APIs': { type: 'project', builds: ['passwordAnalyzer', 'secureVault', 'careerAssistant'] },
+    'SQLite': { type: 'project', builds: ['passwordAnalyzer', 'secureVault', 'careerAssistant'] },
+    'Python': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault', 'textEncryption', 'jArcVideo'] },
+    'OpenCV': { type: 'project', builds: ['deepfake'] },
+    'Image analysis': { type: 'project', builds: ['deepfake'] },
+    'Automation': { type: 'project', builds: ['careerAssistant', 'jArcVideo'] },
+    'OCR': { type: 'foundation', builds: [] },
+    'Tesseract': { type: 'foundation', builds: [] },
+    'Scikit-learn': { type: 'foundation', builds: [] },
+    'Random Forest': { type: 'foundation', builds: [] },
+    'EasyOCR': { type: 'foundation', builds: [] },
+    'TF-IDF': { type: 'foundation', builds: [] },
+    'C': { type: 'foundation', builds: [] },
+    'C++': { type: 'foundation', builds: [] },
+    'SQL': { type: 'foundation', builds: [] },
+    'MySQL': { type: 'foundation', builds: [] },
+    'FastAPI': { type: 'foundation', builds: [] },
+    'SQLAlchemy': { type: 'foundation', builds: [] },
+    'JWT': { type: 'foundation', builds: [] },
+    'bcrypt': { type: 'foundation', builds: [] },
+    'Tailwind CSS': { type: 'foundation', builds: [] },
+    'Vite': { type: 'foundation', builds: [] },
+    'React Router': { type: 'foundation', builds: [] },
+    'Axios': { type: 'foundation', builds: [] },
+    'Git': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault', 'textEncryption', 'jArcVideo', 'deepfake'] },
+    'GitHub': { type: 'project', builds: ['passwordAnalyzer', 'careerAssistant', 'secureVault', 'textEncryption', 'jArcVideo', 'deepfake'] },
+    'Linux': { type: 'foundation', builds: [] },
+    'Kali Linux': { type: 'foundation', builds: [] },
+    'Docker': { type: 'foundation', builds: [] },
+    'VS Code': { type: 'foundation', builds: [] }
+  };
+
+  const defaultAccent = () => {
+    const column = skillsSection.querySelector('.skills-column[style*="--skill-accent"]');
+    const accent = column ? getComputedStyle(column).getPropertyValue('--skill-accent') : '';
+    return accent.trim() || '#2f6f68';
+  };
+
+  const setRelatedAccent = (badge) => {
+    const column = badge.closest('.skills-column') || related;
+    const accent = getComputedStyle(column).getPropertyValue('--skill-accent').trim() || '#2f6f68';
+    related.style.setProperty('--related-accent', accent);
+  };
+
+  const setSelectedBadge = (badge) => {
+    skillBadges.forEach((button) => {
+      button.classList.toggle('is-active', button === badge);
+      button.setAttribute('aria-pressed', String(button === badge));
+    });
+  };
+
+  const updateRelated = (badge) => {
+    const name = badge.dataset.skill;
+    const entry = skillsDirectory[name] || { type: 'foundation', builds: [] };
+    setSelectedBadge(badge);
+    setRelatedAccent(badge);
+    relatedSkill.textContent = name;
+    relatedSub.textContent = entry.type === 'project' && entry.builds.length ? 'RELATED BUILDS' : 'FOUNDATIONAL KNOWLEDGE';
+
+    if (entry.type === 'project' && entry.builds.length) {
+      relatedBuilds.innerHTML = '';
+      entry.builds.forEach((key) => {
+        const project = projectRegistry[key];
+        const link = document.createElement('a');
+        link.className = 'skills-build';
+        link.href = project.href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        const label = document.createElement('span');
+        label.textContent = project.name;
+        link.append(label, ' ↗');
+        relatedBuilds.append(link);
+      });
+    } else {
+      relatedBuilds.innerHTML = '<p class="skills-related-note">Explored through coursework and labs — no public build yet.</p>';
+    }
+
+    if (relatedHint) relatedHint.textContent = 'Select any badge to explore';
+
+    if (!prefersReducedMotion) {
+      gsap.fromTo(relatedSkill, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .35, ease: 'power2.out', overwrite: true });
+      const newBuilds = relatedBuilds.querySelectorAll('.skills-build');
+      if (newBuilds.length) {
+        gsap.fromTo(newBuilds, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .35, stagger: .04, ease: 'power2.out', overwrite: true });
+      }
+      const note = relatedBuilds.querySelector('.skills-related-note');
+      if (note) gsap.fromTo(note, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .3, ease: 'power2.out', overwrite: true });
+    }
+  };
+
+  const initialBadge = () => {
+    const active = skillBadges.find((button) => button.classList.contains('is-active'));
+    if (active) return active;
+    const pressed = skillBadges.find((button) => button.getAttribute('aria-pressed') === 'true');
+    if (pressed) return pressed;
+    const projectBadge = skillBadges.find((button) => (skillsDirectory[button.dataset.skill] || {}).type === 'project');
+    return projectBadge || skillBadges[0];
+  };
+
+  skillBadges.forEach((badge) => badge.addEventListener('click', () => updateRelated(badge), { passive: true }));
+
+  gsap.set(skillsHeading, { y: 28, opacity: 0 });
+  gsap.set(skillsColumns, { y: 36, opacity: 0 });
+  gsap.set(skillsUsed, { y: 10, opacity: 0 });
+  if (skillsToolkit) gsap.set(skillsToolkit, { y: 10, opacity: 0 });
+  gsap.set(related, { y: 24, opacity: 0, '--related-accent': defaultAccent() });
+
+  if (!prefersReducedMotion) {
+    const reveal = gsap.timeline({
+      scrollTrigger: { trigger: skillsSection, start: 'top 78%', once: true },
+      defaults: { ease: 'power3.out' }
+    });
+    reveal
+      .to(skillsHeading, { y: 0, opacity: 1, duration: .8 })
+      .to(skillsColumns, { y: 0, opacity: 1, duration: .8, stagger: .12 }, .12)
+      .to(skillsUsed, { y: 0, opacity: 1, duration: .5, stagger: .08 }, .48)
+      .to(skillsToolkit, { y: 0, opacity: 1, duration: .5 }, .62)
+      .to(related, { y: 0, opacity: 1, duration: .8 }, .70);
+  } else {
+    gsap.set(skillsHeading, { y: 0, opacity: 1 });
+    gsap.set(skillsColumns, { y: 0, opacity: 1 });
+    gsap.set(skillsUsed, { y: 0, opacity: 1 });
+    gsap.set(related, { y: 0, opacity: 1 });
+  }
+
+  updateRelated(initialBadge());
+}
