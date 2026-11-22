@@ -896,6 +896,7 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
 if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
   const skillsSection = document.getElementById('skills');
   const skillsHeading = skillsSection.querySelector('.skills-heading');
+  const skillsEyebrow = skillsSection.querySelector('.skills-heading .eyebrow');
   const skillsColumns = skillsSection.querySelectorAll('.skills-column');
   const matrixBadges = skillsSection.querySelectorAll('.skill-badge');
   const toolBadges = skillsSection.querySelectorAll('.skill-tool');
@@ -1091,6 +1092,7 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
   });
 
   gsap.set(skillsHeading, { y: 28, opacity: 0 });
+  gsap.set(skillsEyebrow, { scale: .72, opacity: 0, transformOrigin: 'left center' });
   gsap.set(skillsColumns, { y: 32, opacity: 0 });
   gsap.set(matrixBadges, { y: 12, opacity: 0 });
   gsap.set(skillsToolkit, { y: 20, opacity: 0 });
@@ -1103,11 +1105,13 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
     });
     reveal
       .to(skillsHeading, { y: 0, opacity: 1, duration: .8 })
+      .to(skillsEyebrow, { scale: 1, opacity: 1, duration: .9, ease: 'power4.out' }, 0)
       .to(skillsColumns, { y: 0, opacity: 1, duration: .8, stagger: .1 }, .14)
       .to(matrixBadges, { y: 0, opacity: 1, duration: .45, stagger: .018 }, .40)
       .to(skillsToolkit, { y: 0, opacity: 1, duration: .6 }, .60)
       .to(toolBadges, { y: 0, opacity: 1, duration: .4, stagger: .018 }, .72);
   } else {
     gsap.set([skillsHeading, skillsColumns, matrixBadges, skillsToolkit, toolBadges], { y: 0, opacity: 1 });
+    gsap.set(skillsEyebrow, { scale: 1, opacity: 1 });
   }
 }
