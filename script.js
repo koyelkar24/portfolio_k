@@ -887,22 +887,20 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
 /* =========================================================================
    Skills: interactive working-matrix.
 
-   Selecting a badge opens the builds that use it; foundational skills show
-   a compact note instead. The section reveals in with GSAP + ScrollTrigger,
-   and interactions animate the related bar.
+   Every skill tile opens one floating details panel. Project names are only
+   rendered on demand from the real project registry below, so the section
+   stays quiet until a skill is selected. The section reveals in with
+   GSAP + ScrollTrigger; the panel uses a short CSS transition plus a small
+   GSAP content stagger.
    ========================================================================= */
 if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
   const skillsSection = document.getElementById('skills');
   const skillsHeading = skillsSection.querySelector('.skills-heading');
   const skillsColumns = skillsSection.querySelectorAll('.skills-column');
-  const skillBadges = skillsSection.querySelectorAll('.skill-badge');
-  const skillsUsed = skillsSection.querySelectorAll('.skills-used');
+  const matrixBadges = skillsSection.querySelectorAll('.skill-badge');
+  const toolBadges = skillsSection.querySelectorAll('.skill-tool');
+  const skillBadges = skillsSection.querySelectorAll('.skill-badge, .skill-tool');
   const skillsToolkit = skillsSection.querySelector('.skills-toolkit');
-  const related = skillsSection.querySelector('.skills-related');
-  const relatedSkill = skillsSection.querySelector('.skills-related-skill');
-  const relatedSub = skillsSection.querySelector('.skills-related-sub');
-  const relatedBuilds = skillsSection.querySelector('.skills-related-builds');
-  const relatedHint = skillsSection.querySelector('.skills-related-hint');
 
   const projectRegistry = {
     passwordAnalyzer: { name: 'Password Analyzer', href: 'https://github.com/koyelkar24/passwordAnalyser' },
@@ -960,98 +958,156 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
     'VS Code': { type: 'foundation', builds: [] }
   };
 
-  const defaultAccent = () => {
-    const column = skillsSection.querySelector('.skills-column[style*="--skill-accent"]');
-    const accent = column ? getComputedStyle(column).getPropertyValue('--skill-accent') : '';
-    return accent.trim() || '#2f6f68';
-  };
+  let skillPopup = null;
+  let popupOpen = false;
+  let activeBadge = null;
 
-  const setRelatedAccent = (badge) => {
-    const column = badge.closest('.skills-column') || related;
-    const accent = getComputedStyle(column).getPropertyValue('--skill-accent').trim() || '#2f6f68';
-    related.style.setProperty('--related-accent', accent);
-  };
+  function getPopup() {
+    if (skillPopup) return skillPopup;
+    skillPopup = document.createElement('div');
+    skillPopup.className = 'skill-popup';
+    skillPopup.setAttribute('role', 'dialog');
+    skillPopup.setAttribute('aria-modal', 'false');
+    skillPopup.setAttribute('aria-hidden', 'true');
+    skillPopup.setAttribute('aria-labelledby', 'skillPopupName');
+    skillPopup.setAttribute('tabindex', '-1');
+    skillPopup.innerHTML = '<button type="button" class="skill-popup-close" aria-label="Close skill details">&times;</button><p class="skill-popup-category"></p><h3 class="skill-popup-name" id="skillPopupName"></h3><p class="skill-popup-caption"></p><div class="skill-popup-projects"></div>';
+    skillPopup.querySelector('.skill-popup-close').addEventListener('click', () => closePopup(true));
+    document.body.append(skillPopup);
+    return skillPopup;
+  }
 
-  const setSelectedBadge = (badge) => {
+  function categoryFor(badge) {
+    const column = badge.closest('.skills-column');
+    const heading = column ? column.querySelector('h3') : null;
+    return heading ? heading.textContent.trim() : 'Toolkit';
+  }
+
+  function accentFor(badge) {
+    const column = badge.closest('.skills-column');
+    if (!column) return '#79c8c0';
+    const accent = getComputedStyle(column).getPropertyValue('--skill-accent').trim();
+    return accent || '#79c8c0';
+  }
+
+  function setSelectedBadge(badge) {
     skillBadges.forEach((button) => {
-      button.classList.toggle('is-active', button === badge);
-      button.setAttribute('aria-pressed', String(button === badge));
+      const active = button === badge;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
     });
-  };
+  }
 
-  const updateRelated = (badge) => {
-    const name = badge.dataset.skill;
-    const entry = skillsDirectory[name] || { type: 'foundation', builds: [] };
-    setSelectedBadge(badge);
-    setRelatedAccent(badge);
-    relatedSkill.textContent = name;
-    relatedSub.textContent = entry.type === 'project' && entry.builds.length ? 'RELATED BUILDS' : 'FOUNDATIONAL KNOWLEDGE';
+  function setPopupContent(entry) {
+    const popup = getPopup();
+    const projects = popup.querySelector('.skill-popup-projects');
+    const caption = popup.querySelector('.skill-popup-caption');
+    projects.innerHTML = '';
 
-    if (entry.type === 'project' && entry.builds.length) {
-      relatedBuilds.innerHTML = '';
-      entry.builds.forEach((key) => {
-        const project = projectRegistry[key];
+    const builds = entry.type === 'project'
+      ? entry.builds.map((key) => projectRegistry[key]).filter(Boolean)
+      : [];
+
+    if (builds.length) {
+      builds.forEach((project) => {
         const link = document.createElement('a');
-        link.className = 'skills-build';
+        link.className = 'skill-popup-project';
         link.href = project.href;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         const label = document.createElement('span');
+        label.className = 'project-name';
         label.textContent = project.name;
-        link.append(label, ' ↗');
-        relatedBuilds.append(link);
+        const arrow = document.createElement('span');
+        arrow.className = 'project-arrow';
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '↗';
+        link.append(label, arrow);
+        projects.append(link);
       });
+      caption.textContent = builds.length + ' related build' + (builds.length === 1 ? '' : 's') + ' · select one to open GitHub';
     } else {
-      relatedBuilds.innerHTML = '<p class="skills-related-note">Explored through coursework and labs — no public build yet.</p>';
+      const note = document.createElement('p');
+      note.className = 'skill-popup-note';
+      note.textContent = entry.type === 'project'
+        ? 'Project-tested capability. No public build is linked to this skill yet.'
+        : 'Foundational knowledge — explored through coursework, labs, and hands-on practice.';
+      projects.append(note);
+      caption.textContent = entry.type === 'project' ? 'Project-tested' : 'Foundational';
     }
+  }
 
-    if (relatedHint) relatedHint.textContent = 'Select any badge to explore';
+  function openPopup(badge) {
+    if (!badge) return;
+    const popup = getPopup();
+    const name = badge.dataset.skill || 'Skill';
+    const entry = skillsDirectory[name] || { type: 'foundation', builds: [] };
+
+    popup.style.setProperty('--skills-accent', accentFor(badge));
+    popup.querySelector('.skill-popup-category').textContent = categoryFor(badge);
+    popup.querySelector('.skill-popup-name').textContent = name;
+    setPopupContent(entry);
+    setSelectedBadge(badge);
+    activeBadge = badge;
+    popupOpen = true;
+    popup.setAttribute('aria-hidden', 'false');
+    popup.focus({ preventScroll: true });
 
     if (!prefersReducedMotion) {
-      gsap.fromTo(relatedSkill, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .35, ease: 'power2.out', overwrite: true });
-      const newBuilds = relatedBuilds.querySelectorAll('.skills-build');
-      if (newBuilds.length) {
-        gsap.fromTo(newBuilds, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .35, stagger: .04, ease: 'power2.out', overwrite: true });
+      const newContent = popup.querySelectorAll('.skill-popup-project, .skill-popup-note');
+      gsap.fromTo(popup.querySelector('.skill-popup-name'), { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .32, ease: 'power2.out', overwrite: true });
+      if (newContent.length) {
+        gsap.fromTo(newContent, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .35, stagger: .035, ease: 'power2.out', overwrite: true });
       }
-      const note = relatedBuilds.querySelector('.skills-related-note');
-      if (note) gsap.fromTo(note, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .3, ease: 'power2.out', overwrite: true });
     }
-  };
+  }
 
-  const initialBadge = () => {
-    const active = skillBadges.find((button) => button.classList.contains('is-active'));
-    if (active) return active;
-    const pressed = skillBadges.find((button) => button.getAttribute('aria-pressed') === 'true');
-    if (pressed) return pressed;
-    const projectBadge = skillBadges.find((button) => (skillsDirectory[button.dataset.skill] || {}).type === 'project');
-    return projectBadge || skillBadges[0];
-  };
+  function closePopup(returnFocus = false) {
+    if (!popupOpen) return;
+    const focusTarget = activeBadge;
+    popupOpen = false;
+    activeBadge = null;
+    skillPopup.setAttribute('aria-hidden', 'true');
+    setSelectedBadge(null);
+    if (returnFocus && focusTarget) focusTarget.focus({ preventScroll: true });
+  }
 
-  skillBadges.forEach((badge) => badge.addEventListener('click', () => updateRelated(badge), { passive: true }));
+  skillBadges.forEach((badge) => {
+    badge.setAttribute('aria-haspopup', 'dialog');
+    badge.addEventListener('click', () => openPopup(badge));
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!popupOpen) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('.skill-popup')) return;
+    if (target.closest('.skill-badge, .skill-tool')) return;
+    closePopup();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && popupOpen) closePopup(true);
+  });
 
   gsap.set(skillsHeading, { y: 28, opacity: 0 });
-  gsap.set(skillsColumns, { y: 36, opacity: 0 });
-  gsap.set(skillsUsed, { y: 10, opacity: 0 });
-  if (skillsToolkit) gsap.set(skillsToolkit, { y: 10, opacity: 0 });
-  gsap.set(related, { y: 24, opacity: 0, '--related-accent': defaultAccent() });
+  gsap.set(skillsColumns, { y: 32, opacity: 0 });
+  gsap.set(matrixBadges, { y: 12, opacity: 0 });
+  gsap.set(skillsToolkit, { y: 20, opacity: 0 });
+  gsap.set(toolBadges, { y: 10, opacity: 0 });
 
   if (!prefersReducedMotion) {
     const reveal = gsap.timeline({
-      scrollTrigger: { trigger: skillsSection, start: 'top 78%', once: true },
+      scrollTrigger: { trigger: skillsSection, start: 'top 76%', once: true },
       defaults: { ease: 'power3.out' }
     });
     reveal
       .to(skillsHeading, { y: 0, opacity: 1, duration: .8 })
-      .to(skillsColumns, { y: 0, opacity: 1, duration: .8, stagger: .12 }, .12)
-      .to(skillsUsed, { y: 0, opacity: 1, duration: .5, stagger: .08 }, .48)
-      .to(skillsToolkit, { y: 0, opacity: 1, duration: .5 }, .62)
-      .to(related, { y: 0, opacity: 1, duration: .8 }, .70);
+      .to(skillsColumns, { y: 0, opacity: 1, duration: .8, stagger: .1 }, .14)
+      .to(matrixBadges, { y: 0, opacity: 1, duration: .45, stagger: .018 }, .40)
+      .to(skillsToolkit, { y: 0, opacity: 1, duration: .6 }, .60)
+      .to(toolBadges, { y: 0, opacity: 1, duration: .4, stagger: .018 }, .72);
   } else {
-    gsap.set(skillsHeading, { y: 0, opacity: 1 });
-    gsap.set(skillsColumns, { y: 0, opacity: 1 });
-    gsap.set(skillsUsed, { y: 0, opacity: 1 });
-    gsap.set(related, { y: 0, opacity: 1 });
+    gsap.set([skillsHeading, skillsColumns, matrixBadges, skillsToolkit, toolBadges], { y: 0, opacity: 1 });
   }
-
-  updateRelated(initialBadge());
 }
