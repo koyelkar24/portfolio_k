@@ -1220,8 +1220,7 @@ main { margin-left: 108px; background: #f1f0eb; }
   width: 100%;
   height: 100%;
   background-image:
-    linear-gradient(rgb(220 230 230 / 2.5%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(220 230 230 / 2.5%) 1px, transparent 1px);
+    linear-gradient(rgb(220 230 230 / 2.5%) 1px, transparent 1px);
   background-size: 46px 46px;
   mask-image: linear-gradient(180deg, #000, transparent 84%);
   animation: skills-grid-drift 22s linear infinite;
@@ -4757,84 +4756,29 @@ html.about-motion-ready .about-portrait-stage {
 
 
 /* =========================================================================
-   Contact: "Encrypted Signal" animation system
-   Matrix rain backdrop, circuit traces with traveling dots, text
-   scramble-to-reveal, scanning beam on the email CTA, and floating
-   data packets — all cybersecurity-themed.
+   Global "Encrypted Signal" Animation System
+   Cybersecurity-themed animations across the entire portfolio:
+   - Dynamic text decrypt / scramble effect across all section titles
+   - Horizontal floating cyber data packets with trailing light aura
+   - High-tech scan beam sweep on cards, doors, and buttons
+   - Holographic shimmer and cyber glow on cards
+   - Subtle signal sync glitch flash on section reveal
+   - Strictly NO vertical lines or matrix rain
    ========================================================================= */
 
-/* --- Matrix rain canvas ------------------------------------------------- */
-.contact-matrix {
-  position: absolute;
+/* --- Global ambient layer ----------------------------------------------- */
+.cyber-ambient {
+  position: fixed;
   inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
+  z-index: 1;
   pointer-events: none;
-  opacity: 0;
-  transition: opacity 1.6s ease;
-}
-.contact-section.cta-revealed .contact-matrix {
-  opacity: 1;
-}
-
-/* --- Circuit board SVG traces ------------------------------------------- */
-.contact-circuit {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
   overflow: hidden;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1.4s ease .2s;
-}
-.contact-section.cta-revealed .contact-circuit {
-  opacity: 1;
-}
-.circuit-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.circuit-traces path {
-  stroke-dasharray: 2200;
-  stroke-dashoffset: 2200;
-  transition: stroke-dashoffset 3s cubic-bezier(.16, 1, .3, 1);
-}
-.contact-section.cta-revealed .circuit-traces path {
-  stroke-dashoffset: 0;
-}
-.circuit-dot {
-  opacity: 0;
-  transition: opacity .6s ease 1.4s;
-}
-.contact-section.cta-revealed .circuit-dot {
-  opacity: .9;
-}
-.circuit-dot-1 { filter: drop-shadow(0 0 6px rgb(121 200 192 / 90%)); }
-.circuit-dot-2 { filter: drop-shadow(0 0 4px rgb(79 170 164 / 80%)); }
-.circuit-dot-3 { filter: drop-shadow(0 0 6px rgb(121 200 192 / 90%)); }
-.circuit-dot-4 { filter: drop-shadow(0 0 3px rgb(163 224 217 / 70%)); }
-
-.circuit-node {
-  opacity: 0;
-  animation: circuit-node-pulse 3s ease-in-out infinite;
-  transition: opacity .8s ease 1.6s;
-}
-.contact-section.cta-revealed .circuit-node {
-  opacity: .35;
-}
-@keyframes circuit-node-pulse {
-  0%, 100% { r: 4; stroke-opacity: .3; }
-  50% { r: 7; stroke-opacity: .7; }
 }
 
-/* --- Floating data packets ---------------------------------------------- */
-.contact-packets {
+/* --- Floating data packets (horizontal drift, NO vertical lines) -------- */
+.cyber-packets {
   position: absolute;
   inset: 0;
-  z-index: 0;
   pointer-events: none;
   overflow: hidden;
 }
@@ -4844,8 +4788,9 @@ html.about-motion-ready .about-portrait-stage {
   height: 4px;
   border-radius: 50%;
   background: #79c8c0;
-  box-shadow: 0 0 10px 2px rgb(121 200 192 / 60%), 0 0 30px 4px rgb(121 200 192 / 20%);
+  box-shadow: 0 0 10px 2px rgb(121 200 192 / 65%), 0 0 25px 4px rgb(121 200 192 / 25%);
   opacity: 0;
+  pointer-events: none;
   will-change: transform, opacity;
 }
 .data-packet::after {
@@ -4855,39 +4800,41 @@ html.about-motion-ready .about-portrait-stage {
   right: 100%;
   width: 24px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(121 200 192 / 60%));
+  background: linear-gradient(90deg, transparent, rgb(121 200 192 / 70%));
   transform: translateY(-50%);
 }
 
-/* --- Text scramble / decrypt effect ------------------------------------- */
+/* --- Text scramble / decrypt effect across all sections ----------------- */
 [data-scramble] {
   position: relative;
+  transition: text-shadow .4s ease;
 }
 .scramble-char {
   display: inline-block;
-  transition: color .15s ease;
+  transition: color .15s ease, opacity .15s ease;
 }
 .scramble-char.is-scrambled {
   color: #79c8c0;
-  opacity: .7;
+  opacity: .8;
   animation: scramble-flicker .08s linear infinite alternate;
 }
 .scramble-char.is-resolved {
   opacity: 1;
 }
 @keyframes scramble-flicker {
-  from { opacity: .5; }
-  to { opacity: .9; }
+  from { opacity: .45; }
+  to { opacity: .95; }
 }
 
-/* Headline decrypt cursor */
+/* Decrypt cursor */
 .decrypt-cursor {
   display: inline-block;
   width: 2px;
-  height: .85em;
+  height: .8em;
   margin-left: 2px;
-  vertical-align: -.1em;
+  vertical-align: -.08em;
   background: #79c8c0;
+  box-shadow: 0 0 8px rgb(121 200 192 / 85%);
   animation: decrypt-cursor-blink .6s steps(2) infinite;
   opacity: 0;
   transition: opacity .3s ease;
@@ -4899,70 +4846,110 @@ html.about-motion-ready .about-portrait-stage {
   to { opacity: 0; }
 }
 
-/* --- Email CTA scan beam ------------------------------------------------ */
-.contact-mail {
+/* Headline cyber glow when section is in view */
+.cyber-revealed [data-scramble],
+.contact-section.cyber-revealed h2 {
+  text-shadow: 0 0 50px rgb(121 200 192 / 18%), 0 0 100px rgb(79 170 164 / 9%);
+  animation: cyber-headline-glow 4s ease-in-out infinite alternate;
+}
+@keyframes cyber-headline-glow {
+  from { text-shadow: 0 0 45px rgb(121 200 192 / 14%), 0 0 90px rgb(79 170 164 / 6%); }
+  to { text-shadow: 0 0 75px rgb(121 200 192 / 26%), 0 0 140px rgb(79 170 164 / 14%); }
+}
+
+/* --- High-tech scan beam sweep on buttons & interactive cards ----------- */
+.button,
+.text-link,
+.contact-mail,
+.door,
+.door-card,
+.skills-column,
+.skill-tool,
+.skill-badge,
+.education-card,
+.contact-card,
+.stat-card,
+.highlight-item {
   position: relative;
   overflow: hidden;
 }
+
+/* Beam sweep pseudo-element */
+.button::after,
+.text-link::after,
+.door::after,
+.door-card::before,
+.education-card::before,
+.contact-card::after,
 .contact-mail .scan-beam {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
+  pointer-events: none;
   background: linear-gradient(
     90deg,
     transparent 0%,
     rgb(121 200 192 / 0%) 35%,
-    rgb(121 200 192 / 15%) 48%,
-    rgb(121 200 192 / 25%) 50%,
-    rgb(121 200 192 / 15%) 52%,
+    rgb(121 200 192 / 18%) 48%,
+    rgb(121 200 192 / 32%) 50%,
+    rgb(121 200 192 / 18%) 52%,
     rgb(121 200 192 / 0%) 65%,
     transparent 100%
   );
-  transform: translateX(-100%);
-  pointer-events: none;
+  transform: translateX(-150%);
   opacity: 0;
   border-radius: inherit;
 }
-.contact-section.cta-revealed .contact-mail .scan-beam {
+
+/* Scan beam on section reveal */
+.cyber-revealed .door-card::before,
+.cyber-revealed .education-card::before,
+.cyber-revealed .contact-card::after,
+.cyber-revealed .contact-mail .scan-beam {
   opacity: 1;
-  animation: scan-beam-sweep 4s cubic-bezier(.4, 0, .2, 1) 2s infinite;
+  animation: scan-beam-sweep 3.5s cubic-bezier(.4, 0, .2, 1) 0.6s 1;
 }
+
+/* Scan beam on hover */
+.button:hover::after,
+.text-link:hover::after,
+.door:hover::after,
+.door-card:hover::before,
+.education-card:hover::before,
+.contact-card:hover::after,
+.contact-mail:hover .scan-beam {
+  opacity: 1;
+  animation: scan-beam-sweep 1.2s cubic-bezier(.4, 0, .2, 1) forwards;
+}
+
 @keyframes scan-beam-sweep {
-  0% { transform: translateX(-100%); }
-  60% { transform: translateX(200%); }
+  0% { transform: translateX(-150%); }
   100% { transform: translateX(200%); }
 }
 
-/* --- Contact card holographic shimmer ----------------------------------- */
-.contact-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    125deg,
-    transparent 20%,
-    rgb(121 200 192 / 5%) 35%,
-    rgb(79 170 164 / 10%) 42%,
-    rgb(121 200 192 / 5%) 48%,
-    transparent 60%
-  );
-  opacity: 0;
-  transform: translateX(-100%) skewX(-15deg);
-  pointer-events: none;
-}
-.contact-section.cta-revealed .contact-card::after {
-  animation: holo-shimmer 6s cubic-bezier(.4, 0, .2, 1) 2.4s infinite;
-}
-@keyframes holo-shimmer {
-  0% { opacity: 1; transform: translateX(-100%) skewX(-15deg); }
-  40% { opacity: 1; transform: translateX(200%) skewX(-15deg); }
-  100% { opacity: 0; transform: translateX(200%) skewX(-15deg); }
+/* --- Holographic cyber card shimmer & hover ----------------------------- */
+.door-card:hover,
+.education-card:hover,
+.contact-card:hover,
+.skills-column:hover {
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 70%), 0 0 24px -6px rgb(121 200 192 / 18%);
 }
 
-/* --- Glitch/noise overlay on section enter ------------------------------- */
-.contact-glitch-overlay {
+.door-card,
+.education-card,
+.contact-card {
+  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+
+.door-card:hover,
+.education-card:hover,
+.contact-card:hover {
+  border-color: rgb(121 200 192 / 45%);
+}
+
+/* --- HUD Signal Sync / Glitch overlay on section enter ------------------ */
+.cyber-glitch-overlay {
   position: absolute;
   inset: 0;
   z-index: 10;
@@ -4973,56 +4960,46 @@ html.about-motion-ready .about-portrait-stage {
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 2px,
-      rgb(121 200 192 / 3%) 2px,
-      rgb(121 200 192 / 3%) 4px
+      transparent 3px,
+      rgb(121 200 192 / 4%) 3px,
+      rgb(121 200 192 / 4%) 6px
     );
 }
-.contact-glitch-overlay.is-glitching {
-  animation: glitch-flash .6s steps(4) forwards;
+.cyber-glitch-overlay.is-glitching {
+  animation: glitch-flash .5s steps(4) forwards;
 }
 @keyframes glitch-flash {
-  0% { opacity: .8; transform: translate3d(-2px, 0, 0); }
-  20% { opacity: .6; transform: translate3d(3px, -1px, 0); }
-  40% { opacity: .4; transform: translate3d(-1px, 2px, 0); }
-  60% { opacity: .2; transform: translate3d(2px, 0, 0); }
-  80% { opacity: .1; transform: translate3d(-1px, -1px, 0); }
+  0% { opacity: .7; transform: translate3d(-2px, 0, 0); }
+  25% { opacity: .5; transform: translate3d(2px, -1px, 0); }
+  50% { opacity: .3; transform: translate3d(-1px, 1px, 0); }
+  75% { opacity: .15; transform: translate3d(1px, 0, 0); }
   100% { opacity: 0; transform: translate3d(0, 0, 0); }
 }
 
-/* --- Stagger the contact-card meta rows with a wave --------------------- */
-.contact-section.cta-revealed .contact-meta-row {
-  animation: meta-wave-in .6s cubic-bezier(.16, 1, .3, 1) both;
+/* --- Staggered wave entrance for list / meta items ----------------------- */
+.cyber-revealed .contact-meta-row,
+.cyber-revealed .highlight-item,
+.cyber-revealed .education-card {
+  animation: cyber-fade-in .7s cubic-bezier(.16, 1, .3, 1) both;
 }
-.contact-section.cta-revealed .contact-meta-row:nth-child(1) { animation-delay: 1.6s; }
-.contact-section.cta-revealed .contact-meta-row:nth-child(2) { animation-delay: 1.75s; }
-.contact-section.cta-revealed .contact-meta-row:nth-child(3) { animation-delay: 1.9s; }
-@keyframes meta-wave-in {
-  from { opacity: 0; transform: translateX(20px); filter: blur(4px); }
-  to { opacity: 1; transform: translateX(0); filter: blur(0); }
-}
-
-/* --- Pulsing teal glow behind the section heading ----------------------- */
-.contact-section.cta-revealed .contact-intro h2 {
-  text-shadow: 0 0 60px rgb(121 200 192 / 15%), 0 0 120px rgb(79 170 164 / 8%);
-  animation: headline-glow 4s ease-in-out infinite alternate;
-}
-@keyframes headline-glow {
-  from { text-shadow: 0 0 60px rgb(121 200 192 / 15%), 0 0 120px rgb(79 170 164 / 8%); }
-  to { text-shadow: 0 0 90px rgb(121 200 192 / 25%), 0 0 180px rgb(79 170 164 / 14%); }
+@keyframes cyber-fade-in {
+  from { opacity: 0; transform: translateY(16px); filter: blur(3px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
-/* --- Reduced motion: skip all fancy animations -------------------------- */
+/* --- Reduced motion ----------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .contact-matrix,
-  .contact-circuit,
-  .contact-packets,
-  .contact-glitch-overlay { display: none !important; }
-  .contact-mail .scan-beam { display: none !important; }
-  .contact-card::after { animation: none !important; }
-  .contact-section.cta-revealed .contact-meta-row { animation: none !important; opacity: 1; transform: none; filter: none; }
-  .contact-section.cta-revealed .contact-intro h2 { animation: none !important; text-shadow: none; }
-  .scramble-char { animation: none !important; opacity: 1 !important; }
+  .cyber-ambient,
+  .cyber-packets,
+  .cyber-glitch-overlay,
   .decrypt-cursor { display: none !important; }
-  .circuit-node { animation: none !important; }
+  .button::after,
+  .text-link::after,
+  .door::after,
+  .door-card::before,
+  .education-card::before,
+  .contact-card::after,
+  .contact-mail .scan-beam { display: none !important; }
+  .scramble-char { animation: none !important; opacity: 1 !important; }
+  [data-scramble] { animation: none !important; text-shadow: none !important; }
 }

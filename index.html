@@ -79,6 +79,10 @@
   </header>
 
   <main id="main">
+    <div class="cyber-ambient" id="cyberAmbient" aria-hidden="true">
+      <div class="cyber-packets" id="cyberPackets"></div>
+      <div class="cyber-glitch-overlay" id="cyberGlitch"></div>
+    </div>
     <section class="hero page-wrap" id="home" aria-labelledby="hero-title">
       <div class="hero-globe" role="img" aria-label="A slowly rotating wireframe globe with a glowing marker pinned on Kolkata, India.">
         <span class="globe-glow" aria-hidden="true"></span>
@@ -102,7 +106,7 @@
         </span>
       </div>
       <div class="hero-copy">
-        <p class="eyebrow hero-name"><span class="status-dot" aria-hidden="true"></span> B.SC. CYBER SECURITY <i>/</i> GNIT KOLKATA</p>
+        <p class="eyebrow hero-name" data-scramble><span class="status-dot" aria-hidden="true"></span> B.SC. CYBER SECURITY <i>/</i> GNIT KOLKATA</p>
         <h1 id="hero-title" aria-label="Fortifying tomorrow&#8217;s digital infrastructure.">
           <span class="hero-title-line" aria-hidden="true">
             <span class="hero-title-mask"><span class="hero-title-word">Fortifying</span></span>
@@ -139,7 +143,7 @@
       <div class="doors-stage" id="doorsStage">
         <div class="doors-head">
           <p class="work-kicker">SELECTED WORK <span>/</span> 06 BUILDS</p>
-          <h2 id="work-title">Magic happens behind the <em>doors.</em></h2>
+          <h2 id="work-title" data-scramble>Magic happens behind the <em>doors.</em></h2>
           <p class="doors-sub">Four doors. Four disciplines. Choose one and step inside.</p>
         </div>
         <div class="doors-camera" id="doorsCamera">
@@ -201,7 +205,7 @@
           <div class="showcase-heading">
             <div class="showcase-title-block">
               <p class="work-kicker" id="showcaseKicker">PROJECT ARCHIVE <span>/</span> 2024&ndash;2026</p>
-              <h2 id="showcaseTitle">Selected work</h2>
+              <h2 id="showcaseTitle" data-scramble>Selected work</h2>
             </div>
             <p class="showcase-intro" id="showcaseIntro">Six builds across security, AI, web, and cryptography. Open a door above, or browse the full archive below.</p>
           </div>
@@ -401,7 +405,7 @@
         <header class="skills-heading">
           <div class="skills-heading-main">
             <p class="eyebrow">WHAT I WORK WITH</p>
-            <h2 id="skills-title">Skills, in <em>practice.</em></h2>
+            <h2 id="skills-title" data-scramble>Skills, in <em>practice.</em></h2>
             <p class="skills-intro">Every capability is a tile you can open. Select a skill to reveal the builds that use it &mdash; project names stay tucked away until you ask for them.</p>
           </div>
           <div class="skills-heading-aside">
@@ -505,7 +509,7 @@
       <div class="about-grid page-wrap">
         <div class="about-heading">
           <p class="eyebrow">BACKGROUND</p>
-          <h2 id="about-title">About<br><em>me.</em></h2>
+          <h2 id="about-title" data-scramble>About<br><em>me.</em></h2>
           <p class="about-subtitle">Curious about how technology works, and how to make it safer.</p>
         </div>
 
@@ -557,7 +561,7 @@
 
     <section class="education-section section-pad" id="education" aria-labelledby="education-title">
       <div class="section-heading page-wrap">
-        <div><p class="eyebrow">MY LEARNING PATH</p><h2 id="education-title">Education</h2></div>
+        <div><p class="eyebrow">MY LEARNING PATH</p><h2 id="education-title" data-scramble>Education</h2></div>
         <p class="section-intro">Building a strong foundation for a career in cybersecurity.</p>
       </div>
       <div class="education-timeline page-wrap">
@@ -581,52 +585,6 @@
     </section>
 
     <section class="contact-section" id="contact" aria-labelledby="contact-title">
-      <!-- Encrypted signal animation backdrop -->
-      <canvas class="contact-matrix" id="contactMatrix" aria-hidden="true"></canvas>
-      <div class="contact-circuit" id="contactCircuit" aria-hidden="true">
-        <svg class="circuit-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <linearGradient id="circuitGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="rgb(121 200 192 / 0%)"/>
-              <stop offset="50%" stop-color="rgb(121 200 192 / 70%)"/>
-              <stop offset="100%" stop-color="rgb(121 200 192 / 0%)"/>
-            </linearGradient>
-            <filter id="circuitBlur">
-              <feGaussianBlur stdDeviation="2"/>
-            </filter>
-          </defs>
-          <g class="circuit-traces" opacity="0.12">
-            <path d="M0 150 H280 V250 H520 V180 H700" fill="none" stroke="#79c8c0" stroke-width="1"/>
-            <path d="M1200 100 H900 V200 H750 V300 H580" fill="none" stroke="#79c8c0" stroke-width="1"/>
-            <path d="M200 400 H400 V320 H600 V450 H800" fill="none" stroke="#79c8c0" stroke-width="1"/>
-            <path d="M0 500 H350 V420 H550 V530 H900 V480 H1200" fill="none" stroke="#79c8c0" stroke-width="1"/>
-            <path d="M100 50 V200 H300 V350" fill="none" stroke="#79c8c0" stroke-width="1"/>
-            <path d="M1100 50 V180 H950 V380" fill="none" stroke="#79c8c0" stroke-width="1"/>
-          </g>
-          <!-- Animated signal dots travel along circuit paths -->
-          <circle class="circuit-dot circuit-dot-1" r="3" fill="#79c8c0" filter="url(#circuitBlur)">
-            <animateMotion dur="6s" repeatCount="indefinite" path="M0 150 H280 V250 H520 V180 H700"/>
-          </circle>
-          <circle class="circuit-dot circuit-dot-2" r="2.5" fill="#4faaa4">
-            <animateMotion dur="8s" repeatCount="indefinite" path="M1200 100 H900 V200 H750 V300 H580"/>
-          </circle>
-          <circle class="circuit-dot circuit-dot-3" r="3" fill="#79c8c0" filter="url(#circuitBlur)">
-            <animateMotion dur="7s" repeatCount="indefinite" path="M200 400 H400 V320 H600 V450 H800"/>
-          </circle>
-          <circle class="circuit-dot circuit-dot-4" r="2" fill="#a3e0d9">
-            <animateMotion dur="9s" repeatCount="indefinite" path="M0 500 H350 V420 H550 V530 H900 V480 H1200"/>
-          </circle>
-          <!-- Junction nodes that pulse -->
-          <circle class="circuit-node" cx="280" cy="150" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
-          <circle class="circuit-node" cx="520" cy="250" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
-          <circle class="circuit-node" cx="900" cy="200" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
-          <circle class="circuit-node" cx="400" cy="320" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
-          <circle class="circuit-node" cx="550" cy="420" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
-        </svg>
-      </div>
-      <!-- Floating data packets -->
-      <div class="contact-packets" id="contactPackets" aria-hidden="true"></div>
-      <div class="contact-glitch-overlay" id="contactGlitch" aria-hidden="true"></div>
       <div class="contact-inner page-wrap">
         <div class="contact-head">
           <p class="contact-kicker"><span class="contact-pulse" aria-hidden="true"></span>Contact</p>

@@ -788,21 +788,228 @@ if (!prefersReducedMotion && window.gsap) {
 }
 
 /* =========================================================================
-   Contact: scroll-triggered reveal + "Encrypted Signal" animations.
-
-   The header line draws in, the headline uncovers with a text-scramble
-   decrypt effect, then the lead, email CTA (with scan beam), card details,
-   socials, and footer rise as they enter the viewport. Behind it all, a
-   matrix rain canvas, animated circuit traces, and floating data packets
-   create a cybersecurity atmosphere. A brief glitch overlay fires as the
-   section enters.
+   Global "Encrypted Signal" System + Section Reveals
+   
+   Cybersecurity-themed animations across the whole portfolio:
+   - Dynamic text decrypt / scramble effect on all section titles & headers
+   - Ambient floating horizontal data packets drifting with light aura
+   - High-tech scan beam sweep on cards & buttons on reveal/hover
+   - Holographic shimmer and cyber glow on cards
+   - Subtle signal sync glitch flash on section reveal
+   - Strictly NO vertical lines or matrix rain
    ========================================================================= */
 if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---- 1. Text scramble / decrypt engine --------------------------------- */
+  const scrambleGlyphs = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`01αβγδεζ';
+  const scrambledElements = new WeakSet();
+
+  const scrambleText = (element) => {
+    if (!element || scrambledElements.has(element)) return;
+    scrambledElements.add(element);
+
+    // Create cursor
+    const cursor = document.createElement('span');
+    cursor.className = 'decrypt-cursor is-active';
+    cursor.setAttribute('aria-hidden', 'true');
+
+    // Recursively parse text nodes to wrap individual characters in spans
+    let charIndex = 0;
+    const processNode = (node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const fragment = document.createDocumentFragment();
+        for (const char of node.textContent) {
+          const span = document.createElement('span');
+          span.className = 'scramble-char is-scrambled';
+          span.dataset.original = char;
+          span.dataset.index = charIndex;
+          span.textContent = char === ' ' ? ' ' : scrambleGlyphs[Math.floor(Math.random() * scrambleGlyphs.length)];
+          fragment.appendChild(span);
+          charIndex++;
+        }
+        return fragment;
+      }
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const clone = node.cloneNode(false);
+        for (const child of node.childNodes) {
+          clone.appendChild(processNode(child));
+        }
+        return clone;
+      }
+      return node.cloneNode(true);
+    };
+
+    const tempDiv = document.createElement('div');
+    for (const child of element.childNodes) {
+      tempDiv.appendChild(processNode(child));
+    }
+    element.innerHTML = tempDiv.innerHTML;
+    element.appendChild(cursor);
+
+    const scrambleChars = element.querySelectorAll('.scramble-char');
+    const totalChars = scrambleChars.length;
+    let resolved = 0;
+
+    const decryptNext = () => {
+      if (resolved >= totalChars) {
+        cursor.classList.remove('is-active');
+        setTimeout(() => cursor.remove(), 400);
+        return;
+      }
+
+      const charEl = scrambleChars[resolved];
+      const original = charEl.dataset.original;
+
+      let passes = 0;
+      const maxPasses = 3 + Math.floor(Math.random() * 3);
+
+      const scramblePass = () => {
+        if (passes >= maxPasses) {
+          charEl.textContent = original;
+          charEl.classList.remove('is-scrambled');
+          charEl.classList.add('is-resolved');
+          resolved++;
+
+          // Decrypt in batches of 1-3 for natural cadence
+          const batch = Math.random() > 0.55 ? 2 : 1;
+          for (let b = 0; b < batch - 1 && resolved < totalChars; b++) {
+            const nextChar = scrambleChars[resolved];
+            nextChar.textContent = nextChar.dataset.original;
+            nextChar.classList.remove('is-scrambled');
+            nextChar.classList.add('is-resolved');
+            resolved++;
+          }
+          setTimeout(decryptNext, 18 + Math.random() * 26);
+          return;
+        }
+        if (original !== ' ') {
+          charEl.textContent = scrambleGlyphs[Math.floor(Math.random() * scrambleGlyphs.length)];
+        }
+        passes++;
+        setTimeout(scramblePass, 28);
+      };
+
+      scramblePass();
+    };
+
+    setTimeout(decryptNext, 160);
+  };
+
+  /* ---- 2. Global floating cyber data packets (Horizontal, NO vertical lines) ---- */
+  const initGlobalCyberPackets = () => {
+    const container = document.getElementById('cyberPackets');
+    if (!container) return;
+
+    const spawnOne = () => {
+      const packet = document.createElement('div');
+      packet.className = 'data-packet';
+      const startY = 8 + Math.random() * 84;
+      const duration = 4.5 + Math.random() * 4.5;
+      const size = 2.5 + Math.random() * 2.5;
+      const fromLeft = Math.random() > 0.45;
+
+      packet.style.top = `${startY}%`;
+      packet.style.width = `${size}px`;
+      packet.style.height = `${size}px`;
+
+      if (fromLeft) {
+        packet.style.left = '-30px';
+        packet.style.transform = 'scaleX(1)';
+      } else {
+        packet.style.right = '-30px';
+        packet.style.transform = 'scaleX(-1)';
+      }
+
+      container.appendChild(packet);
+
+      gsap.to(packet, {
+        x: fromLeft ? window.innerWidth + 80 : -(window.innerWidth + 80),
+        y: (Math.random() - 0.5) * 80,
+        opacity: 0.65,
+        duration: duration,
+        ease: 'none',
+        onComplete: () => packet.remove()
+      });
+
+      gsap.fromTo(packet, { opacity: 0 }, {
+        opacity: 0.5 + Math.random() * 0.35,
+        duration: 0.6,
+        yoyo: true,
+        repeat: 1,
+        repeatDelay: duration - 1.2
+      });
+    };
+
+    // Continuous gentle horizontal spawn
+    setInterval(spawnOne, 1200 + Math.random() * 1400);
+
+    // Initial batch
+    for (let i = 0; i < 3; i++) {
+      setTimeout(spawnOne, i * 400);
+    }
+  };
+
+  /* ---- 3. HUD Signal Glitch Flash --------------------------------------- */
+  const triggerGlitch = () => {
+    const glitch = document.getElementById('cyberGlitch');
+    if (!glitch) return;
+    glitch.classList.add('is-glitching');
+    glitch.addEventListener('animationend', () => {
+      glitch.classList.remove('is-glitching');
+    }, { once: true });
+  };
+
+  /* ---- 4. Setup Section Scramble & Cyber Reveals ------------------------- */
+  const setupCyberSections = () => {
+    initGlobalCyberPackets();
+
+    // Trigger hero decryption shortly after load
+    const heroSection = document.getElementById('home');
+    if (heroSection) {
+      setTimeout(() => {
+        heroSection.classList.add('cyber-revealed');
+        heroSection.querySelectorAll('[data-scramble]').forEach((el) => scrambleText(el));
+      }, 700);
+    }
+
+    // Connect all sections with ScrollTrigger
+    const sections = document.querySelectorAll('section, .work-doors');
+    sections.forEach((sec) => {
+      ScrollTrigger.create({
+        trigger: sec,
+        start: 'top 75%',
+        once: true,
+        onEnter: () => {
+          sec.classList.add('cyber-revealed');
+          triggerGlitch();
+          sec.querySelectorAll('[data-scramble]').forEach((el) => {
+            setTimeout(() => scrambleText(el), 120);
+          });
+        }
+      });
+    });
+
+    // Also trigger decrypt when opening doors
+    const showcaseTitle = document.getElementById('showcaseTitle');
+    const workDoorsEl = document.querySelector('.work-doors');
+    if (workDoorsEl && showcaseTitle) {
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            if (workDoorsEl.classList.contains('is-showcase') && !showcaseTitle.dataset.scrambled) {
+              scrambleText(showcaseTitle);
+            }
+          }
+        }
+      });
+      observer.observe(workDoorsEl, { attributes: true });
+    }
+  };
+
+  /* ---- 5. Contact Section Smooth Reveal (No vertical lines) ------------- */
   const contact = document.getElementById('contact');
-
   if (contact) {
-    gsap.registerPlugin(ScrollTrigger);
-
     const head = contact.querySelector('.contact-head');
     const kicker = contact.querySelector('.contact-kicker');
     const note = contact.querySelector('.contact-head-note');
@@ -818,285 +1025,51 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
     const footer = document.querySelector('.site-footer');
 
     gsap.set([kicker, note], { y: 14, opacity: 0 });
-    gsap.set(headLine, { scaleX: 0, transformOrigin: 'left center' });
-    gsap.set(title, { y: 40, opacity: 0, clipPath: 'inset(0 0 100% 0)' });
+    if (headLine) gsap.set(headLine, { scaleX: 0, transformOrigin: 'left center' });
+    if (title) gsap.set(title, { y: 40, opacity: 0, clipPath: 'inset(0 0 100% 0)' });
     gsap.set([lead, mailWrap], { y: 24, opacity: 0 });
-    gsap.set(mailWrap, { scale: .985 });
+    if (mailWrap) gsap.set(mailWrap, { scale: .985 });
 
     const cardStart = window.matchMedia('(max-width: 900px)').matches
       ? { y: 32, x: 0, rotationY: 0 }
       : { y: 0, x: 56, rotationY: -5 };
-    gsap.set(card, { ...cardStart, opacity: 0, transformPerspective: 1100 });
-    gsap.set(cardTop, { y: 12, opacity: 0 });
+    if (card) gsap.set(card, { ...cardStart, opacity: 0, transformPerspective: 1100 });
+    if (cardTop) gsap.set(cardTop, { y: 12, opacity: 0 });
     gsap.set(metaRows, { y: 12, opacity: 0 });
-    gsap.set(socials, { y: 10, opacity: 0 });
+    if (socials) gsap.set(socials, { y: 10, opacity: 0 });
     if (footer) gsap.set(footer, { y: 16, opacity: 0 });
 
-    /* ---- Matrix rain canvas ------------------------------------------------ */
-    const matrixCanvas = document.getElementById('contactMatrix');
-    let matrixActive = false;
-
-    const startMatrixRain = () => {
-      if (!matrixCanvas || matrixActive) return;
-      matrixActive = true;
-
-      const ctx = matrixCanvas.getContext('2d');
-      const chars = '01アイウエオカキクケコ{}[]<>|/\\ÆΩΔΣπ∞≈';
-      const fontSize = 12;
-      let columns;
-      let drops;
-
-      const resize = () => {
-        matrixCanvas.width = matrixCanvas.offsetWidth;
-        matrixCanvas.height = matrixCanvas.offsetHeight;
-        columns = Math.floor(matrixCanvas.width / fontSize);
-        drops = Array.from({ length: columns }, () => Math.random() * -50);
-      };
-
-      resize();
-      window.addEventListener('resize', resize);
-
-      const draw = () => {
-        if (!matrixActive) return;
-        ctx.fillStyle = 'rgba(11, 13, 16, 0.06)';
-        ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
-        ctx.font = `${fontSize}px "JetBrains Mono", monospace`;
-
-        for (let i = 0; i < columns; i++) {
-          // Only render every 3rd column for a sparser, more elegant look
-          if (i % 3 !== 0) continue;
-          const char = chars[Math.floor(Math.random() * chars.length)];
-          const x = i * fontSize;
-          const y = drops[i] * fontSize;
-
-          // Brighter green at the head, fading tail
-          const brightness = 0.08 + Math.random() * 0.08;
-          ctx.fillStyle = `rgba(121, 200, 192, ${brightness})`;
-          ctx.fillText(char, x, y);
-
-          if (y > matrixCanvas.height && Math.random() > 0.985) {
-            drops[i] = 0;
-          }
-          drops[i] += 0.4 + Math.random() * 0.3;
-        }
-
-        requestAnimationFrame(draw);
-      };
-
-      draw();
-    };
-
-    /* ---- Text scramble / decrypt effect ------------------------------------- */
-    const scrambleText = (element) => {
-      if (!element || element.dataset.scrambled) return;
-      element.dataset.scrambled = 'true';
-
-      const glyphs = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`01αβγδεζ';
-      const originalHTML = element.innerHTML;
-      // Flatten text content, preserving <br> and <span>
-      const textContent = element.textContent.replace(/\s+/g, ' ').trim();
-
-      // Create a cursor element
-      const cursor = document.createElement('span');
-      cursor.className = 'decrypt-cursor';
-      cursor.setAttribute('aria-hidden', 'true');
-
-      // Wrap each character in a span
-      let charIndex = 0;
-      const processNode = (node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          const fragment = document.createDocumentFragment();
-          for (const char of node.textContent) {
-            const span = document.createElement('span');
-            span.className = 'scramble-char is-scrambled';
-            span.dataset.original = char;
-            span.dataset.index = charIndex;
-            span.textContent = char === ' ' ? ' ' : glyphs[Math.floor(Math.random() * glyphs.length)];
-            fragment.appendChild(span);
-            charIndex++;
-          }
-          return fragment;
-        }
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const clone = node.cloneNode(false);
-          for (const child of node.childNodes) {
-            clone.appendChild(processNode(child));
-          }
-          return clone;
-        }
-        return node.cloneNode(true);
-      };
-
-      const tempDiv = document.createElement('div');
-      for (const child of element.childNodes) {
-        tempDiv.appendChild(processNode(child));
+    const startContactReveal = () => {
+      if (head) {
+        gsap.timeline({
+          scrollTrigger: { trigger: head, start: 'top 82%', once: true },
+          defaults: { ease: 'power3.out' }
+        })
+          .to(headLine, { scaleX: 1, duration: 1.1, ease: 'power3.inOut' })
+          .to([kicker, note], { y: 0, opacity: 1, duration: .65, stagger: .08 }, .12)
+          .to(title, { y: 0, opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 1.05 }, .22);
       }
-      element.innerHTML = tempDiv.innerHTML;
-      element.appendChild(cursor);
 
-      // Decrypt characters one by one with scramble passes
-      const scrambleChars = element.querySelectorAll('.scramble-char');
-      const totalChars = scrambleChars.length;
-      let resolved = 0;
-      cursor.classList.add('is-active');
-
-      const decryptNext = () => {
-        if (resolved >= totalChars) {
-          cursor.classList.remove('is-active');
-          setTimeout(() => cursor.remove(), 400);
-          return;
-        }
-
-        const charEl = scrambleChars[resolved];
-        const original = charEl.dataset.original;
-
-        // Quick scramble through 3-5 random chars before resolving
-        let passes = 0;
-        const maxPasses = 3 + Math.floor(Math.random() * 3);
-
-        const scramblePass = () => {
-          if (passes >= maxPasses) {
-            charEl.textContent = original;
-            charEl.classList.remove('is-scrambled');
-            charEl.classList.add('is-resolved');
-            resolved++;
-            // Decrypt 1-3 chars at a time for speed variation
-            const batch = Math.random() > 0.6 ? 2 : 1;
-            for (let b = 0; b < batch - 1 && resolved < totalChars; b++) {
-              const nextChar = scrambleChars[resolved];
-              nextChar.textContent = nextChar.dataset.original;
-              nextChar.classList.remove('is-scrambled');
-              nextChar.classList.add('is-resolved');
-              resolved++;
-            }
-            setTimeout(decryptNext, 20 + Math.random() * 30);
-            return;
-          }
-          if (original !== ' ') {
-            charEl.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
-          }
-          passes++;
-          setTimeout(scramblePass, 30);
-        };
-
-        scramblePass();
-      };
-
-      // Start after a small delay so the section has animated in
-      setTimeout(decryptNext, 600);
-    };
-
-    /* ---- Floating data packets --------------------------------------------- */
-    const spawnPackets = () => {
-      const container = document.getElementById('contactPackets');
-      if (!container) return;
-
-      const spawnOne = () => {
-        const packet = document.createElement('div');
-        packet.className = 'data-packet';
-        const startY = Math.random() * 100;
-        const duration = 3 + Math.random() * 4;
-        const size = 2 + Math.random() * 3;
-        const fromLeft = Math.random() > 0.5;
-
-        packet.style.top = `${startY}%`;
-        packet.style.width = `${size}px`;
-        packet.style.height = `${size}px`;
-
-        if (fromLeft) {
-          packet.style.left = '-20px';
-          packet.style.transform = 'scaleX(1)';
-        } else {
-          packet.style.right = '-20px';
-          packet.style.transform = 'scaleX(-1)';
-        }
-
-        container.appendChild(packet);
-
-        gsap.to(packet, {
-          x: fromLeft ? window.innerWidth + 60 : -(window.innerWidth + 60),
-          y: (Math.random() - 0.5) * 120,
-          opacity: 0.6,
-          duration: duration,
-          ease: 'none',
-          onComplete: () => {
-            packet.remove();
-          }
-        });
-
-        gsap.fromTo(packet, { opacity: 0 }, {
-          opacity: 0.5 + Math.random() * 0.3,
-          duration: 0.5,
-          yoyo: true,
-          repeat: 1,
-          repeatDelay: duration - 1
-        });
-      };
-
-      // Spawn packets periodically
-      const interval = setInterval(() => {
-        if (!matrixActive) {
-          clearInterval(interval);
-          return;
-        }
-        spawnOne();
-      }, 800 + Math.random() * 1200);
-
-      // Initial burst
-      for (let i = 0; i < 4; i++) {
-        setTimeout(spawnOne, i * 300);
+      if (copy) {
+        gsap.timeline({
+          scrollTrigger: { trigger: copy, start: 'top 85%', once: true },
+          defaults: { ease: 'power3.out' }
+        })
+          .to(lead, { y: 0, opacity: 1, duration: .75 })
+          .to(mailWrap, { y: 0, opacity: 1, scale: 1, duration: .85 }, .1);
       }
-    };
 
-    /* ---- Glitch overlay flash ---------------------------------------------- */
-    const triggerGlitch = () => {
-      const glitch = document.getElementById('contactGlitch');
-      if (!glitch) return;
-      glitch.classList.add('is-glitching');
-      glitch.addEventListener('animationend', () => {
-        glitch.classList.remove('is-glitching');
-      }, { once: true });
-    };
+      if (card) {
+        gsap.timeline({
+          scrollTrigger: { trigger: card, start: 'top 85%', once: true },
+          defaults: { ease: 'power3.out' }
+        })
+          .to(card, { x: 0, y: 0, rotationY: 0, opacity: 1, duration: 1.05 })
+          .to(cardTop, { y: 0, opacity: 1, duration: .55 }, .55)
+          .to(metaRows, { y: 0, opacity: 1, duration: .5, stagger: .07 }, .65)
+          .to(socials, { y: 0, opacity: 1, duration: .5 }, .92);
+      }
 
-    const startReveal = () => {
-      // 1. The contact header and headline uncover as the section enters.
-      //    Also triggers the encrypted-signal animations.
-      gsap.timeline({
-        scrollTrigger: { trigger: head, start: 'top 82%', once: true },
-        defaults: { ease: 'power3.out' },
-        onStart: () => {
-          contact.classList.add('cta-revealed');
-          triggerGlitch();
-          startMatrixRain();
-          spawnPackets();
-        }
-      })
-        .to(headLine, { scaleX: 1, duration: 1.1, ease: 'power3.inOut' })
-        .to([kicker, note], { y: 0, opacity: 1, duration: .65, stagger: .08 }, .12)
-        .to(title, {
-          y: 0, opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 1.05,
-          onComplete: () => scrambleText(title)
-        }, .22);
-
-      // 2. The lead and email CTA rise together.
-      gsap.timeline({
-        scrollTrigger: { trigger: copy, start: 'top 85%', once: true },
-        defaults: { ease: 'power3.out' }
-      })
-        .to(lead, { y: 0, opacity: 1, duration: .75 })
-        .to(mailWrap, { y: 0, opacity: 1, scale: 1, duration: .85 }, .1);
-
-      // 3. The card settles in 3D, then its details cascade.
-      gsap.timeline({
-        scrollTrigger: { trigger: card, start: 'top 85%', once: true },
-        defaults: { ease: 'power3.out' }
-      })
-        .to(card, { x: 0, y: 0, rotationY: 0, opacity: 1, duration: 1.05 })
-        .to(cardTop, { y: 0, opacity: 1, duration: .55 }, .55)
-        .to(metaRows, { y: 0, opacity: 1, duration: .5, stagger: .07 }, .65)
-        .to(socials, { y: 0, opacity: 1, duration: .5 }, .92);
-
-      // 4. The footer closes the page with the same quiet rise.
       if (footer) {
         gsap.to(footer, {
           y: 0,
@@ -1110,14 +1083,18 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
       ScrollTrigger.refresh();
     };
 
-    // Trigger positions are measured after images have loaded. Creating them
-    // during the initial parse can make the first trigger fire against a
-    // shorter page and remove itself before the reveal has a chance to run.
     if (document.readyState === 'complete') {
-      startReveal();
+      startContactReveal();
     } else {
-      window.addEventListener('load', startReveal, { once: true });
+      window.addEventListener('load', startContactReveal, { once: true });
     }
+  }
+
+  // Initialize global animations when ready
+  if (document.readyState === 'complete') {
+    setupCyberSections();
+  } else {
+    window.addEventListener('load', setupCyberSections, { once: true });
   }
 }
 
