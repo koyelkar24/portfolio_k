@@ -581,6 +581,52 @@
     </section>
 
     <section class="contact-section" id="contact" aria-labelledby="contact-title">
+      <!-- Encrypted signal animation backdrop -->
+      <canvas class="contact-matrix" id="contactMatrix" aria-hidden="true"></canvas>
+      <div class="contact-circuit" id="contactCircuit" aria-hidden="true">
+        <svg class="circuit-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="circuitGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgb(121 200 192 / 0%)"/>
+              <stop offset="50%" stop-color="rgb(121 200 192 / 70%)"/>
+              <stop offset="100%" stop-color="rgb(121 200 192 / 0%)"/>
+            </linearGradient>
+            <filter id="circuitBlur">
+              <feGaussianBlur stdDeviation="2"/>
+            </filter>
+          </defs>
+          <g class="circuit-traces" opacity="0.12">
+            <path d="M0 150 H280 V250 H520 V180 H700" fill="none" stroke="#79c8c0" stroke-width="1"/>
+            <path d="M1200 100 H900 V200 H750 V300 H580" fill="none" stroke="#79c8c0" stroke-width="1"/>
+            <path d="M200 400 H400 V320 H600 V450 H800" fill="none" stroke="#79c8c0" stroke-width="1"/>
+            <path d="M0 500 H350 V420 H550 V530 H900 V480 H1200" fill="none" stroke="#79c8c0" stroke-width="1"/>
+            <path d="M100 50 V200 H300 V350" fill="none" stroke="#79c8c0" stroke-width="1"/>
+            <path d="M1100 50 V180 H950 V380" fill="none" stroke="#79c8c0" stroke-width="1"/>
+          </g>
+          <!-- Animated signal dots travel along circuit paths -->
+          <circle class="circuit-dot circuit-dot-1" r="3" fill="#79c8c0" filter="url(#circuitBlur)">
+            <animateMotion dur="6s" repeatCount="indefinite" path="M0 150 H280 V250 H520 V180 H700"/>
+          </circle>
+          <circle class="circuit-dot circuit-dot-2" r="2.5" fill="#4faaa4">
+            <animateMotion dur="8s" repeatCount="indefinite" path="M1200 100 H900 V200 H750 V300 H580"/>
+          </circle>
+          <circle class="circuit-dot circuit-dot-3" r="3" fill="#79c8c0" filter="url(#circuitBlur)">
+            <animateMotion dur="7s" repeatCount="indefinite" path="M200 400 H400 V320 H600 V450 H800"/>
+          </circle>
+          <circle class="circuit-dot circuit-dot-4" r="2" fill="#a3e0d9">
+            <animateMotion dur="9s" repeatCount="indefinite" path="M0 500 H350 V420 H550 V530 H900 V480 H1200"/>
+          </circle>
+          <!-- Junction nodes that pulse -->
+          <circle class="circuit-node" cx="280" cy="150" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
+          <circle class="circuit-node" cx="520" cy="250" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
+          <circle class="circuit-node" cx="900" cy="200" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
+          <circle class="circuit-node" cx="400" cy="320" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
+          <circle class="circuit-node" cx="550" cy="420" r="4" fill="none" stroke="#79c8c0" stroke-width="1"/>
+        </svg>
+      </div>
+      <!-- Floating data packets -->
+      <div class="contact-packets" id="contactPackets" aria-hidden="true"></div>
+      <div class="contact-glitch-overlay" id="contactGlitch" aria-hidden="true"></div>
       <div class="contact-inner page-wrap">
         <div class="contact-head">
           <p class="contact-kicker"><span class="contact-pulse" aria-hidden="true"></span>Contact</p>
@@ -588,13 +634,14 @@
           <span class="contact-head-line" aria-hidden="true"></span>
         </div>
         <div class="contact-intro">
-          <h2 id="contact-title">Have a project<br>or an <span>idea?</span></h2>
+          <h2 id="contact-title" data-scramble>Have a project<br>or an <span>idea?</span></h2>
         </div>
         <div class="contact-grid">
           <div class="contact-copy">
             <p class="contact-lead">I’m open to internships, collaborations, and conversations about cybersecurity and software.</p>
             <div class="contact-mail-wrap">
               <a class="contact-mail" href="mailto:kar351191@gmail.com">
+                <span class="scan-beam" aria-hidden="true"></span>
                 <span class="contact-mail-label">Email me</span>
                 <span class="contact-mail-address">kar351191@gmail.com</span>
                 <span class="contact-mail-arrow" aria-hidden="true">↗</span>
