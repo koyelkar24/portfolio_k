@@ -4756,55 +4756,261 @@ html.about-motion-ready .about-portrait-stage {
 
 
 /* =========================================================================
-   Global "Encrypted Signal" Animation System
-   Cybersecurity-themed animations across the entire portfolio:
-   - Dynamic text decrypt / scramble effect across all section titles
-   - Horizontal floating cyber data packets with trailing light aura
-   - High-tech scan beam sweep on cards, doors, and buttons
-   - Holographic shimmer and cyber glow on cards
-   - Subtle signal sync glitch flash on section reveal
-   - Strictly NO vertical lines or matrix rain
+   Awwwards-Tier UI Flex & Elegant Interactive Suite
+   - Scroll Progress HUD bar & glowing tracer dot
+   - Magnetic Custom Cursor (Aura ring + precision dot + magnetic lock)
+   - Interactive 3D Card Tilt with Specular Spotlight (Apple/Stripe sheen)
+   - Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines)
+   - Click Shockwave Ripple
+   - Text Decrypt / Scramble on all sections
+   - Magnetic button tactile feel
    ========================================================================= */
 
-/* --- Global ambient layer ----------------------------------------------- */
-.cyber-ambient {
+/* --- 1. Scroll Progress HUD ---------------------------------------------- */
+.scroll-progress-hud {
   position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2.5px;
+  z-index: 9999;
+  pointer-events: none;
+  background: rgb(255 255 255 / 4%);
+}
+.scroll-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #35684f 0%, #4faaa4 40%, #79c8c0 85%, #baf5ee 100%);
+  transform-origin: left center;
+  transform: scaleX(0);
+  will-change: transform;
+  box-shadow: 0 0 12px 1px rgb(121 200 192 / 70%);
+}
+.scroll-progress-dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e4fff9;
+  box-shadow: 0 0 12px 2px #79c8c0, 0 0 24px 6px rgb(121 200 192 / 50%);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity .3s ease;
+  pointer-events: none;
+}
+.scroll-progress-hud.is-scrolling .scroll-progress-dot {
+  opacity: 1;
+}
+
+/* --- 2. Custom Magnetic Cursor ------------------------------------------ */
+.custom-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.cursor-aura {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgb(121 200 192 / 55%);
+  background: radial-gradient(circle, rgb(121 200 192 / 12%), transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: width .28s cubic-bezier(.22, 1, .36, 1),
+              height .28s cubic-bezier(.22, 1, .36, 1),
+              border-color .28s ease,
+              background .28s ease,
+              border-radius .28s ease;
+  will-change: transform, width, height;
+}
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #79c8c0;
+  box-shadow: 0 0 8px 1px #79c8c0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: transform .08s ease-out, opacity .2s ease;
+  will-change: transform;
+}
+
+/* Cursor hover states */
+.custom-cursor.is-hovering .cursor-aura {
+  width: 54px;
+  height: 54px;
+  border-color: #79c8c0;
+  background: radial-gradient(circle, rgb(121 200 192 / 24%), transparent 75%);
+  box-shadow: 0 0 20px rgb(121 200 192 / 30%);
+}
+.custom-cursor.is-hovering .cursor-dot {
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0.8;
+}
+.custom-cursor.is-active .cursor-aura {
+  transform: translate(-50%, -50%) scale(0.85);
+  background: radial-gradient(circle, rgb(121 200 192 / 40%), transparent 75%);
+}
+
+.custom-cursor.is-hidden {
+  opacity: 0;
+}
+@media (pointer: coarse), (hover: none) {
+  .custom-cursor { display: none !important; }
+}
+
+/* --- 3. Ambient Constellation Canvas (Full screen, fluid 2D) ------------- */
+.ambient-constellation {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.65;
+  will-change: transform;
+}
+
+/* --- 4. Interactive 3D Card Tilt + Specular Spotlight ------------------- */
+.door-card,
+.education-card,
+.contact-card,
+.skills-column,
+.stat-card,
+.highlight-item,
+.door-frame {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform .45s cubic-bezier(.16, 1, .3, 1),
+              box-shadow .45s cubic-bezier(.16, 1, .3, 1),
+              border-color .3s ease;
+}
+
+/* Specular spotlight overlay */
+.door-card::before,
+.education-card::before,
+.contact-card::before,
+.skills-column::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    480px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgb(121 200 192 / 16%),
+    transparent 55%
+  );
+  opacity: 0;
+  transition: opacity .35s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+.door-card:hover::before,
+.education-card:hover::before,
+.contact-card:hover::before,
+.skills-column:hover::before {
+  opacity: 1;
+}
+
+/* Card hover glow */
+.door-card:hover,
+.education-card:hover,
+.contact-card:hover,
+.skills-column:hover {
+  box-shadow: 0 24px 60px -20px rgb(0 0 0 / 80%), 0 0 28px -4px rgb(121 200 192 / 20%);
+  border-color: rgb(121 200 192 / 45%);
+}
+
+/* --- 5. Interactive Click Ripple (Cyber Shockwave) ---------------------- */
+.click-ripples {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  overflow: hidden;
+}
+.click-ripple {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid #79c8c0;
+  box-shadow: 0 0 16px rgb(121 200 192 / 50%);
+  transform: translate(-50%, -50%) scale(0);
+  animation: cyber-ripple .55s cubic-bezier(.22, 1, .36, 1) forwards;
+  pointer-events: none;
+}
+@keyframes cyber-ripple {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(3.2); opacity: 0; }
+}
+
+/* --- 6. Magnetic Elements Fluid Feel ------------------------------------ */
+.button,
+.text-link,
+.nav-resume,
+.contact-mail,
+.brand,
+.rail-social-links a,
+.contact-socials a,
+.door-report,
+.door-code,
+.skill-tool,
+.skill-badge {
+  transform-origin: center;
+  will-change: transform;
+}
+
+/* High-tech scan beam on hover for buttons & CTAs */
+.button,
+.text-link,
+.contact-mail {
+  position: relative;
+  overflow: hidden;
+}
+.button::after,
+.text-link::after,
+.contact-mail .scan-beam {
+  content: "";
+  position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  overflow: hidden;
-}
-
-/* --- Floating data packets (horizontal drift, NO vertical lines) -------- */
-.cyber-packets {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.data-packet {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #79c8c0;
-  box-shadow: 0 0 10px 2px rgb(121 200 192 / 65%), 0 0 25px 4px rgb(121 200 192 / 25%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgb(121 200 192 / 0%) 35%,
+    rgb(121 200 192 / 18%) 48%,
+    rgb(121 200 192 / 32%) 50%,
+    rgb(121 200 192 / 18%) 52%,
+    rgb(121 200 192 / 0%) 65%,
+    transparent 100%
+  );
+  transform: translateX(-150%);
   opacity: 0;
-  pointer-events: none;
-  will-change: transform, opacity;
+  border-radius: inherit;
 }
-.data-packet::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: 100%;
-  width: 24px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(121 200 192 / 70%));
-  transform: translateY(-50%);
+.button:hover::after,
+.text-link:hover::after,
+.contact-mail:hover .scan-beam {
+  opacity: 1;
+  animation: scan-beam-sweep 1.2s cubic-bezier(.4, 0, .2, 1) forwards;
+}
+@keyframes scan-beam-sweep {
+  0% { transform: translateX(-150%); }
+  100% { transform: translateX(200%); }
 }
 
-/* --- Text scramble / decrypt effect across all sections ----------------- */
+/* --- 7. Text Scramble & Decrypt Effect ----------------------------------- */
 [data-scramble] {
   position: relative;
   transition: text-shadow .4s ease;
@@ -4826,7 +5032,6 @@ html.about-motion-ready .about-portrait-stage {
   to { opacity: .95; }
 }
 
-/* Decrypt cursor */
 .decrypt-cursor {
   display: inline-block;
   width: 2px;
@@ -4846,7 +5051,6 @@ html.about-motion-ready .about-portrait-stage {
   to { opacity: 0; }
 }
 
-/* Headline cyber glow when section is in view */
 .cyber-revealed [data-scramble],
 .contact-section.cyber-revealed h2 {
   text-shadow: 0 0 50px rgb(121 200 192 / 18%), 0 0 100px rgb(79 170 164 / 9%);
@@ -4857,149 +5061,24 @@ html.about-motion-ready .about-portrait-stage {
   to { text-shadow: 0 0 75px rgb(121 200 192 / 26%), 0 0 140px rgb(79 170 164 / 14%); }
 }
 
-/* --- High-tech scan beam sweep on buttons & interactive cards ----------- */
-.button,
-.text-link,
-.contact-mail,
-.door,
-.door-card,
-.skills-column,
-.skill-tool,
-.skill-badge,
-.education-card,
-.contact-card,
-.stat-card,
-.highlight-item {
-  position: relative;
-  overflow: hidden;
-}
-
-/* Beam sweep pseudo-element */
-.button::after,
-.text-link::after,
-.door::after,
-.door-card::before,
-.education-card::before,
-.contact-card::after,
-.contact-mail .scan-beam {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgb(121 200 192 / 0%) 35%,
-    rgb(121 200 192 / 18%) 48%,
-    rgb(121 200 192 / 32%) 50%,
-    rgb(121 200 192 / 18%) 52%,
-    rgb(121 200 192 / 0%) 65%,
-    transparent 100%
-  );
-  transform: translateX(-150%);
-  opacity: 0;
-  border-radius: inherit;
-}
-
-/* Scan beam on section reveal */
-.cyber-revealed .door-card::before,
-.cyber-revealed .education-card::before,
-.cyber-revealed .contact-card::after,
-.cyber-revealed .contact-mail .scan-beam {
-  opacity: 1;
-  animation: scan-beam-sweep 3.5s cubic-bezier(.4, 0, .2, 1) 0.6s 1;
-}
-
-/* Scan beam on hover */
-.button:hover::after,
-.text-link:hover::after,
-.door:hover::after,
-.door-card:hover::before,
-.education-card:hover::before,
-.contact-card:hover::after,
-.contact-mail:hover .scan-beam {
-  opacity: 1;
-  animation: scan-beam-sweep 1.2s cubic-bezier(.4, 0, .2, 1) forwards;
-}
-
-@keyframes scan-beam-sweep {
-  0% { transform: translateX(-150%); }
-  100% { transform: translateX(200%); }
-}
-
-/* --- Holographic cyber card shimmer & hover ----------------------------- */
-.door-card:hover,
-.education-card:hover,
-.contact-card:hover,
-.skills-column:hover {
-  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 70%), 0 0 24px -6px rgb(121 200 192 / 18%);
-}
-
-.door-card,
-.education-card,
-.contact-card {
-  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
-}
-
-.door-card:hover,
-.education-card:hover,
-.contact-card:hover {
-  border-color: rgb(121 200 192 / 45%);
-}
-
-/* --- HUD Signal Sync / Glitch overlay on section enter ------------------ */
-.cyber-glitch-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: none;
-  opacity: 0;
-  mix-blend-mode: overlay;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 3px,
-      rgb(121 200 192 / 4%) 3px,
-      rgb(121 200 192 / 4%) 6px
-    );
-}
-.cyber-glitch-overlay.is-glitching {
-  animation: glitch-flash .5s steps(4) forwards;
-}
-@keyframes glitch-flash {
-  0% { opacity: .7; transform: translate3d(-2px, 0, 0); }
-  25% { opacity: .5; transform: translate3d(2px, -1px, 0); }
-  50% { opacity: .3; transform: translate3d(-1px, 1px, 0); }
-  75% { opacity: .15; transform: translate3d(1px, 0, 0); }
-  100% { opacity: 0; transform: translate3d(0, 0, 0); }
-}
-
-/* --- Staggered wave entrance for list / meta items ----------------------- */
-.cyber-revealed .contact-meta-row,
-.cyber-revealed .highlight-item,
-.cyber-revealed .education-card {
-  animation: cyber-fade-in .7s cubic-bezier(.16, 1, .3, 1) both;
-}
-@keyframes cyber-fade-in {
-  from { opacity: 0; transform: translateY(16px); filter: blur(3px); }
-  to { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-
 /* --- Reduced motion ----------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .cyber-ambient,
-  .cyber-packets,
-  .cyber-glitch-overlay,
+  .scroll-progress-hud,
+  .custom-cursor,
+  .ambient-constellation,
+  .click-ripples,
   .decrypt-cursor { display: none !important; }
   .button::after,
   .text-link::after,
-  .door::after,
+  .contact-mail .scan-beam { display: none !important; }
+  .door-card,
+  .education-card,
+  .contact-card,
+  .skills-column { transform: none !important; }
   .door-card::before,
   .education-card::before,
-  .contact-card::after,
-  .contact-mail .scan-beam { display: none !important; }
+  .contact-card::before,
+  .skills-column::before { display: none !important; }
   .scramble-char { animation: none !important; opacity: 1 !important; }
   [data-scramble] { animation: none !important; text-shadow: none !important; }
 }

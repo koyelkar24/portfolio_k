@@ -26,6 +26,24 @@
   </script>
 </head>
 <body>
+  <!-- Scroll Progress HUD -->
+  <div class="scroll-progress-hud" aria-hidden="true">
+    <div class="scroll-progress-bar" id="scrollProgressBar"></div>
+    <div class="scroll-progress-dot" id="scrollProgressDot"></div>
+  </div>
+
+  <!-- Interactive Custom Cursor (Magnetic Aura + Precision Dot) -->
+  <div class="custom-cursor" id="customCursor" aria-hidden="true">
+    <div class="cursor-aura" id="cursorAura"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+  </div>
+
+  <!-- Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines) -->
+  <canvas class="ambient-constellation" id="ambientConstellation" aria-hidden="true"></canvas>
+
+  <!-- Interactive Click Ripple Wave Layer -->
+  <div class="click-ripples" id="clickRipples" aria-hidden="true"></div>
+
   <div class="intro" id="intro">
     <div class="intro-orbit" aria-hidden="true">
       <span class="intro-orbit-glow"></span>
@@ -79,10 +97,6 @@
   </header>
 
   <main id="main">
-    <div class="cyber-ambient" id="cyberAmbient" aria-hidden="true">
-      <div class="cyber-packets" id="cyberPackets"></div>
-      <div class="cyber-glitch-overlay" id="cyberGlitch"></div>
-    </div>
     <section class="hero page-wrap" id="home" aria-labelledby="hero-title">
       <div class="hero-globe" role="img" aria-label="A slowly rotating wireframe globe with a glowing marker pinned on Kolkata, India.">
         <span class="globe-glow" aria-hidden="true"></span>

@@ -788,20 +788,321 @@ if (!prefersReducedMotion && window.gsap) {
 }
 
 /* =========================================================================
-   Global "Encrypted Signal" System + Section Reveals
+   Awwwards-Tier UI Flex & Elegant Interactive Suite
    
-   Cybersecurity-themed animations across the whole portfolio:
-   - Dynamic text decrypt / scramble effect on all section titles & headers
-   - Ambient floating horizontal data packets drifting with light aura
-   - High-tech scan beam sweep on cards & buttons on reveal/hover
-   - Holographic shimmer and cyber glow on cards
-   - Subtle signal sync glitch flash on section reveal
-   - Strictly NO vertical lines or matrix rain
+   1. Interactive Magnetic Cursor (Aura + Precision Dot + Magnetic Target Lock)
+   2. Interactive 3D Card Tilt + Specular Spotlight (Apple/Stripe sheen)
+   3. Magnetic Buttons & Nav CTAs (Tactile Spring Physics)
+   4. Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines)
+   5. Scroll Progress HUD Bar + Glowing Tracer Dot
+   6. Cyber Shockwave Click Ripples
+   7. Section Decrypt / Scramble Typography
+   8. Contact Section Smooth Orchestration
    ========================================================================= */
-if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
-  gsap.registerPlugin(ScrollTrigger);
+if (!prefersReducedMotion) {
 
-  /* ---- 1. Text scramble / decrypt engine --------------------------------- */
+  /* ---- 1. Scroll Progress HUD -------------------------------------------- */
+  const scrollProgressBar = document.getElementById('scrollProgressBar');
+  const scrollProgressDot = document.getElementById('scrollProgressDot');
+  const scrollProgressHud = document.querySelector('.scroll-progress-hud');
+  let scrollIdleTimer = 0;
+
+  const updateScrollProgress = () => {
+    if (!scrollProgressBar) return;
+    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+    if (scrollH <= 0) return;
+    const progress = Math.max(0, Math.min(1, window.scrollY / scrollH));
+    
+    scrollProgressBar.style.transform = `scaleX(${progress})`;
+    if (scrollProgressDot) {
+      scrollProgressDot.style.left = `${progress * 100}%`;
+    }
+
+    if (scrollProgressHud) {
+      scrollProgressHud.classList.add('is-scrolling');
+      window.clearTimeout(scrollIdleTimer);
+      scrollIdleTimer = window.setTimeout(() => {
+        scrollProgressHud.classList.remove('is-scrolling');
+      }, 400);
+    }
+  };
+
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  updateScrollProgress();
+
+  /* ---- 2. Interactive Magnetic Cursor & Click Shockwaves ----------------- */
+  const customCursor = document.getElementById('customCursor');
+  const cursorAura = document.getElementById('cursorAura');
+  const cursorDot = document.getElementById('cursorDot');
+  const clickRipples = document.getElementById('clickRipples');
+  const isFinePointer = window.matchMedia('(pointer: fine)').matches;
+
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
+  let auraX = mouseX;
+  let auraY = mouseY;
+  let cursorVisible = false;
+
+  if (customCursor && isFinePointer) {
+    // Show cursor on first mousemove
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      if (!cursorVisible) {
+        cursorVisible = true;
+        customCursor.classList.remove('is-hidden');
+      }
+
+      if (cursorDot) {
+        cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+      }
+    }, { passive: true });
+
+    // Smooth spring aura loop
+    const renderCursor = () => {
+      if (cursorVisible && cursorAura) {
+        auraX += (mouseX - auraX) * 0.16;
+        auraY += (mouseY - auraY) * 0.16;
+        cursorAura.style.transform = `translate3d(${auraX.toFixed(2)}px, ${auraY.toFixed(2)}px, 0) translate(-50%, -50%)`;
+      }
+      requestAnimationFrame(renderCursor);
+    };
+    requestAnimationFrame(renderCursor);
+
+    // Hide when mouse leaves viewport
+    document.addEventListener('mouseleave', () => {
+      if (customCursor) customCursor.classList.add('is-hidden');
+      cursorVisible = false;
+    });
+
+    document.addEventListener('mouseenter', () => {
+      if (customCursor) customCursor.classList.remove('is-hidden');
+    });
+
+    // Mousedown tactile click scale
+    window.addEventListener('mousedown', () => {
+      if (customCursor) customCursor.classList.add('is-active');
+    });
+    window.addEventListener('mouseup', () => {
+      if (customCursor) customCursor.classList.remove('is-active');
+    });
+
+    // Hover magnetic morph on interactive targets
+    const interactiveSelector = 'a, button, input, [role="button"], .door, .door-card, .skill-badge, .skill-tool, .education-card, .contact-card';
+    
+    document.addEventListener('mouseover', (e) => {
+      const target = e.target.closest(interactiveSelector);
+      if (target && customCursor) {
+        customCursor.classList.add('is-hovering');
+      }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+      const target = e.target.closest(interactiveSelector);
+      if (target && customCursor) {
+        customCursor.classList.remove('is-hovering');
+      }
+    });
+
+    // Click Shockwave Ripple
+    window.addEventListener('click', (e) => {
+      if (!clickRipples) return;
+      const ripple = document.createElement('span');
+      ripple.className = 'click-ripple';
+      const size = Math.random() * 20 + 35;
+      ripple.style.width = `${size}px`;
+      ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX}px`;
+      ripple.style.top = `${e.clientY}px`;
+      clickRipples.appendChild(ripple);
+
+      ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+    }, { passive: true });
+  }
+
+  /* ---- 3. Interactive 3D Card Tilt + Specular Spotlight ------------------ */
+  const tiltCardSelector = '.door-card, .education-card, .contact-card, .skills-column, .stat-card, .highlight-item, .door-frame';
+  
+  if (isFinePointer) {
+    document.addEventListener('pointermove', (e) => {
+      const card = e.target.closest(tiltCardSelector);
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width;
+      const py = (e.clientY - rect.top) / rect.height;
+
+      // Subtle, high-end 3D tilt angles (max +/- 8deg)
+      const rotX = (py - 0.5) * -12;
+      const rotY = (px - 0.5) * 14;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.018, 1.018, 1.018)`;
+      card.style.setProperty('--spot-x', `${(px * 100).toFixed(1)}%`);
+      card.style.setProperty('--spot-y', `${(py * 100).toFixed(1)}%`);
+    }, { passive: true });
+
+    document.addEventListener('pointerout', (e) => {
+      const card = e.target.closest(tiltCardSelector);
+      if (!card) return;
+
+      if (!card.contains(e.relatedTarget)) {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        card.style.setProperty('--spot-x', '50%');
+        card.style.setProperty('--spot-y', '50%');
+      }
+    });
+  }
+
+  /* ---- 4. Magnetic Buttons & Nav CTAs ------------------------------------ */
+  if (isFinePointer && window.gsap) {
+    const magneticSelector = '.hero-actions .button, .hero-actions .text-link, .nav-resume, .contact-mail, .brand, .door-report, .door-code, .site-header .nav-resume';
+    const magneticElements = document.querySelectorAll(magneticSelector);
+
+    magneticElements.forEach((el) => {
+      el.addEventListener('mousemove', (e) => {
+        const rect = el.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = (e.clientX - centerX) * 0.35;
+        const dy = (e.clientY - centerY) * 0.35;
+
+        gsap.to(el, {
+          x: dx,
+          y: dy,
+          duration: 0.3,
+          ease: 'power2.out',
+          overwrite: 'auto'
+        });
+      });
+
+      el.addEventListener('mouseleave', () => {
+        gsap.to(el, {
+          x: 0,
+          y: 0,
+          duration: 0.7,
+          ease: 'elastic.out(1.1, 0.4)',
+          overwrite: 'auto'
+        });
+      });
+    });
+  }
+
+  /* ---- 5. Ambient Constellation Canvas (Organic 2D flow, ZERO vertical lines) ---- */
+  const canvas = document.getElementById('ambientConstellation');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    let particles = [];
+    let animFrame = 0;
+    let isCanvasActive = true;
+
+    const resizeCanvas = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    };
+
+    const particleCount = window.innerWidth < 768 ? 32 : 58;
+
+    const createParticles = () => {
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          radius: Math.random() * 1.8 + 1.2,
+          baseAlpha: Math.random() * 0.4 + 0.25,
+          pulseSpeed: Math.random() * 0.02 + 0.01,
+          pulseOffset: Math.random() * Math.PI * 2
+        });
+      }
+    };
+
+    resizeCanvas();
+    createParticles();
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createParticles();
+    }, { passive: true });
+
+    let nowTime = 0;
+    const maxDist = 125;
+    const mouseRadius = 130;
+
+    const drawConstellation = () => {
+      if (!isCanvasActive) return;
+      ctx.clearRect(0, 0, width, height);
+      nowTime += 0.02;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) { p.x = 0; p.vx *= -1; }
+        else if (p.x > width) { p.x = width; p.vx *= -1; }
+        if (p.y < 0) { p.y = 0; p.vy *= -1; }
+        else if (p.y > height) { p.y = height; p.vy *= -1; }
+
+        if (cursorVisible && isFinePointer) {
+          const dx = p.x - mouseX;
+          const dy = p.y - mouseY;
+          const dist = Math.hypot(dx, dy);
+          if (dist < mouseRadius && dist > 0) {
+            const force = (1 - dist / mouseRadius) * 0.8;
+            p.x += (dx / dist) * force;
+            p.y += (dy / dist) * force;
+          }
+        }
+
+        const alpha = p.baseAlpha + Math.sin(nowTime * p.pulseSpeed + p.pulseOffset) * 0.15;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(121, 200, 192, ${Math.max(0.08, alpha)})`;
+        ctx.shadowColor = 'rgba(121, 200, 192, 0.4)';
+        ctx.shadowBlur = 4;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+          if (dist < maxDist) {
+            const lineAlpha = (1 - dist / maxDist) * 0.12;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(121, 200, 192, ${lineAlpha})`;
+            ctx.lineWidth = 0.85;
+            ctx.stroke();
+          }
+        }
+      }
+
+      animFrame = requestAnimationFrame(drawConstellation);
+    };
+
+    drawConstellation();
+
+    document.addEventListener('visibilitychange', () => {
+      isCanvasActive = !document.hidden;
+      if (isCanvasActive) {
+        cancelAnimationFrame(animFrame);
+        drawConstellation();
+      }
+    });
+  }
+
+  /* ---- 6. Text Decrypt / Scramble Typography ------------------------------ */
   const scrambleGlyphs = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`01αβγδεζ';
   const scrambledElements = new WeakSet();
 
@@ -809,12 +1110,10 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
     if (!element || scrambledElements.has(element)) return;
     scrambledElements.add(element);
 
-    // Create cursor
     const cursor = document.createElement('span');
     cursor.className = 'decrypt-cursor is-active';
     cursor.setAttribute('aria-hidden', 'true');
 
-    // Recursively parse text nodes to wrap individual characters in spans
     let charIndex = 0;
     const processNode = (node) => {
       if (node.nodeType === Node.TEXT_NODE) {
@@ -871,7 +1170,6 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
           charEl.classList.add('is-resolved');
           resolved++;
 
-          // Decrypt in batches of 1-3 for natural cadence
           const batch = Math.random() > 0.55 ? 2 : 1;
           for (let b = 0; b < batch - 1 && resolved < totalChars; b++) {
             const nextChar = scrambleChars[resolved];
@@ -896,75 +1194,11 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
     setTimeout(decryptNext, 160);
   };
 
-  /* ---- 2. Global floating cyber data packets (Horizontal, NO vertical lines) ---- */
-  const initGlobalCyberPackets = () => {
-    const container = document.getElementById('cyberPackets');
-    if (!container) return;
+  /* ---- 7. ScrollTrigger Section Orchestration ----------------------------- */
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
 
-    const spawnOne = () => {
-      const packet = document.createElement('div');
-      packet.className = 'data-packet';
-      const startY = 8 + Math.random() * 84;
-      const duration = 4.5 + Math.random() * 4.5;
-      const size = 2.5 + Math.random() * 2.5;
-      const fromLeft = Math.random() > 0.45;
-
-      packet.style.top = `${startY}%`;
-      packet.style.width = `${size}px`;
-      packet.style.height = `${size}px`;
-
-      if (fromLeft) {
-        packet.style.left = '-30px';
-        packet.style.transform = 'scaleX(1)';
-      } else {
-        packet.style.right = '-30px';
-        packet.style.transform = 'scaleX(-1)';
-      }
-
-      container.appendChild(packet);
-
-      gsap.to(packet, {
-        x: fromLeft ? window.innerWidth + 80 : -(window.innerWidth + 80),
-        y: (Math.random() - 0.5) * 80,
-        opacity: 0.65,
-        duration: duration,
-        ease: 'none',
-        onComplete: () => packet.remove()
-      });
-
-      gsap.fromTo(packet, { opacity: 0 }, {
-        opacity: 0.5 + Math.random() * 0.35,
-        duration: 0.6,
-        yoyo: true,
-        repeat: 1,
-        repeatDelay: duration - 1.2
-      });
-    };
-
-    // Continuous gentle horizontal spawn
-    setInterval(spawnOne, 1200 + Math.random() * 1400);
-
-    // Initial batch
-    for (let i = 0; i < 3; i++) {
-      setTimeout(spawnOne, i * 400);
-    }
-  };
-
-  /* ---- 3. HUD Signal Glitch Flash --------------------------------------- */
-  const triggerGlitch = () => {
-    const glitch = document.getElementById('cyberGlitch');
-    if (!glitch) return;
-    glitch.classList.add('is-glitching');
-    glitch.addEventListener('animationend', () => {
-      glitch.classList.remove('is-glitching');
-    }, { once: true });
-  };
-
-  /* ---- 4. Setup Section Scramble & Cyber Reveals ------------------------- */
-  const setupCyberSections = () => {
-    initGlobalCyberPackets();
-
-    // Trigger hero decryption shortly after load
+    // Hero title scramble on load
     const heroSection = document.getElementById('home');
     if (heroSection) {
       setTimeout(() => {
@@ -973,7 +1207,7 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
       }, 700);
     }
 
-    // Connect all sections with ScrollTrigger
+    // Trigger decrypt and revealed state for all sections
     const sections = document.querySelectorAll('section, .work-doors');
     sections.forEach((sec) => {
       ScrollTrigger.create({
@@ -982,7 +1216,6 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
         once: true,
         onEnter: () => {
           sec.classList.add('cyber-revealed');
-          triggerGlitch();
           sec.querySelectorAll('[data-scramble]').forEach((el) => {
             setTimeout(() => scrambleText(el), 120);
           });
@@ -990,7 +1223,7 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
       });
     });
 
-    // Also trigger decrypt when opening doors
+    // Decrypt showcase title on door open
     const showcaseTitle = document.getElementById('showcaseTitle');
     const workDoorsEl = document.querySelector('.work-doors');
     if (workDoorsEl && showcaseTitle) {
@@ -1005,11 +1238,11 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
       });
       observer.observe(workDoorsEl, { attributes: true });
     }
-  };
+  }
 
-  /* ---- 5. Contact Section Smooth Reveal (No vertical lines) ------------- */
+  /* ---- 8. Contact Section Smooth Entrance --------------------------------- */
   const contact = document.getElementById('contact');
-  if (contact) {
+  if (contact && window.gsap && window.ScrollTrigger) {
     const head = contact.querySelector('.contact-head');
     const kicker = contact.querySelector('.contact-kicker');
     const note = contact.querySelector('.contact-head-note');
@@ -1089,14 +1322,8 @@ if (!prefersReducedMotion && window.gsap && window.ScrollTrigger) {
       window.addEventListener('load', startContactReveal, { once: true });
     }
   }
-
-  // Initialize global animations when ready
-  if (document.readyState === 'complete') {
-    setupCyberSections();
-  } else {
-    window.addEventListener('load', setupCyberSections, { once: true });
-  }
 }
+
 
 /* =========================================================================
    Skills: interactive working-matrix.
