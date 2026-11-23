@@ -790,14 +790,14 @@ if (!prefersReducedMotion && window.gsap) {
 /* =========================================================================
    Awwwards-Tier UI Flex & Elegant Interactive Suite
    
-   1. Interactive Magnetic Cursor (Aura + Precision Dot + Magnetic Target Lock)
-   2. Interactive 3D Card Tilt + Specular Spotlight (Apple/Stripe sheen)
-   3. Magnetic Buttons & Nav CTAs (Tactile Spring Physics)
-   4. Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines)
-   5. Scroll Progress HUD Bar + Glowing Tracer Dot
-   6. Cyber Shockwave Click Ripples
-   7. Section Decrypt / Scramble Typography
-   8. Contact Section Smooth Orchestration
+   1. Scroll Progress HUD Bar + Glowing Tracer Dot
+   2. Cyber Shockwave Click Ripples
+   3. Interactive 3D Card Tilt + Specular Spotlight (Apple/Stripe sheen)
+   4. Magnetic Buttons & Nav CTAs (Tactile Spring Physics)
+   5. Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines)
+   6. Section Decrypt / Scramble Typography
+   7. Contact Section Smooth Orchestration
+   8. Section Robots (line-art guide walking through each section)
    ========================================================================= */
 if (!prefersReducedMotion) {
 
@@ -830,84 +830,12 @@ if (!prefersReducedMotion) {
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();
 
-  /* ---- 2. Interactive Magnetic Cursor & Click Shockwaves ----------------- */
-  const customCursor = document.getElementById('customCursor');
-  const cursorAura = document.getElementById('cursorAura');
-  const cursorDot = document.getElementById('cursorDot');
+  /* ---- 2. Click Shockwaves ------------------------------------------------ */
   const clickRipples = document.getElementById('clickRipples');
   const isFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
-  let auraX = mouseX;
-  let auraY = mouseY;
-  let cursorVisible = false;
-
-  if (customCursor && isFinePointer) {
-    // Show cursor on first mousemove
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      if (!cursorVisible) {
-        cursorVisible = true;
-        customCursor.classList.remove('is-hidden');
-      }
-
-      if (cursorDot) {
-        cursorDot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
-      }
-    }, { passive: true });
-
-    // Smooth spring aura loop
-    const renderCursor = () => {
-      if (cursorVisible && cursorAura) {
-        auraX += (mouseX - auraX) * 0.16;
-        auraY += (mouseY - auraY) * 0.16;
-        cursorAura.style.transform = `translate3d(${auraX.toFixed(2)}px, ${auraY.toFixed(2)}px, 0) translate(-50%, -50%)`;
-      }
-      requestAnimationFrame(renderCursor);
-    };
-    requestAnimationFrame(renderCursor);
-
-    // Hide when mouse leaves viewport
-    document.addEventListener('mouseleave', () => {
-      if (customCursor) customCursor.classList.add('is-hidden');
-      cursorVisible = false;
-    });
-
-    document.addEventListener('mouseenter', () => {
-      if (customCursor) customCursor.classList.remove('is-hidden');
-    });
-
-    // Mousedown tactile click scale
-    window.addEventListener('mousedown', () => {
-      if (customCursor) customCursor.classList.add('is-active');
-    });
-    window.addEventListener('mouseup', () => {
-      if (customCursor) customCursor.classList.remove('is-active');
-    });
-
-    // Hover magnetic morph on interactive targets
-    const interactiveSelector = 'a, button, input, [role="button"], .door, .door-card, .skill-badge, .skill-tool, .education-card, .contact-card';
-    
-    document.addEventListener('mouseover', (e) => {
-      const target = e.target.closest(interactiveSelector);
-      if (target && customCursor) {
-        customCursor.classList.add('is-hovering');
-      }
-    });
-
-    document.addEventListener('mouseout', (e) => {
-      const target = e.target.closest(interactiveSelector);
-      if (target && customCursor) {
-        customCursor.classList.remove('is-hovering');
-      }
-    });
-
-    // Click Shockwave Ripple
+  if (clickRipples) {
     window.addEventListener('click', (e) => {
-      if (!clickRipples) return;
       const ripple = document.createElement('span');
       ripple.className = 'click-ripple';
       const size = Math.random() * 20 + 35;
@@ -1035,7 +963,6 @@ if (!prefersReducedMotion) {
 
     let nowTime = 0;
     const maxDist = 125;
-    const mouseRadius = 130;
 
     const drawConstellation = () => {
       if (!isCanvasActive) return;
@@ -1052,17 +979,6 @@ if (!prefersReducedMotion) {
         else if (p.x > width) { p.x = width; p.vx *= -1; }
         if (p.y < 0) { p.y = 0; p.vy *= -1; }
         else if (p.y > height) { p.y = height; p.vy *= -1; }
-
-        if (cursorVisible && isFinePointer) {
-          const dx = p.x - mouseX;
-          const dy = p.y - mouseY;
-          const dist = Math.hypot(dx, dy);
-          if (dist < mouseRadius && dist > 0) {
-            const force = (1 - dist / mouseRadius) * 0.8;
-            p.x += (dx / dist) * force;
-            p.y += (dy / dist) * force;
-          }
-        }
 
         const alpha = p.baseAlpha + Math.sin(nowTime * p.pulseSpeed + p.pulseOffset) * 0.15;
         ctx.beginPath();
@@ -1587,4 +1503,73 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
     gsap.set([skillsHeading, skillsColumns, matrixBadges, skillsToolkit, toolBadges], { y: 0, opacity: 1 });
     gsap.set(skillsEyebrow, { scale: 1, opacity: 1 });
   }
+}
+
+/* =========================================================================
+   Section robots: a small line-art guide walks across each section.
+   The robot is decorative, pointer-events-free, and stays out of the content
+   stacking order. Reduced-motion visitors do not get the walking layer.
+   ========================================================================= */
+if (window.gsap && window.ScrollTrigger && !prefersReducedMotion) {
+  const robotSections = document.querySelectorAll('#home, #work, #skills, #about, #education, #contact');
+  const robotMarkup = `
+    <div class="bot-frame">
+      <svg viewBox="0 0 64 88" role="presentation" focusable="false" aria-hidden="true">
+        <g class="bot-antenna">
+          <path class="bot-limb" d="M32 17V9"></path>
+          <circle class="bot-antenna-dot" cx="32" cy="6" r="3"></circle>
+        </g>
+        <rect class="bot-shell" x="12" y="15" width="40" height="27" rx="9"></rect>
+        <rect class="bot-visor" x="18" y="22" width="28" height="12" rx="6"></rect>
+        <circle class="bot-eye" cx="25" cy="28" r="2.2"></circle>
+        <circle class="bot-eye" cx="39" cy="28" r="2.2"></circle>
+        <path class="bot-neck" d="M32 42v4"></path>
+        <rect class="bot-shell" x="17" y="46" width="30" height="22" rx="8"></rect>
+        <circle class="bot-core" cx="32" cy="57" r="4.5"></circle>
+        <path class="bot-detail" d="M23 51h6M35 51h6"></path>
+        <g class="bot-arm bot-arm-left">
+          <path class="bot-limb" d="M17 50l-7 8 2 6"></path>
+          <circle class="bot-joint" cx="12" cy="64" r="2.2"></circle>
+        </g>
+        <g class="bot-arm bot-arm-right">
+          <path class="bot-limb" d="M47 50l7 8-2 6"></path>
+          <circle class="bot-joint" cx="52" cy="64" r="2.2"></circle>
+        </g>
+        <g class="bot-leg bot-leg-left">
+          <path class="bot-limb" d="M26 68v8"></path>
+          <rect class="bot-foot" x="21" y="76" width="10" height="4" rx="2"></rect>
+        </g>
+        <g class="bot-leg bot-leg-right">
+          <path class="bot-limb" d="M38 68v8"></path>
+          <rect class="bot-foot" x="33" y="76" width="10" height="4" rx="2"></rect>
+        </g>
+        <path class="bot-scan" d="M20 35h24"></path>
+      </svg>
+    </div>
+  `;
+
+  robotSections.forEach((section, index) => {
+    if (section.querySelector(':scope > .section-bot-lane')) return;
+
+    const lane = document.createElement('div');
+    lane.className = 'section-bot-lane';
+    lane.setAttribute('aria-hidden', 'true');
+    lane.innerHTML = `<div class="section-bot">${robotMarkup}</div>`;
+    section.append(lane);
+
+    const bot = lane.querySelector('.section-bot');
+    const walkDuration = Math.max(5, Math.min(10, section.clientWidth / 150));
+    const startAt = .3 + index * .06;
+
+    gsap.set(bot, { x: -90, opacity: 0 });
+
+    const walk = gsap.timeline({
+      scrollTrigger: { trigger: section, start: 'bottom 96%', once: true }
+    });
+
+    walk
+      .to(bot, { opacity: .78, duration: .35, ease: 'power2.out' }, startAt)
+      .to(bot, { x: () => section.clientWidth + 90, duration: walkDuration, ease: 'none' }, startAt)
+      .to(bot, { opacity: 0, duration: .45, ease: 'power2.in' }, '-=.5');
+  });
 }

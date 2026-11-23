@@ -4758,7 +4758,6 @@ html.about-motion-ready .about-portrait-stage {
 /* =========================================================================
    Awwwards-Tier UI Flex & Elegant Interactive Suite
    - Scroll Progress HUD bar & glowing tracer dot
-   - Magnetic Custom Cursor (Aura ring + precision dot + magnetic lock)
    - Interactive 3D Card Tilt with Specular Spotlight (Apple/Stripe sheen)
    - Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines)
    - Click Shockwave Ripple
@@ -4802,71 +4801,6 @@ html.about-motion-ready .about-portrait-stage {
 }
 .scroll-progress-hud.is-scrolling .scroll-progress-dot {
   opacity: 1;
-}
-
-/* --- 2. Custom Magnetic Cursor ------------------------------------------ */
-.custom-cursor {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  pointer-events: none;
-  transition: opacity .3s ease;
-}
-.cursor-aura {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1.5px solid rgb(121 200 192 / 55%);
-  background: radial-gradient(circle, rgb(121 200 192 / 12%), transparent 70%);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: width .28s cubic-bezier(.22, 1, .36, 1),
-              height .28s cubic-bezier(.22, 1, .36, 1),
-              border-color .28s ease,
-              background .28s ease,
-              border-radius .28s ease;
-  will-change: transform, width, height;
-}
-.cursor-dot {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #79c8c0;
-  box-shadow: 0 0 8px 1px #79c8c0;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: transform .08s ease-out, opacity .2s ease;
-  will-change: transform;
-}
-
-/* Cursor hover states */
-.custom-cursor.is-hovering .cursor-aura {
-  width: 54px;
-  height: 54px;
-  border-color: #79c8c0;
-  background: radial-gradient(circle, rgb(121 200 192 / 24%), transparent 75%);
-  box-shadow: 0 0 20px rgb(121 200 192 / 30%);
-}
-.custom-cursor.is-hovering .cursor-dot {
-  transform: translate(-50%, -50%) scale(0.6);
-  opacity: 0.8;
-}
-.custom-cursor.is-active .cursor-aura {
-  transform: translate(-50%, -50%) scale(0.85);
-  background: radial-gradient(circle, rgb(121 200 192 / 40%), transparent 75%);
-}
-
-.custom-cursor.is-hidden {
-  opacity: 0;
-}
-@media (pointer: coarse), (hover: none) {
-  .custom-cursor { display: none !important; }
 }
 
 /* --- 3. Ambient Constellation Canvas (Full screen, fluid 2D) ------------- */
@@ -5061,12 +4995,182 @@ html.about-motion-ready .about-portrait-stage {
   to { text-shadow: 0 0 75px rgb(121 200 192 / 26%), 0 0 140px rgb(79 170 164 / 14%); }
 }
 
+/* =========================================================================
+   Section robots: a small line-art guide walks across each section.
+   ========================================================================= */
+.hero,
+.work-doors,
+.skills-section,
+.about-section,
+.education-section,
+.contact-section {
+  isolation: isolate;
+}
+.about-section,
+.education-section {
+  position: relative;
+}
+.about-grid,
+.education-section > .section-heading,
+.education-timeline {
+  position: relative;
+  z-index: 1;
+}
+.section-bot-lane {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.section-bot-lane::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(121 200 192 / 20%), transparent);
+  opacity: .7;
+}
+.section-bot {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 58px;
+  height: 80px;
+  color: #79c8c0;
+  opacity: 0;
+  filter: drop-shadow(0 0 9px rgb(121 200 192 / 24%));
+  will-change: transform, opacity;
+}
+.section-bot svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.bot-frame {
+  width: 100%;
+  height: 100%;
+  transform-origin: center bottom;
+  animation: bot-body-bob .72s ease-in-out infinite;
+}
+.section-bot .bot-shell {
+  fill: rgb(11 13 16 / 55%);
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.section-bot .bot-visor {
+  fill: rgb(121 200 192 / 16%);
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+.section-bot .bot-eye {
+  fill: #e4fff9;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bot-eye-blink 4.6s steps(1) infinite;
+}
+.section-bot .bot-core {
+  fill: currentColor;
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.section-bot .bot-antenna-dot {
+  fill: #e4fff9;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bot-antenna-pulse 1.4s ease-in-out infinite;
+}
+.section-bot .bot-limb,
+.section-bot .bot-neck,
+.section-bot .bot-detail,
+.section-bot .bot-scan {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.section-bot .bot-scan {
+  opacity: .45;
+  animation: bot-scan 1.8s ease-in-out infinite;
+}
+.section-bot .bot-joint,
+.section-bot .bot-foot {
+  fill: rgb(11 13 16 / 55%);
+  stroke: currentColor;
+  stroke-width: 1.2;
+}
+.section-bot .bot-leg,
+.section-bot .bot-arm {
+  transform-box: fill-box;
+  transform-origin: center top;
+}
+.section-bot .bot-leg-left,
+.section-bot .bot-arm-right {
+  animation: bot-limb-swing .72s ease-in-out infinite alternate;
+}
+.section-bot .bot-leg-right,
+.section-bot .bot-arm-left {
+  animation: bot-limb-swing .72s ease-in-out infinite alternate-reverse;
+}
+.education-section .section-bot {
+  color: #2f7e78;
+  filter: drop-shadow(0 0 8px rgb(47 126 120 / 18%));
+}
+.education-section .section-bot .bot-shell,
+.education-section .section-bot .bot-joint,
+.education-section .section-bot .bot-foot {
+  fill: rgb(255 255 255 / 55%);
+}
+.education-section .section-bot .bot-eye,
+.education-section .section-bot .bot-antenna-dot {
+  fill: #0b0d10;
+}
+.education-section .section-bot .bot-visor {
+  fill: rgb(47 126 120 / 12%);
+}
+.education-section .section-bot-lane::after {
+  background: linear-gradient(90deg, transparent, rgb(47 126 120 / 24%), transparent);
+}
+@keyframes bot-body-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1.5px); }
+}
+@keyframes bot-limb-swing {
+  from { transform: rotate(14deg); }
+  to { transform: rotate(-14deg); }
+}
+@keyframes bot-antenna-pulse {
+  0%, 100% { opacity: .45; transform: scale(.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+@keyframes bot-eye-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  94% { transform: scaleY(.12); }
+}
+@keyframes bot-scan {
+  0%, 100% { opacity: .2; transform: translateX(-5px); }
+  50% { opacity: .7; transform: translateX(5px); }
+}
+@media (max-width: 680px) {
+  .section-bot {
+    bottom: 7px;
+    width: 44px;
+    height: 61px;
+  }
+  .section-bot-lane::after {
+    bottom: 6px;
+  }
+}
+
 /* --- Reduced motion ----------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .scroll-progress-hud,
-  .custom-cursor,
   .ambient-constellation,
   .click-ripples,
+  .section-bot-lane,
   .decrypt-cursor { display: none !important; }
   .button::after,
   .text-link::after,
