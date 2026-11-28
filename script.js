@@ -472,6 +472,7 @@ const enterWorkDoor = (door) => {
     workDoors.setAttribute('aria-labelledby', 'showcaseTitle');
     doorsCamera.style.transformOrigin = '50% 50%';
     scrollToWorkTop();
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
 
     if (doorShowcaseTitle) {
       doorShowcaseTitle.setAttribute('tabindex', '-1');
@@ -505,6 +506,7 @@ const closeWorkDoors = () => {
     workDoors.setAttribute('aria-labelledby', 'work-title');
     scrollToWorkTop(true);
     void doorsCamera.offsetWidth;
+    if (window.ScrollTrigger) window.ScrollTrigger.refresh();
 
     window.setTimeout(() => {
       if (token !== doorAnimationToken) return;
@@ -788,18 +790,17 @@ if (!prefersReducedMotion && window.gsap) {
 }
 
 /* =========================================================================
-   Awwwards-Tier UI Flex & Elegant Interactive Suite
-   
+   Continuous Per-Slide Motion & Interactive UI Suite
+
    1. Scroll Progress HUD Bar + Glowing Tracer Dot
-   2. Cyber Shockwave Click Ripples
-   3. Interactive 3D Card Tilt + Specular Spotlight (Apple/Stripe sheen)
-   4. Magnetic Buttons & Nav CTAs (Tactile Spring Physics)
-   5. Ambient Interactive Constellation Canvas (Organic 2D flow, ZERO vertical lines)
-   6. Section Decrypt / Scramble Typography
-   7. Contact Section Smooth Orchestration
-   8. Section Robots (line-art guide walking through each section)
+   2. Interactive 3D Card Tilt + Specular Spotlight
+   3. Magnetic Buttons & Nav CTAs (Tactile Spring Physics)
+   4. Ambient Neural Constellation Canvas (Organic 2D wave + signal pulses)
+   5. Contact Section Smooth Orchestration
+   6. Unique Per-Slide Scroll Parallax & Living Motion Triggers
    ========================================================================= */
 if (!prefersReducedMotion) {
+  const isFinePointer = window.matchMedia('(pointer: fine)').matches;
 
   /* ---- 1. Scroll Progress HUD -------------------------------------------- */
   const scrollProgressBar = document.getElementById('scrollProgressBar');
@@ -812,7 +813,7 @@ if (!prefersReducedMotion) {
     const scrollH = document.documentElement.scrollHeight - window.innerHeight;
     if (scrollH <= 0) return;
     const progress = Math.max(0, Math.min(1, window.scrollY / scrollH));
-    
+
     scrollProgressBar.style.transform = `scaleX(${progress})`;
     if (scrollProgressDot) {
       scrollProgressDot.style.left = `${progress * 100}%`;
@@ -822,31 +823,31 @@ if (!prefersReducedMotion) {
       scrollProgressHud.classList.add('is-scrolling');
       window.clearTimeout(scrollIdleTimer);
       scrollIdleTimer = window.setTimeout(() => {
-        scrollProgressHud.classList.remove('is-scrolling');
-      }, 400);
+        if (progress <= 0.01) scrollProgressHud.classList.remove('is-scrolling');
+      }, 650);
     }
   };
 
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();
 
-  /* ---- 3. Interactive 3D Card Tilt + Specular Spotlight ------------------ */
+  /* ---- 2. Interactive 3D Card Tilt + Specular Spotlight ------------------ */
   const tiltCardSelector = '.door-card, .education-card, .contact-card, .skills-column, .stat-card, .highlight-item, .door-frame';
-  
+
   if (isFinePointer) {
     document.addEventListener('pointermove', (e) => {
       const card = e.target.closest(tiltCardSelector);
       if (!card) return;
 
       const rect = card.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
       const px = (e.clientX - rect.left) / rect.width;
       const py = (e.clientY - rect.top) / rect.height;
 
-      // Subtle, high-end 3D tilt angles (max +/- 8deg)
-      const rotX = (py - 0.5) * -12;
-      const rotY = (px - 0.5) * 14;
+      const rotX = (py - 0.5) * -10;
+      const rotY = (px - 0.5) * 12;
 
-      card.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.018, 1.018, 1.018)`;
+      card.style.transform = `perspective(1000px) rotateX(${rotX.toFixed(2)}deg) rotateY(${rotY.toFixed(2)}deg) scale3d(1.015, 1.015, 1.015)`;
       card.style.setProperty('--spot-x', `${(px * 100).toFixed(1)}%`);
       card.style.setProperty('--spot-y', `${(py * 100).toFixed(1)}%`);
     }, { passive: true });
@@ -856,14 +857,14 @@ if (!prefersReducedMotion) {
       if (!card) return;
 
       if (!card.contains(e.relatedTarget)) {
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        card.style.transform = '';
         card.style.setProperty('--spot-x', '50%');
         card.style.setProperty('--spot-y', '50%');
       }
     });
   }
 
-  /* ---- 4. Magnetic Buttons & Nav CTAs ------------------------------------ */
+  /* ---- 3. Magnetic Buttons & Nav CTAs ------------------------------------ */
   if (isFinePointer && window.gsap) {
     const magneticSelector = '.hero-actions .button, .hero-actions .text-link, .nav-resume, .contact-mail, .brand, .door-report, .door-code, .site-header .nav-resume';
     const magneticElements = document.querySelectorAll(magneticSelector);
@@ -873,13 +874,13 @@ if (!prefersReducedMotion) {
         const rect = el.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        const dx = (e.clientX - centerX) * 0.35;
-        const dy = (e.clientY - centerY) * 0.35;
+        const dx = (e.clientX - centerX) * 0.32;
+        const dy = (e.clientY - centerY) * 0.32;
 
         gsap.to(el, {
           x: dx,
           y: dy,
-          duration: 0.3,
+          duration: 0.28,
           ease: 'power2.out',
           overwrite: 'auto'
         });
@@ -889,7 +890,7 @@ if (!prefersReducedMotion) {
         gsap.to(el, {
           x: 0,
           y: 0,
-          duration: 0.7,
+          duration: 0.65,
           ease: 'elastic.out(1.1, 0.4)',
           overwrite: 'auto'
         });
@@ -897,15 +898,24 @@ if (!prefersReducedMotion) {
     });
   }
 
-  /* ---- 5. Ambient Constellation Canvas (Organic 2D flow, ZERO vertical lines) ---- */
+  /* ---- 4. Ambient Neural Constellation Canvas (Organic wave + pulses) ---- */
   const canvas = document.getElementById('ambientConstellation');
   if (canvas) {
     const ctx = canvas.getContext('2d');
     let width = 0;
     let height = 0;
     let particles = [];
+    let pulses = [];
     let animFrame = 0;
     let isCanvasActive = true;
+    let lastScrollY = window.scrollY;
+    let scrollBoost = 0;
+
+    window.addEventListener('scroll', () => {
+      const delta = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+      scrollBoost = Math.max(-14, Math.min(14, delta * 0.16));
+    }, { passive: true });
 
     const resizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -913,10 +923,10 @@ if (!prefersReducedMotion) {
       height = window.innerHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const particleCount = window.innerWidth < 768 ? 32 : 58;
+    const particleCount = window.innerWidth < 768 ? 34 : 64;
 
     const createParticles = () => {
       particles = [];
@@ -924,12 +934,13 @@ if (!prefersReducedMotion) {
         particles.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          radius: Math.random() * 1.8 + 1.2,
+          vx: (Math.random() - 0.5) * 0.55,
+          vy: (Math.random() - 0.5) * 0.55,
+          radius: Math.random() * 1.9 + 1.1,
           baseAlpha: Math.random() * 0.4 + 0.25,
-          pulseSpeed: Math.random() * 0.02 + 0.01,
-          pulseOffset: Math.random() * Math.PI * 2
+          pulseSpeed: Math.random() * 0.04 + 0.02,
+          pulseOffset: Math.random() * Math.PI * 2,
+          waveAmp: Math.random() * 0.28 + 0.08
         });
       }
     };
@@ -943,46 +954,65 @@ if (!prefersReducedMotion) {
     }, { passive: true });
 
     let nowTime = 0;
-    const maxDist = 125;
+    const maxDist = 140;
 
     const drawConstellation = () => {
       if (!isCanvasActive) return;
       ctx.clearRect(0, 0, width, height);
-      nowTime += 0.02;
+      nowTime += 0.025;
+      scrollBoost *= 0.92;
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx + Math.sin(nowTime * 0.7 + p.pulseOffset) * p.waveAmp;
+        p.y += p.vy + Math.cos(nowTime * 0.55 + p.pulseOffset) * p.waveAmp - scrollBoost * 0.35;
 
-        if (p.x < 0) { p.x = 0; p.vx *= -1; }
-        else if (p.x > width) { p.x = width; p.vx *= -1; }
-        if (p.y < 0) { p.y = 0; p.vy *= -1; }
-        else if (p.y > height) { p.y = height; p.vy *= -1; }
+        if (p.x < -10) p.x = width + 10;
+        else if (p.x > width + 10) p.x = -10;
+        if (p.y < -10) p.y = height + 10;
+        else if (p.y > height + 10) p.y = -10;
 
-        const alpha = p.baseAlpha + Math.sin(nowTime * p.pulseSpeed + p.pulseOffset) * 0.15;
+        const alpha = p.baseAlpha + Math.sin(nowTime * p.pulseSpeed * 20 + p.pulseOffset) * 0.16;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(121, 200, 192, ${Math.max(0.08, alpha)})`;
-        ctx.shadowColor = 'rgba(121, 200, 192, 0.4)';
-        ctx.shadowBlur = 4;
         ctx.fill();
-        ctx.shadowBlur = 0;
 
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
           if (dist < maxDist) {
-            const lineAlpha = (1 - dist / maxDist) * 0.12;
+            const lineAlpha = (1 - dist / maxDist) * 0.14;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.strokeStyle = `rgba(121, 200, 192, ${lineAlpha})`;
             ctx.lineWidth = 0.85;
             ctx.stroke();
+
+            // Periodically emit a glowing signal packet along organic diagonal links
+            if (pulses.length < 14 && dist > 35 && Math.random() < 0.0012) {
+              pulses.push({ a: p, b: p2, t: 0, speed: 0.018 + Math.random() * 0.015 });
+            }
           }
         }
+      }
+
+      for (let k = pulses.length - 1; k >= 0; k--) {
+        const pulse = pulses[k];
+        pulse.t += pulse.speed;
+        if (pulse.t >= 1 || Math.hypot(pulse.a.x - pulse.b.x, pulse.a.y - pulse.b.y) > maxDist * 1.25) {
+          pulses.splice(k, 1);
+          continue;
+        }
+        const px = pulse.a.x + (pulse.b.x - pulse.a.x) * pulse.t;
+        const py = pulse.a.y + (pulse.b.y - pulse.a.y) * pulse.t;
+        const pAlpha = Math.sin(pulse.t * Math.PI) * 0.85;
+        ctx.beginPath();
+        ctx.arc(px, py, 2.1, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(220, 255, 248, ${pAlpha})`;
+        ctx.fill();
       }
 
       animFrame = requestAnimationFrame(drawConstellation);
@@ -999,7 +1029,7 @@ if (!prefersReducedMotion) {
     });
   }
 
-  /* ---- 8. Contact Section Smooth Entrance --------------------------------- */
+  /* ---- 5. Contact Section Smooth Entrance --------------------------------- */
   const contact = document.getElementById('contact');
   if (contact && window.gsap && window.ScrollTrigger) {
     const head = contact.querySelector('.contact-head');
@@ -1014,6 +1044,7 @@ if (!prefersReducedMotion) {
     const cardTop = contact.querySelector('.contact-card-top');
     const metaRows = contact.querySelectorAll('.contact-meta-row');
     const socials = contact.querySelector('.contact-socials');
+    const socialLinks = contact.querySelectorAll('.contact-socials a');
     const footer = document.querySelector('.site-footer');
 
     gsap.set([kicker, note], { y: 14, opacity: 0 });
@@ -1029,6 +1060,7 @@ if (!prefersReducedMotion) {
     if (cardTop) gsap.set(cardTop, { y: 12, opacity: 0 });
     gsap.set(metaRows, { y: 12, opacity: 0 });
     if (socials) gsap.set(socials, { y: 10, opacity: 0 });
+    if (socialLinks.length) gsap.set(socialLinks, { scale: .75, opacity: 0 });
     if (footer) gsap.set(footer, { y: 16, opacity: 0 });
 
     const startContactReveal = () => {
@@ -1056,10 +1088,11 @@ if (!prefersReducedMotion) {
           scrollTrigger: { trigger: card, start: 'top 85%', once: true },
           defaults: { ease: 'power3.out' }
         })
-          .to(card, { x: 0, y: 0, rotationY: 0, opacity: 1, duration: 1.05 })
+          .to(card, { x: 0, y: 0, rotationY: 0, opacity: 1, duration: 1.05, clearProps: 'transform' })
           .to(cardTop, { y: 0, opacity: 1, duration: .55 }, .55)
           .to(metaRows, { y: 0, opacity: 1, duration: .5, stagger: .07 }, .65)
-          .to(socials, { y: 0, opacity: 1, duration: .5 }, .92);
+          .to(socials, { y: 0, opacity: 1, duration: .45 }, .88)
+          .to(socialLinks, { scale: 1, opacity: 1, duration: .48, stagger: .08, ease: 'back.out(2.2)', clearProps: 'transform' }, .92);
       }
 
       if (footer) {
@@ -1082,120 +1115,139 @@ if (!prefersReducedMotion) {
     }
   }
 
-  /* ---- NEW: Unique Per-Section Scroll Animations ----------------------------- */
+  /* ---- 6. Unique Per-Slide Scroll Parallax & Kinetic Animations ---------- */
   if (window.gsap && window.ScrollTrigger) {
     gsap.registerPlugin(ScrollTrigger);
 
-    /* -- Hero: Staggered parallax entrance for focus tags + disciplines ---------- */
-    const heroFocus = document.querySelector('.hero-focus');
-    const heroDisciplines = document.querySelector('.hero-disciplines');
-    const heroBottomline = document.querySelector('.hero-bottomline');
-    const heroScrollCue = document.querySelector('.scroll-cue');
+    /* -- Hero: Multi-depth scroll parallax as user scrolls down -------------- */
+    const heroGlobe = document.querySelector('.hero-globe');
+    const heroPortrait = document.querySelector('.hero-portrait');
+    const heroCopy = document.querySelector('.hero-copy');
+    const heroOrbs = document.querySelectorAll('.hero-orb');
 
-    if (heroFocus) {
-      const focusItems = heroFocus.querySelectorAll('span, div');
-      gsap.set(focusItems, { y: 20, opacity: 0, scale: 0.95 });
-      gsap.to(focusItems, {
-        y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.08,
-        ease: 'power3.out', delay: 1.2
+    if (heroGlobe) {
+      gsap.to(heroGlobe, {
+        y: -70,
+        scale: 1.06,
+        scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1.2 }
       });
     }
-    if (heroDisciplines) {
-      const discItems = heroDisciplines.querySelectorAll('span');
-      gsap.set(discItems, { x: -30, opacity: 0 });
-      gsap.to(discItems, {
-        x: 0, opacity: 1, duration: 0.8, stagger: 0.12,
-        ease: 'power3.out', delay: 1.6
+    if (heroPortrait) {
+      gsap.to(heroPortrait, {
+        y: 42,
+        scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1 }
       });
     }
-    if (heroBottomline) {
-      const blItems = heroBottomline.querySelectorAll('span');
-      gsap.set(blItems, { y: 12, opacity: 0 });
-      gsap.to(blItems, {
-        y: 0, opacity: 1, duration: 0.6, stagger: 0.1,
-        ease: 'power2.out', delay: 2
+    if (heroCopy) {
+      gsap.to(heroCopy, {
+        y: -48,
+        scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1 }
       });
     }
-    if (heroScrollCue) {
-      gsap.set(heroScrollCue, { opacity: 0, y: 10 });
-      gsap.to(heroScrollCue, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 2.4 });
-    }
+    heroOrbs.forEach((orb, i) => {
+      gsap.to(orb, {
+        y: () => -window.innerHeight * (0.14 + i * 0.08),
+        scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1.4 }
+      });
+    });
 
-    /* -- Work/Doors: Each door staggers in with a 3D flip from below ------------ */
+    /* -- Work/Doors: 3D staggered portal rise + clean transform release ------ */
     const doors = document.querySelectorAll('.work-doors .door');
     if (doors.length) {
-      gsap.set(doors, { y: 60, opacity: 0, rotationX: -15, transformPerspective: 800 });
+      gsap.set(doors, { y: 48, opacity: 0, rotationX: -14, transformPerspective: 900 });
       ScrollTrigger.create({
         trigger: '.work-doors',
-        start: 'top 72%',
+        start: 'top 76%',
         once: true,
         onEnter: () => {
           gsap.to(doors, {
-            y: 0, opacity: 1, rotationX: 0,
-            duration: 0.9, stagger: 0.12,
+            y: 0,
+            opacity: 1,
+            rotationX: 0,
+            duration: 0.9,
+            stagger: 0.11,
+            ease: 'power3.out',
+            clearProps: 'transform'
+          });
+        }
+      });
+    }
+
+    const doorsKicker = document.querySelector('.doors-head .work-kicker');
+    const doorsSub = document.querySelector('.doors-sub');
+    const doorsHint = document.querySelector('.doors-hint');
+    const doorsMetaEls = [doorsKicker, doorsSub, doorsHint].filter(Boolean);
+    if (doorsMetaEls.length) {
+      gsap.set(doorsMetaEls, { y: 18, opacity: 0 });
+      ScrollTrigger.create({
+        trigger: '.doors-head',
+        start: 'top 82%',
+        once: true,
+        onEnter: () => {
+          gsap.to(doorsMetaEls, {
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+            stagger: 0.1,
             ease: 'power3.out'
           });
         }
       });
     }
 
-    /* -- Work: Door kicker + sub text reveal ------------------------------------ */
-    const doorsKicker = document.querySelector('.doors-head .work-kicker');
-    const doorsSub = document.querySelector('.doors-sub');
-    const doorsHint = document.querySelector('.doors-hint');
-    if (doorsKicker) {
-      gsap.set([doorsKicker, doorsSub, doorsHint].filter(Boolean), { y: 18, opacity: 0 });
-      ScrollTrigger.create({
-        trigger: '.doors-head',
-        start: 'top 80%',
-        once: true,
-        onEnter: () => {
-          gsap.to([doorsKicker, doorsSub, doorsHint].filter(Boolean), {
-            y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'power3.out'
-          });
+    /* -- Showcase Mockups: Parallax on outer visual wrapper (safe for 3D hover) */
+    document.querySelectorAll('.door-card-visual').forEach((visual) => {
+      gsap.fromTo(
+        visual,
+        { y: 16 },
+        {
+          y: -18,
+          scrollTrigger: {
+            trigger: visual,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2
+          }
         }
-      });
-    }
+      );
+    });
 
-    /* -- Work: Door cards shimmer border on scroll ------------------------------ */
-    const doorCards = document.querySelectorAll('.door-card');
-    doorCards.forEach((card) => {
-      gsap.set(card, { y: 40, opacity: 0, scale: 0.97 });
-      ScrollTrigger.create({
-        trigger: card,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => {
-          gsap.to(card, {
-            y: 0, opacity: 1, scale: 1,
-            duration: 0.8, ease: 'power3.out'
-          });
+    /* -- Skills: Ambient orbs react smoothly to vertical scroll -------------- */
+    document.querySelectorAll('.skills-orb').forEach((orb, i) => {
+      gsap.to(orb, {
+        y: -55 - i * 18,
+        x: i % 2 === 0 ? 28 : -28,
+        scrollTrigger: {
+          trigger: '#skills',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.8
         }
       });
     });
 
-    /* -- About: Stat numbers count up ------------------------------------------ */
-    const statNumbers = document.querySelectorAll('.stat-number');
-    statNumbers.forEach((el) => {
+    /* -- About: Stat number counters + morph blob & floating tags parallax --- */
+    document.querySelectorAll('.stat-number').forEach((el) => {
       const target = el.textContent.trim();
       const num = parseInt(target, 10);
       if (isNaN(num)) return;
 
-      const originalText = el.textContent;
-      el.textContent = '0';
+      const originalText = target;
+      const startVal = num >= 2000 ? num - 24 : 0;
+      el.textContent = String(startVal).padStart(originalText.length, '0');
 
       ScrollTrigger.create({
         trigger: el,
         start: 'top 88%',
         once: true,
         onEnter: () => {
-          const counter = { val: 0 };
+          const counter = { val: startVal };
           gsap.to(counter, {
             val: num,
-            duration: 1.6,
+            duration: 1.4,
             ease: 'power2.out',
             onUpdate: () => {
-              el.textContent = Math.round(counter.val).toString();
+              el.textContent = String(Math.round(counter.val)).padStart(originalText.length, '0');
             },
             onComplete: () => {
               el.textContent = originalText;
@@ -1205,122 +1257,78 @@ if (!prefersReducedMotion) {
       });
     });
 
-    /* -- About: Highlight items slide in from left with blur -------------------- */
-    const highlights = document.querySelectorAll('.highlight-item');
-    if (highlights.length) {
-      gsap.set(highlights, { x: -40, opacity: 0, filter: 'blur(6px)' });
+    const morphBlob = document.querySelector('.about-morph-blob');
+    if (morphBlob) {
+      gsap.to(morphBlob, {
+        scale: 1.24,
+        scrollTrigger: { trigger: '#about', start: 'top bottom', end: 'bottom top', scrub: 1.5 }
+      });
+    }
+
+    /* -- Education: Animated milestone rail + card alternating stagger ------ */
+    const eduRailTrack = document.querySelector('.edu-rail-track');
+    const eduRailNodes = document.querySelectorAll('.edu-rail-node');
+    if (eduRailTrack) {
+      gsap.set(eduRailTrack, { scaleX: 0, transformOrigin: 'left center' });
+      if (eduRailNodes.length) gsap.set(eduRailNodes, { scale: 0.6, opacity: 0 });
       ScrollTrigger.create({
-        trigger: '.about-highlights-list',
-        start: 'top 82%',
+        trigger: '.edu-motion-rail',
+        start: 'top 85%',
         once: true,
         onEnter: () => {
-          gsap.to(highlights, {
-            x: 0, opacity: 1, filter: 'blur(0px)',
-            duration: 0.8, stagger: 0.1, ease: 'power3.out'
-          });
+          gsap.to(eduRailTrack, { scaleX: 1, duration: 1.0, ease: 'power3.inOut' });
+          if (eduRailNodes.length) {
+            gsap.to(eduRailNodes, { scale: 1, opacity: 1, duration: 0.55, stagger: 0.14, delay: 0.25, ease: 'back.out(2)' });
+          }
         }
       });
     }
 
-    /* -- Education: Cards slide in from alternating sides with rotation ---------- */
     const eduCards = document.querySelectorAll('.education-card');
     if (eduCards.length) {
       eduCards.forEach((card, i) => {
         const fromRight = i % 2 === 1;
         gsap.set(card, {
-          x: fromRight ? 50 : -50,
-          y: 20,
+          x: fromRight ? 42 : -42,
+          y: 18,
           opacity: 0,
-          rotation: fromRight ? 3 : -3,
-          scale: 0.95
+          rotation: fromRight ? 2.5 : -2.5,
+          scale: 0.96
         });
       });
       ScrollTrigger.create({
         trigger: '.education-timeline',
-        start: 'top 78%',
+        start: 'top 80%',
         once: true,
         onEnter: () => {
           gsap.to(eduCards, {
-            x: 0, y: 0, opacity: 1, rotation: 0, scale: 1,
-            duration: 0.85, stagger: 0.12, ease: 'power3.out'
+            x: 0,
+            y: 0,
+            opacity: 1,
+            rotation: 0,
+            scale: 1,
+            duration: 0.85,
+            stagger: 0.12,
+            ease: 'power3.out',
+            clearProps: 'transform'
           });
         }
       });
     }
 
-    /* -- Education: Section heading with clip-path wipe reveal ------------------ */
-    const eduHeading = document.querySelector('#education .section-heading');
-    if (eduHeading) {
-      gsap.set(eduHeading, { clipPath: 'inset(0 100% 0 0)', opacity: 0 });
-      ScrollTrigger.create({
-        trigger: eduHeading,
-        start: 'top 82%',
-        once: true,
-        onEnter: () => {
-          gsap.to(eduHeading, {
-            clipPath: 'inset(0 0% 0 0)', opacity: 1,
-            duration: 1.1, ease: 'power3.inOut'
-          });
-        }
-      });
-    }
-
-    /* -- Contact: Social links bounce stagger ---------------------------------- */
-    const contactSocials = document.querySelectorAll('.contact-socials a');
-    if (contactSocials.length) {
-      gsap.set(contactSocials, { scale: 0, opacity: 0 });
-      ScrollTrigger.create({
-        trigger: '.contact-socials',
-        start: 'top 90%',
-        once: true,
-        onEnter: () => {
-          gsap.to(contactSocials, {
-            scale: 1, opacity: 1,
-            duration: 0.5, stagger: 0.08,
-            ease: 'back.out(2.5)'
-          });
-        }
-      });
-    }
-
-    /* -- Contact: Status pulse ring animation ---------------------------------- */
-    const contactPulse = document.querySelector('.contact-pulse');
-    if (contactPulse) {
-      contactPulse.classList.add('is-pulsing');
-    }
-    const contactStatus = document.querySelector('.contact-card-status i');
-    if (contactStatus) {
-      contactStatus.classList.add('is-pulsing');
-    }
-
-    /* -- Skill badges: Subtle float on idle ------------------------------------ */
-    const allSkillBadges = document.querySelectorAll('.skill-badge');
-    allSkillBadges.forEach((badge, i) => {
-      gsap.to(badge, {
-        y: -2 - (i % 3),
-        duration: 2.5 + (i % 4) * 0.5,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-        delay: i * 0.15
-      });
-    });
-
-    /* -- Door mock-browsers: subtle parallax on scroll ------------------------- */
-    const mockBrowsers = document.querySelectorAll('.mock-browser, .mock-phone');
-    mockBrowsers.forEach((mock) => {
-      gsap.to(mock, {
-        y: -15,
+    /* -- Contact: Ambient diamonds parallax drift on scroll ------------------ */
+    document.querySelectorAll('.contact-diamond').forEach((diamond, i) => {
+      gsap.to(diamond, {
+        y: (i % 2 === 0 ? -36 : 36),
         scrollTrigger: {
-          trigger: mock,
+          trigger: '#contact',
           start: 'top bottom',
           end: 'bottom top',
-          scrub: 1.2
+          scrub: 1.6
         }
       });
     });
   }
-
 }
 
 
@@ -1647,12 +1655,20 @@ if (window.gsap && window.ScrollTrigger && !prefersReducedMotion) {
     gsap.set(bot, { x: -90, opacity: 0 });
 
     const walk = gsap.timeline({
-      scrollTrigger: { trigger: section, start: 'bottom 96%', once: true }
+      repeat: -1,
+      repeatDelay: 1.1,
+      scrollTrigger: {
+        trigger: section,
+        start: 'top 82%',
+        end: 'bottom 10%',
+        toggleActions: 'play pause resume pause'
+      }
     });
 
     walk
-      .to(bot, { opacity: .78, duration: .35, ease: 'power2.out' }, startAt)
+      .to(bot, { opacity: .82, duration: .4, ease: 'power2.out' }, startAt)
       .to(bot, { x: () => section.clientWidth + 90, duration: walkDuration, ease: 'none' }, startAt)
-      .to(bot, { opacity: 0, duration: .45, ease: 'power2.in' }, '-=.5');
+      .to(bot, { opacity: 0, duration: .45, ease: 'power2.in' }, '-=.5')
+      .set(bot, { x: -90, opacity: 0 });
   });
 }
