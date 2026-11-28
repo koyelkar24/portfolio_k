@@ -1411,23 +1411,7 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
   let skillPopup = null;
   let popupOpen = false;
   let activeBadge = null;
-  let popupCloseTimer = null;
-
-  function cancelPopupClose() {
-    if (popupCloseTimer) {
-      window.clearTimeout(popupCloseTimer);
-      popupCloseTimer = null;
-    }
-  }
-
-  function schedulePopupClose(delay = 500) {
-    if (!popupOpen) return;
-    cancelPopupClose();
-    popupCloseTimer = window.setTimeout(() => {
-      popupCloseTimer = null;
-      closePopup();
-    }, delay);
-  }
+  let isPinned = false;
 
   function getPopup() {
     if (skillPopup) return skillPopup;
@@ -1440,11 +1424,30 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
     skillPopup.setAttribute('tabindex', '-1');
     skillPopup.innerHTML = '<button type="button" class="skill-popup-close" aria-label="Close skill details">&times;</button><p class="skill-popup-category"></p><h3 class="skill-popup-name" id="skillPopupName"></h3><p class="skill-popup-caption"></p><div class="skill-popup-projects"></div>';
     skillPopup.querySelector('.skill-popup-close').addEventListener('click', () => closePopup(true));
-    skillPopup.addEventListener('pointerenter', cancelPopupClose);
-    skillPopup.addEventListener('pointerleave', () => schedulePopupClose());
-    skillPopup.addEventListener('focusin', cancelPopupClose);
     document.body.append(skillPopup);
     return skillPopup;
+  }
+
+  function positionPopup(badge) {
+    const popup = getPopup();
+    if (!badge || window.innerWidth < 680) {
+      popup.classList.remove('is-anchored');
+      popup.style.setProperty('--popup-left', '');
+      popup.style.setProperty('--popup-top', '');
+      return;
+    }
+    popup.classList.add('is-anchored');
+    const rect = badge.getBoundingClientRect();
+    const popupW = Math.min(390, window.innerWidth - 32);
+    const popupH = popup.offsetHeight || 220;
+    const left = Math.max(16, Math.min(window.innerWidth - popupW - 16, rect.left + rect.width / 2 - popupW / 2));
+    const spaceAbove = rect.top - 80;
+    const spaceBelow = window.innerHeight - rect.bottom - 16;
+    const top = (spaceAbove >= popupH + 10 || spaceAbove >= spaceBelow)
+      ? Math.max(76, rect.top - popupH - 10)
+      : Math.min(window.innerHeight - popupH - 16, rect.bottom + 10);
+    popup.style.setProperty('--popup-left', `${Math.round(left)}px`);
+    popup.style.setProperty('--popup-top', `${Math.round(top)}px`);
   }
 
   function categoryFor(badge) {
@@ -1468,7 +1471,7 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
     });
   }
 
-  function setPopupContent(entry) {
+  function setPopupContent(entry, pinned = false) {
     const popup = getPopup();
     const projects = popup.querySelector('.skill-popup-projects');
     const caption = popup.querySelector('.skill-popup-caption');
@@ -1495,7 +1498,8 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
         link.append(label, arrow);
         projects.append(link);
       });
-      caption.textContent = builds.length + ' related build' + (builds.length === 1 ? '' : 's') + ' · select one to open GitHub';
+      caption.textContent = builds.length + ' related build' + (builds.length === 1 ? '' : 's')
+        + (pinned ? ' · select one to open GitHub' : ' · click skill to open links');
     } else {
       const note = document.createElement('p');
       note.className = 'skill-popup-note';
@@ -1507,39 +1511,44 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
     }
   }
 
-  function openPopup(badge) {
+  function openPopup(badge, pinned = false) {
     if (!badge) return;
-    if (activeBadge === badge && popupOpen) return;
-    cancelPopupClose();
     const popup = getPopup();
+
+    if (activeBadge === badge && popupOpen && isPinned === pinned) return;
+
     const name = badge.dataset.skill || 'Skill';
     const entry = skillsDirectory[name] || { type: 'foundation', builds: [] };
 
+    isPinned = pinned;
+    popup.classList.toggle('is-hover-preview', !pinned);
     popup.style.setProperty('--skills-accent', accentFor(badge));
     popup.querySelector('.skill-popup-category').textContent = categoryFor(badge);
     popup.querySelector('.skill-popup-name').textContent = name;
-    setPopupContent(entry);
+    setPopupContent(entry, pinned);
+    positionPopup(badge);
     setSelectedBadge(badge);
     activeBadge = badge;
     popupOpen = true;
     popup.setAttribute('aria-hidden', 'false');
-    popup.focus({ preventScroll: true });
+    if (pinned) popup.focus({ preventScroll: true });
 
     if (!prefersReducedMotion) {
       const newContent = popup.querySelectorAll('.skill-popup-project, .skill-popup-note');
-      gsap.fromTo(popup.querySelector('.skill-popup-name'), { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .32, ease: 'power2.out', overwrite: true });
+      gsap.fromTo(popup.querySelector('.skill-popup-name'), { y: 6, opacity: 0 }, { y: 0, opacity: 1, duration: .24, ease: 'power2.out', overwrite: true });
       if (newContent.length) {
-        gsap.fromTo(newContent, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .35, stagger: .035, ease: 'power2.out', overwrite: true });
+        gsap.fromTo(newContent, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: .26, stagger: .028, ease: 'power2.out', overwrite: true });
       }
     }
   }
 
   function closePopup(returnFocus = false) {
     if (!popupOpen) return;
-    cancelPopupClose();
     const focusTarget = activeBadge;
     popupOpen = false;
+    isPinned = false;
     activeBadge = null;
+    skillPopup.classList.remove('is-hover-preview');
     skillPopup.setAttribute('aria-hidden', 'true');
     setSelectedBadge(null);
     if (returnFocus && focusTarget) focusTarget.focus({ preventScroll: true });
@@ -1547,15 +1556,25 @@ if (window.gsap && window.ScrollTrigger && document.getElementById('skills')) {
 
   skillBadges.forEach((badge) => {
     badge.setAttribute('aria-haspopup', 'dialog');
-    badge.addEventListener('click', () => openPopup(badge));
+    badge.addEventListener('click', () => {
+      if (activeBadge === badge && popupOpen && isPinned) {
+        closePopup(true);
+      } else {
+        openPopup(badge, true);
+      }
+    });
     if (canHover) {
-      badge.addEventListener('pointerenter', () => openPopup(badge));
+      badge.addEventListener('pointerenter', () => openPopup(badge, false));
+      badge.addEventListener('pointerleave', () => {
+        if (!isPinned && activeBadge === badge) closePopup();
+      });
     }
   });
 
   if (canHover) {
-    skillsSection.addEventListener('pointerenter', cancelPopupClose);
-    skillsSection.addEventListener('pointerleave', () => schedulePopupClose());
+    window.addEventListener('scroll', () => {
+      if (popupOpen && !isPinned) closePopup();
+    }, { passive: true });
   }
 
   document.addEventListener('pointerdown', (event) => {
