@@ -4944,54 +4944,7 @@ html.about-motion-ready .about-portrait-stage {
   100% { transform: translateX(200%); }
 }
 
-/* --- 7. Text Scramble & Decrypt Effect ----------------------------------- */
-[data-scramble] {
-  position: relative;
-  transition: text-shadow .4s ease;
-}
-.scramble-char {
-  display: inline-block;
-  transition: color .15s ease, opacity .15s ease;
-}
-.scramble-char.is-scrambled {
-  color: #79c8c0;
-  opacity: .8;
-  animation: scramble-flicker .08s linear infinite alternate;
-}
-.scramble-char.is-resolved {
-  opacity: 1;
-}
-@keyframes scramble-flicker {
-  from { opacity: .45; }
-  to { opacity: .95; }
-}
 
-.decrypt-cursor {
-  display: inline-block;
-  width: 2px;
-  height: .8em;
-  margin-left: 2px;
-  vertical-align: -.08em;
-  background: #79c8c0;
-  box-shadow: 0 0 8px rgb(121 200 192 / 85%);
-  animation: decrypt-cursor-blink .6s steps(2) infinite;
-  opacity: 0;
-  transition: opacity .3s ease;
-}
-.decrypt-cursor.is-active {
-  opacity: 1;
-}
-@keyframes decrypt-cursor-blink {
-  to { opacity: 0; }
-}
-
-.cyber-revealed [data-scramble],
-.contact-section.cyber-revealed h2 {
-  text-shadow: 0 0 50px rgb(121 200 192 / 18%), 0 0 100px rgb(79 170 164 / 9%);
-  animation: cyber-headline-glow 4s ease-in-out infinite alternate;
-}
-@keyframes cyber-headline-glow {
-  from { text-shadow: 0 0 45px rgb(121 200 192 / 14%), 0 0 90px rgb(79 170 164 / 6%); }
   to { text-shadow: 0 0 75px rgb(121 200 192 / 26%), 0 0 140px rgb(79 170 164 / 14%); }
 }
 
@@ -5169,7 +5122,6 @@ html.about-motion-ready .about-portrait-stage {
 @media (prefers-reduced-motion: reduce) {
   .scroll-progress-hud,
   .ambient-constellation,
-  .click-ripples,
   .section-bot-lane,
   .decrypt-cursor { display: none !important; }
   .button::after,
@@ -5185,4 +5137,122 @@ html.about-motion-ready .about-portrait-stage {
   .skills-column::before { display: none !important; }
   .scramble-char { animation: none !important; opacity: 1 !important; }
   [data-scramble] { animation: none !important; text-shadow: none !important; }
+}
+
+
+/* =========================================================================
+   Unique Per-Section Animation Styles
+   ========================================================================= */
+
+/* Contact pulse ring animation */
+.contact-pulse.is-pulsing,
+.contact-card-status i.is-pulsing {
+  position: relative;
+}
+.contact-pulse.is-pulsing::before,
+.contact-card-status i.is-pulsing::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid #79c8c0;
+  animation: contact-pulse-ring 2s ease-out infinite;
+}
+@keyframes contact-pulse-ring {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Education cards: glow border trace on hover */
+.education-card {
+  position: relative;
+  overflow: hidden;
+}
+.education-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    transparent 20%,
+    rgb(121 200 192 / 8%) 50%,
+    transparent 80%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.education-card:hover::after {
+  opacity: 1;
+}
+
+/* Door cards: shimmer overlay on scroll-reveal */
+.door-card {
+  position: relative;
+  overflow: hidden;
+}
+.door-card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    transparent 40%,
+    rgb(121 200 192 / 6%) 45%,
+    rgb(121 200 192 / 12%) 50%,
+    rgb(121 200 192 / 6%) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  transform: translateX(-100%) rotate(0deg);
+  pointer-events: none;
+  animation: none;
+}
+.door-card.shimmer-active::after {
+  animation: card-shimmer 1.8s ease-out forwards;
+}
+@keyframes card-shimmer {
+  0% { transform: translateX(-100%) rotate(0deg); }
+  100% { transform: translateX(100%) rotate(0deg); }
+}
+
+/* Skill badges idle float */
+.skill-badge {
+  will-change: transform;
+}
+
+/* Mock browser parallax smoothness */
+.mock-browser,
+.mock-phone {
+  will-change: transform;
+}
+
+/* Education heading clip-path reveal */
+#education .section-heading {
+  will-change: clip-path, opacity;
+}
+
+/* Highlight items blur-in from left */
+.highlight-item {
+  will-change: transform, opacity, filter;
+}
+
+/* Stat counter smooth rendering */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+  will-change: contents;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-pulse.is-pulsing::before,
+  .contact-card-status i.is-pulsing::before { animation: none !important; display: none; }
+  .education-card::after { display: none !important; }
+  .door-card::after { display: none !important; }
+  .skill-badge { will-change: auto; }
+  .mock-browser, .mock-phone { will-change: auto; }
 }

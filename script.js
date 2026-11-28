@@ -830,25 +830,6 @@ if (!prefersReducedMotion) {
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
   updateScrollProgress();
 
-  /* ---- 2. Click Shockwaves ------------------------------------------------ */
-  const clickRipples = document.getElementById('clickRipples');
-  const isFinePointer = window.matchMedia('(pointer: fine)').matches;
-
-  if (clickRipples) {
-    window.addEventListener('click', (e) => {
-      const ripple = document.createElement('span');
-      ripple.className = 'click-ripple';
-      const size = Math.random() * 20 + 35;
-      ripple.style.width = `${size}px`;
-      ripple.style.height = `${size}px`;
-      ripple.style.left = `${e.clientX}px`;
-      ripple.style.top = `${e.clientY}px`;
-      clickRipples.appendChild(ripple);
-
-      ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
-    }, { passive: true });
-  }
-
   /* ---- 3. Interactive 3D Card Tilt + Specular Spotlight ------------------ */
   const tiltCardSelector = '.door-card, .education-card, .contact-card, .skills-column, .stat-card, .highlight-item, .door-frame';
   
@@ -1018,144 +999,6 @@ if (!prefersReducedMotion) {
     });
   }
 
-  /* ---- 6. Text Decrypt / Scramble Typography ------------------------------ */
-  const scrambleGlyphs = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`01αβγδεζ';
-  const scrambledElements = new WeakSet();
-
-  const scrambleText = (element) => {
-    if (!element || scrambledElements.has(element)) return;
-    scrambledElements.add(element);
-
-    const cursor = document.createElement('span');
-    cursor.className = 'decrypt-cursor is-active';
-    cursor.setAttribute('aria-hidden', 'true');
-
-    let charIndex = 0;
-    const processNode = (node) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        const fragment = document.createDocumentFragment();
-        for (const char of node.textContent) {
-          const span = document.createElement('span');
-          span.className = 'scramble-char is-scrambled';
-          span.dataset.original = char;
-          span.dataset.index = charIndex;
-          span.textContent = char === ' ' ? ' ' : scrambleGlyphs[Math.floor(Math.random() * scrambleGlyphs.length)];
-          fragment.appendChild(span);
-          charIndex++;
-        }
-        return fragment;
-      }
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const clone = node.cloneNode(false);
-        for (const child of node.childNodes) {
-          clone.appendChild(processNode(child));
-        }
-        return clone;
-      }
-      return node.cloneNode(true);
-    };
-
-    const tempDiv = document.createElement('div');
-    for (const child of element.childNodes) {
-      tempDiv.appendChild(processNode(child));
-    }
-    element.innerHTML = tempDiv.innerHTML;
-    element.appendChild(cursor);
-
-    const scrambleChars = element.querySelectorAll('.scramble-char');
-    const totalChars = scrambleChars.length;
-    let resolved = 0;
-
-    const decryptNext = () => {
-      if (resolved >= totalChars) {
-        cursor.classList.remove('is-active');
-        setTimeout(() => cursor.remove(), 400);
-        return;
-      }
-
-      const charEl = scrambleChars[resolved];
-      const original = charEl.dataset.original;
-
-      let passes = 0;
-      const maxPasses = 3 + Math.floor(Math.random() * 3);
-
-      const scramblePass = () => {
-        if (passes >= maxPasses) {
-          charEl.textContent = original;
-          charEl.classList.remove('is-scrambled');
-          charEl.classList.add('is-resolved');
-          resolved++;
-
-          const batch = Math.random() > 0.55 ? 2 : 1;
-          for (let b = 0; b < batch - 1 && resolved < totalChars; b++) {
-            const nextChar = scrambleChars[resolved];
-            nextChar.textContent = nextChar.dataset.original;
-            nextChar.classList.remove('is-scrambled');
-            nextChar.classList.add('is-resolved');
-            resolved++;
-          }
-          setTimeout(decryptNext, 18 + Math.random() * 26);
-          return;
-        }
-        if (original !== ' ') {
-          charEl.textContent = scrambleGlyphs[Math.floor(Math.random() * scrambleGlyphs.length)];
-        }
-        passes++;
-        setTimeout(scramblePass, 28);
-      };
-
-      scramblePass();
-    };
-
-    setTimeout(decryptNext, 160);
-  };
-
-  /* ---- 7. ScrollTrigger Section Orchestration ----------------------------- */
-  if (window.gsap && window.ScrollTrigger) {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Hero title scramble on load
-    const heroSection = document.getElementById('home');
-    if (heroSection) {
-      setTimeout(() => {
-        heroSection.classList.add('cyber-revealed');
-        heroSection.querySelectorAll('[data-scramble]').forEach((el) => scrambleText(el));
-      }, 700);
-    }
-
-    // Trigger decrypt and revealed state for all sections
-    const sections = document.querySelectorAll('section, .work-doors');
-    sections.forEach((sec) => {
-      ScrollTrigger.create({
-        trigger: sec,
-        start: 'top 75%',
-        once: true,
-        onEnter: () => {
-          sec.classList.add('cyber-revealed');
-          sec.querySelectorAll('[data-scramble]').forEach((el) => {
-            setTimeout(() => scrambleText(el), 120);
-          });
-        }
-      });
-    });
-
-    // Decrypt showcase title on door open
-    const showcaseTitle = document.getElementById('showcaseTitle');
-    const workDoorsEl = document.querySelector('.work-doors');
-    if (workDoorsEl && showcaseTitle) {
-      const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            if (workDoorsEl.classList.contains('is-showcase') && !showcaseTitle.dataset.scrambled) {
-              scrambleText(showcaseTitle);
-            }
-          }
-        }
-      });
-      observer.observe(workDoorsEl, { attributes: true });
-    }
-  }
-
   /* ---- 8. Contact Section Smooth Entrance --------------------------------- */
   const contact = document.getElementById('contact');
   if (contact && window.gsap && window.ScrollTrigger) {
@@ -1238,6 +1081,246 @@ if (!prefersReducedMotion) {
       window.addEventListener('load', startContactReveal, { once: true });
     }
   }
+
+  /* ---- NEW: Unique Per-Section Scroll Animations ----------------------------- */
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* -- Hero: Staggered parallax entrance for focus tags + disciplines ---------- */
+    const heroFocus = document.querySelector('.hero-focus');
+    const heroDisciplines = document.querySelector('.hero-disciplines');
+    const heroBottomline = document.querySelector('.hero-bottomline');
+    const heroScrollCue = document.querySelector('.scroll-cue');
+
+    if (heroFocus) {
+      const focusItems = heroFocus.querySelectorAll('span, div');
+      gsap.set(focusItems, { y: 20, opacity: 0, scale: 0.95 });
+      gsap.to(focusItems, {
+        y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.08,
+        ease: 'power3.out', delay: 1.2
+      });
+    }
+    if (heroDisciplines) {
+      const discItems = heroDisciplines.querySelectorAll('span');
+      gsap.set(discItems, { x: -30, opacity: 0 });
+      gsap.to(discItems, {
+        x: 0, opacity: 1, duration: 0.8, stagger: 0.12,
+        ease: 'power3.out', delay: 1.6
+      });
+    }
+    if (heroBottomline) {
+      const blItems = heroBottomline.querySelectorAll('span');
+      gsap.set(blItems, { y: 12, opacity: 0 });
+      gsap.to(blItems, {
+        y: 0, opacity: 1, duration: 0.6, stagger: 0.1,
+        ease: 'power2.out', delay: 2
+      });
+    }
+    if (heroScrollCue) {
+      gsap.set(heroScrollCue, { opacity: 0, y: 10 });
+      gsap.to(heroScrollCue, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', delay: 2.4 });
+    }
+
+    /* -- Work/Doors: Each door staggers in with a 3D flip from below ------------ */
+    const doors = document.querySelectorAll('.work-doors .door');
+    if (doors.length) {
+      gsap.set(doors, { y: 60, opacity: 0, rotationX: -15, transformPerspective: 800 });
+      ScrollTrigger.create({
+        trigger: '.work-doors',
+        start: 'top 72%',
+        once: true,
+        onEnter: () => {
+          gsap.to(doors, {
+            y: 0, opacity: 1, rotationX: 0,
+            duration: 0.9, stagger: 0.12,
+            ease: 'power3.out'
+          });
+        }
+      });
+    }
+
+    /* -- Work: Door kicker + sub text reveal ------------------------------------ */
+    const doorsKicker = document.querySelector('.doors-head .work-kicker');
+    const doorsSub = document.querySelector('.doors-sub');
+    const doorsHint = document.querySelector('.doors-hint');
+    if (doorsKicker) {
+      gsap.set([doorsKicker, doorsSub, doorsHint].filter(Boolean), { y: 18, opacity: 0 });
+      ScrollTrigger.create({
+        trigger: '.doors-head',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.to([doorsKicker, doorsSub, doorsHint].filter(Boolean), {
+            y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'power3.out'
+          });
+        }
+      });
+    }
+
+    /* -- Work: Door cards shimmer border on scroll ------------------------------ */
+    const doorCards = document.querySelectorAll('.door-card');
+    doorCards.forEach((card) => {
+      gsap.set(card, { y: 40, opacity: 0, scale: 0.97 });
+      ScrollTrigger.create({
+        trigger: card,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          gsap.to(card, {
+            y: 0, opacity: 1, scale: 1,
+            duration: 0.8, ease: 'power3.out'
+          });
+        }
+      });
+    });
+
+    /* -- About: Stat numbers count up ------------------------------------------ */
+    const statNumbers = document.querySelectorAll('.stat-number');
+    statNumbers.forEach((el) => {
+      const target = el.textContent.trim();
+      const num = parseInt(target, 10);
+      if (isNaN(num)) return;
+
+      const originalText = el.textContent;
+      el.textContent = '0';
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => {
+          const counter = { val: 0 };
+          gsap.to(counter, {
+            val: num,
+            duration: 1.6,
+            ease: 'power2.out',
+            onUpdate: () => {
+              el.textContent = Math.round(counter.val).toString();
+            },
+            onComplete: () => {
+              el.textContent = originalText;
+            }
+          });
+        }
+      });
+    });
+
+    /* -- About: Highlight items slide in from left with blur -------------------- */
+    const highlights = document.querySelectorAll('.highlight-item');
+    if (highlights.length) {
+      gsap.set(highlights, { x: -40, opacity: 0, filter: 'blur(6px)' });
+      ScrollTrigger.create({
+        trigger: '.about-highlights-list',
+        start: 'top 82%',
+        once: true,
+        onEnter: () => {
+          gsap.to(highlights, {
+            x: 0, opacity: 1, filter: 'blur(0px)',
+            duration: 0.8, stagger: 0.1, ease: 'power3.out'
+          });
+        }
+      });
+    }
+
+    /* -- Education: Cards slide in from alternating sides with rotation ---------- */
+    const eduCards = document.querySelectorAll('.education-card');
+    if (eduCards.length) {
+      eduCards.forEach((card, i) => {
+        const fromRight = i % 2 === 1;
+        gsap.set(card, {
+          x: fromRight ? 50 : -50,
+          y: 20,
+          opacity: 0,
+          rotation: fromRight ? 3 : -3,
+          scale: 0.95
+        });
+      });
+      ScrollTrigger.create({
+        trigger: '.education-timeline',
+        start: 'top 78%',
+        once: true,
+        onEnter: () => {
+          gsap.to(eduCards, {
+            x: 0, y: 0, opacity: 1, rotation: 0, scale: 1,
+            duration: 0.85, stagger: 0.12, ease: 'power3.out'
+          });
+        }
+      });
+    }
+
+    /* -- Education: Section heading with clip-path wipe reveal ------------------ */
+    const eduHeading = document.querySelector('#education .section-heading');
+    if (eduHeading) {
+      gsap.set(eduHeading, { clipPath: 'inset(0 100% 0 0)', opacity: 0 });
+      ScrollTrigger.create({
+        trigger: eduHeading,
+        start: 'top 82%',
+        once: true,
+        onEnter: () => {
+          gsap.to(eduHeading, {
+            clipPath: 'inset(0 0% 0 0)', opacity: 1,
+            duration: 1.1, ease: 'power3.inOut'
+          });
+        }
+      });
+    }
+
+    /* -- Contact: Social links bounce stagger ---------------------------------- */
+    const contactSocials = document.querySelectorAll('.contact-socials a');
+    if (contactSocials.length) {
+      gsap.set(contactSocials, { scale: 0, opacity: 0 });
+      ScrollTrigger.create({
+        trigger: '.contact-socials',
+        start: 'top 90%',
+        once: true,
+        onEnter: () => {
+          gsap.to(contactSocials, {
+            scale: 1, opacity: 1,
+            duration: 0.5, stagger: 0.08,
+            ease: 'back.out(2.5)'
+          });
+        }
+      });
+    }
+
+    /* -- Contact: Status pulse ring animation ---------------------------------- */
+    const contactPulse = document.querySelector('.contact-pulse');
+    if (contactPulse) {
+      contactPulse.classList.add('is-pulsing');
+    }
+    const contactStatus = document.querySelector('.contact-card-status i');
+    if (contactStatus) {
+      contactStatus.classList.add('is-pulsing');
+    }
+
+    /* -- Skill badges: Subtle float on idle ------------------------------------ */
+    const allSkillBadges = document.querySelectorAll('.skill-badge');
+    allSkillBadges.forEach((badge, i) => {
+      gsap.to(badge, {
+        y: -2 - (i % 3),
+        duration: 2.5 + (i % 4) * 0.5,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        delay: i * 0.15
+      });
+    });
+
+    /* -- Door mock-browsers: subtle parallax on scroll ------------------------- */
+    const mockBrowsers = document.querySelectorAll('.mock-browser, .mock-phone');
+    mockBrowsers.forEach((mock) => {
+      gsap.to(mock, {
+        y: -15,
+        scrollTrigger: {
+          trigger: mock,
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: 1.2
+        }
+      });
+    });
+  }
+
 }
 
 
